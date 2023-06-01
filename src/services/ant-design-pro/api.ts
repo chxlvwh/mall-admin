@@ -12,14 +12,6 @@ export async function currentUser(options?: { [key: string]: any }) {
     });
 }
 
-/** 退出登录接口 POST /api/login/outLogin */
-export async function outLogin(options?: { [key: string]: any }) {
-    return request<Record<string, any>>('/api/admin/user/login', {
-        method: 'POST',
-        ...(options || {}),
-    });
-}
-
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
     return request<API.LoginResult>('/api/v1/auth/login', {
@@ -28,6 +20,28 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
             'Content-Type': 'application/json',
         },
         data: body,
+        ...(options || {}),
+    });
+}
+
+export async function user(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+    const result = await request<API.UserList>('/api/v1/admin/user/list', {
+        method: 'GET',
+        params: { ...params },
+        ...(options || {}),
+    });
+    console.log('[api.ts:] ', result);
+    return {
+        data: result.data.elements,
+        total: result.data.total,
+        success: true,
+    };
+}
+
+/** 退出登录接口 POST /api/login/outLogin */
+export async function outLogin(options?: { [key: string]: any }) {
+    return request<Record<string, any>>('/api/admin/user/login', {
+        method: 'POST',
         ...(options || {}),
     });
 }

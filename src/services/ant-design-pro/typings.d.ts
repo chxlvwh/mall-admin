@@ -6,6 +6,7 @@ declare namespace API {
         username?: string;
         createdAt?: Date;
         lastModified?: Date;
+        deletedAt?: Date;
         profile?: {
             id?: number;
             gender?: number;
@@ -42,6 +43,16 @@ declare namespace API {
         updatedAt?: string;
         createdAt?: string;
         progress?: number;
+    };
+
+    type UserList = {
+        data: {
+            elements: CurrentUser[];
+            total: number;
+        };
+        /** 列表的内容总数 */
+        total?: number;
+        success?: string;
     };
 
     type RuleList = {

@@ -55,12 +55,11 @@ export default [
         name: 'auth',
         icon: 'key',
         path: '/auth',
-        component: './TableList',
         routes: [
             {
                 name: 'user-list',
                 path: '/auth/user',
-                component: './Auth/UserMgt',
+                component: './Auth/UserList',
             },
         ],
     },

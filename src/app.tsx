@@ -1,4 +1,4 @@
-import Footer from '@/components/Footer';
+// import Footer from '@/components/Footer';
 import { Question, SelectLang } from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
@@ -10,6 +10,7 @@ import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import React from 'react';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
+import { ConfigProvider } from 'antd';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -64,7 +65,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         waterMarkProps: {
             content: initialState?.currentUser?.profile?.nickName,
         },
-        footerRender: () => <Footer />,
+        // footerRender: () => <Footer />,
         onPageChange: () => {
             const { location } = history;
             // 如果没有登录，重定向到 login
@@ -108,7 +109,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             // if (initialState?.loading) return <PageLoading />;
             return (
                 <>
-                    {children}
+                    <ConfigProvider theme={{ token: { borderRadius: 1 } }}>{children}</ConfigProvider>
                     <SettingDrawer
                         disableUrlParams
                         enableDarkTheme
