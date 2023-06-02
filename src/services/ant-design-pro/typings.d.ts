@@ -7,17 +7,21 @@ declare namespace API {
         createdAt?: Date;
         lastModified?: Date;
         deletedAt?: Date;
-        profile?: {
-            id?: number;
-            gender?: number;
-            nickName?: string;
-            email?: string;
-            avatar?: string;
-            address?: string;
-        };
+        profile?: Profile;
         logs?: object[];
         roles?: object[];
     };
+
+    type Profile = {
+        id?: number;
+        gender?: number;
+        nickName?: string;
+        email?: string;
+        avatar?: string;
+        address?: string;
+    };
+
+    type UserForm = CurrentUser & Profile;
 
     type LoginResult = {
         status?: string;

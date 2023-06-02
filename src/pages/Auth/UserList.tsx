@@ -1,11 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Switch } from 'antd';
+import { Button, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
 import { user } from '@/services/ant-design-pro/api';
+import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
 
 const UserList: React.FC = () => {
+    const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     const switchOpen = () => {};
     const valueEnum = new Map([
@@ -57,14 +59,14 @@ const UserList: React.FC = () => {
             search: false,
             render: (_, record) => {
                 return (
-                    <div>
-                        <a href="" onClick={() => {}} style={{ marginRight: '20px' }}>
+                    <Space>
+                        <a href="" onClick={() => {}}>
                             编辑
                         </a>
                         <a href="" onClick={() => {}}>
                             删除
                         </a>
-                    </div>
+                    </Space>
                 );
             },
         },
@@ -76,14 +78,22 @@ const UserList: React.FC = () => {
                 actionRef={actionRef}
                 rowKey="id"
                 search={{
-                    labelWidth: 100,
+                    showHiddenNum: true,
+                    span: {
+                        xs: 24,
+                        sm: 24,
+                        md: 12,
+                        lg: 12,
+                        xl: 8,
+                        xxl: 6,
+                    },
                 }}
                 toolBarRender={() => [
                     <Button
                         type="primary"
                         key="primary"
                         onClick={() => {
-                            // handleModalOpen(true);
+                            handleModalOpen(true);
                         }}
                     >
                         <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
@@ -91,6 +101,11 @@ const UserList: React.FC = () => {
                 ]}
                 request={user}
                 columns={columns}
+            />
+            <CreateUserModal
+                createModalOpen={createModalOpen}
+                handleModalOpen={handleModalOpen}
+                actionRef={actionRef}
             />
         </PageContainer>
     );

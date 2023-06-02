@@ -38,6 +38,15 @@ export async function user(params: { current?: number; pageSize?: number }, opti
     };
 }
 
+/** 新建用户 POST /api/rule */
+export async function addUser(body: API.UserForm, options?: { [key: string]: any }) {
+    return request<API.CurrentUser>('/api/v1/admin/user', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
     return request<Record<string, any>>('/api/admin/user/login', {
