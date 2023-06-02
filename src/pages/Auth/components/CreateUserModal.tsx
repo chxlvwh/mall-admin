@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { FormattedMessage } from '@@/exports';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { message, Space } from 'antd';
-import { addRule, addUser } from '@/services/ant-design-pro/api';
+import { message } from 'antd';
+import { addUser } from '@/services/ant-design-pro/api';
 
 interface CreateUserModalProps {
     createModalOpen: boolean;
@@ -29,7 +28,7 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef }: Create
     return (
         <ModalForm
             title={'创建用户'}
-            // width="400px"
+            modalProps={{ destroyOnClose: true }}
             open={createModalOpen}
             onOpenChange={handleModalOpen}
             onFinish={async (value) => {
@@ -72,6 +71,7 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef }: Create
                 <ProFormRadio.Group
                     name={'isDeleted'}
                     label={'是否启用'}
+                    fieldProps={{ defaultValue: 0 }}
                     options={[
                         {
                             label: '是',

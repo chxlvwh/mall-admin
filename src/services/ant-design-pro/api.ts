@@ -33,7 +33,7 @@ export async function user(params: { current?: number; pageSize?: number }, opti
     console.log('[api.ts:] ', result);
     return {
         data: result.data.elements,
-        total: result.data.total,
+        total: result.data.paging.total,
         success: true,
     };
 }

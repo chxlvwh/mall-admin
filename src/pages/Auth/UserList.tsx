@@ -11,8 +11,8 @@ const UserList: React.FC = () => {
     const actionRef = useRef<ActionType>();
     const switchOpen = () => {};
     const valueEnum = new Map([
-        [true, '是'],
-        [false, '否'],
+        [0, '是'],
+        [1, '否'],
     ]);
     const columns: ProColumns<API.CurrentUser>[] = [
         {

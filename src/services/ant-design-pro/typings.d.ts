@@ -52,7 +52,9 @@ declare namespace API {
     type UserList = {
         data: {
             elements: CurrentUser[];
-            total: number;
+            paging: {
+                total: number;
+            };
         };
         /** 列表的内容总数 */
         total?: number;
