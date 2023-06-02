@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { login } from '@/services/user/api';
+import { getFakeCaptcha } from '@/services/user/login';
 import {
     AlipayCircleOutlined,
     LockOutlined,
@@ -114,26 +114,16 @@ const Login: React.FC = () => {
             // 登录
             const res = await login({ ...values });
             if (res.access_token) {
-                localStorage.setItem('token', res.access_token);
-                const defaultLoginSuccessMessage = intl.formatMessage({
-                    id: 'pages.login.success',
-                    defaultMessage: '登录成功！',
-                });
-                message.success(defaultLoginSuccessMessage);
                 await fetchUserInfo();
+                localStorage.setItem('token', res.access_token);
                 const urlParams = new URL(window.location.href).searchParams;
+                message.success('登录成功');
                 history.push(urlParams.get('redirect') || '/');
-                return;
             }
             // 如果失败去设置用户错误信息
             setUserLoginState(res);
         } catch (error) {
-            const defaultLoginFailureMessage = intl.formatMessage({
-                id: 'pages.login.failure',
-                defaultMessage: '登录失败，请重试！',
-            });
             console.log(error);
-            message.error(defaultLoginFailureMessage);
         }
     };
     const { status, type: loginType } = userLoginState;

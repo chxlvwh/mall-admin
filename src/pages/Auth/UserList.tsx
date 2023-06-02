@@ -1,15 +1,26 @@
 import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Switch } from 'antd';
+import { Button, message, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { user } from '@/services/ant-design-pro/api';
+import { deleteUser, restoreUser, user } from '@/services/user/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
 
 const UserList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
-    const switchOpen = () => {};
+    const switchOpen = async (val: boolean, id: number) => {
+        try {
+            if (val) {
+                await restoreUser(id);
+            } else {
+                await deleteUser(id);
+            }
+            actionRef.current?.reload();
+        } catch (e) {
+            actionRef.current?.reload();
+        }
+    };
     const valueEnum = new Map([
         [0, '是'],
         [1, '否'],
@@ -50,7 +61,7 @@ const UserList: React.FC = () => {
             valueType: 'select',
             valueEnum,
             render: (_, record) => {
-                return <Switch defaultChecked={!record.deletedAt} onChange={switchOpen} />;
+                return <Switch checked={!record.deletedAt} onChange={(val) => switchOpen(val, record.id)} />;
             },
         },
         {

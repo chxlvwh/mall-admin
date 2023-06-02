@@ -39,7 +39,12 @@ export const errorConfig: RequestConfig = {
         },
         // 错误接收及处理
         errorHandler: (error: any, opts: any) => {
-            if (opts?.skipErrorHandler) throw error;
+            if (opts?.skipErrorHandler) {
+                if (error.response.status === 401) {
+                    localStorage.clear();
+                }
+                throw error;
+            }
             // 我们的 errorThrower 抛出的错误。
             if (error.name === 'BizError') {
                 const errorInfo: ResponseStructure | undefined = error.info;
@@ -71,10 +76,13 @@ export const errorConfig: RequestConfig = {
             } else if (error.response) {
                 // Axios 的错误
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-                if (error.response.data.message && Array.isArray(error.response.data.message)) {
-                    message.error(error.response.data.message[0]);
-                } else {
-                    message.error(error.response.data.message);
+                if (error.response.data.error) {
+                    if (Array.isArray(error.response.data.error.message)) {
+                        message.error(error.response.data.error.message[0]);
+                    }
+                    if (typeof error.response.data.error.message === 'string') {
+                        message.error(error.response.data.error.message);
+                    }
                 }
             } else if (error.request) {
                 // 请求已经成功发起，但没有收到响应

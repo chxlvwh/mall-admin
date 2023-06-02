@@ -47,6 +47,26 @@ export async function addUser(body: API.UserForm, options?: { [key: string]: any
     });
 }
 
+/**
+ * 删除用户
+ */
+export async function deleteUser(id: number, options?: { [key: string]: any }) {
+    return request<API.CurrentUser>(`/api/v1/admin/user/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/**
+ * 恢复用户
+ */
+export async function restoreUser(id: number, options?: { [key: string]: any }) {
+    return request<API.CurrentUser>(`/api/v1/admin/user/${id}/restore`, {
+        method: 'PUT',
+        ...(options || {}),
+    });
+}
+
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
     return request<Record<string, any>>('/api/admin/user/login', {
