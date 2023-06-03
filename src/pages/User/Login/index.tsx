@@ -114,10 +114,9 @@ const Login: React.FC = () => {
             // 登录
             const res = await login({ ...values });
             if (res.access_token) {
-                await fetchUserInfo();
                 localStorage.setItem('token', res.access_token);
+                await fetchUserInfo();
                 const urlParams = new URL(window.location.href).searchParams;
-                message.success('登录成功');
                 history.push(urlParams.get('redirect') || '/');
             }
             // 如果失败去设置用户错误信息

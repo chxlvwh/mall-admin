@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, message, Space, Switch } from 'antd';
+import { Button, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@@/exports';
+import { FormattedMessage, useModel } from '@@/exports';
 import { deleteUser, restoreUser, user } from '@/services/user/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
 
 const UserList: React.FC = () => {
+    const { initialState } = useModel('@@initialState');
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     const switchOpen = async (val: boolean, id: number) => {
@@ -61,7 +62,13 @@ const UserList: React.FC = () => {
             valueType: 'select',
             valueEnum,
             render: (_, record) => {
-                return <Switch checked={!record.deletedAt} onChange={(val) => switchOpen(val, record.id)} />;
+                return (
+                    <Switch
+                        disabled={initialState?.currentUser?.id === record.id}
+                        checked={!record.deletedAt}
+                        onChange={(val) => switchOpen(val, record.id)}
+                    />
+                );
             },
         },
         {
@@ -73,9 +80,6 @@ const UserList: React.FC = () => {
                     <Space>
                         <a href="" onClick={() => {}}>
                             编辑
-                        </a>
-                        <a href="" onClick={() => {}}>
-                            删除
                         </a>
                     </Space>
                 );
