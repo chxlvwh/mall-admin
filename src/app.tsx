@@ -56,7 +56,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     return {
         actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
         avatarProps: {
-            src: initialState?.currentUser?.profile?.avatar,
+            src: initialState?.currentUser?.profile?.avatar || '/icons/default-avatar.jpg',
             title: <AvatarName />,
             render: (_, avatarChildren) => {
                 return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;

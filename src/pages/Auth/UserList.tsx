@@ -117,17 +117,15 @@ const UserList: React.FC = () => {
             render: (_, record) => {
                 return (
                     <Space>
-                        {initialState?.currentUser?.id !== record.id && (
-                            <a
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    setCurrentRow(record);
-                                    handleModalOpen(true);
-                                }}
-                            >
-                                编辑
-                            </a>
-                        )}
+                        <a
+                            onClick={(event) => {
+                                event.preventDefault();
+                                setCurrentRow(record);
+                                handleModalOpen(true);
+                            }}
+                        >
+                            编辑
+                        </a>
                     </Space>
                 );
             },

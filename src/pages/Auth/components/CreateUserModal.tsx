@@ -95,22 +95,24 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef, currentR
                 <ProFormText label="姓名" width="md" name="nickname" initialValue={currentRow?.profile?.nickname} />
                 <ProFormText label="邮箱" width="md" name="email" initialValue={currentRow?.profile?.email} />
                 <ProFormTextArea label={'备注'} width="md" name="remark" initialValue={currentRow?.profile?.remark} />
-                <ProFormRadio.Group
-                    initialValue={currentRow?.deletedAt ? 1 : 0}
-                    name={'isDeleted'}
-                    label={'是否启用'}
-                    fieldProps={{ defaultValue: 0 }}
-                    options={[
-                        {
-                            label: '是',
-                            value: 0,
-                        },
-                        {
-                            label: '否',
-                            value: 1,
-                        },
-                    ]}
-                ></ProFormRadio.Group>
+                {!isEdit && (
+                    <ProFormRadio.Group
+                        initialValue={currentRow?.deletedAt ? 1 : 0}
+                        name={'isDeleted'}
+                        label={'是否启用'}
+                        fieldProps={{ defaultValue: 0 }}
+                        options={[
+                            {
+                                label: '是',
+                                value: 0,
+                            },
+                            {
+                                label: '否',
+                                value: 1,
+                            },
+                        ]}
+                    ></ProFormRadio.Group>
+                )}
             </ProForm.Group>
         </ModalForm>
     );
