@@ -47,6 +47,15 @@ export async function addUser(body: API.UserForm, options?: { [key: string]: any
     });
 }
 
+/** 更新用户 POST /api/rule */
+export async function updateUser(id: number, body: API.UserForm, options?: { [key: string]: any }) {
+    return request<API.CurrentUser>(`/api/v1/admin/user/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
 /**
  * 删除用户
  */

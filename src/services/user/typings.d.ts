@@ -4,6 +4,7 @@
 declare namespace API {
     type CurrentUser = {
         id: number;
+        password: string;
         username?: string;
         createdAt?: Date;
         lastModified?: Date;
@@ -16,10 +17,11 @@ declare namespace API {
     type Profile = {
         id?: number;
         gender?: number;
-        nickName?: string;
+        nickname?: string;
         email?: string;
         avatar?: string;
         address?: string;
+        remark?: string;
     };
 
     type UserForm = CurrentUser & Profile;

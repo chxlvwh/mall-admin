@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
-import { addUser } from '@/services/user/api';
+import { addUser, updateUser } from '@/services/user/api';
 
 interface CreateUserModalProps {
     createModalOpen: boolean;
     handleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     actionRef: React.MutableRefObject<ActionType | undefined>;
+    currentRow?: API.CurrentUser;
 }
 
 const handleAdd = async (fields: API.CurrentUser) => {
+    console.log('[CreateUserModal.tsx:] ', fields);
     const hide = message.loading('正在添加');
     try {
         await addUser({ ...fields });
@@ -24,16 +26,38 @@ const handleAdd = async (fields: API.CurrentUser) => {
     }
 };
 
-const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef }: CreateUserModalProps) => {
+const handleUpdate = async (id: number, fields: API.CurrentUser) => {
+    console.log('[CreateUserModal.tsx:] ', fields);
+    const hide = message.loading('正在更新');
+    try {
+        await updateUser(id, { ...fields });
+        hide();
+        message.success('更新成功');
+        return true;
+    } catch (error) {
+        hide();
+        message.error('更新失败，请重试!');
+        return false;
+    }
+};
+
+const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateUserModalProps) => {
+    const isEdit = currentRow && !!currentRow.id;
+    console.log('[isEdit:] ', isEdit);
     return (
         <ModalForm
-            title={'创建用户'}
+            title={isEdit ? '更新用户' : '创建用户'}
             modalProps={{ destroyOnClose: true }}
             open={createModalOpen}
             onOpenChange={handleModalOpen}
             onFinish={async (value) => {
                 console.log('[CreateUserModal.tsx:] ', value);
-                const success = await handleAdd(value as API.CurrentUser);
+                let success = false;
+                if (!isEdit) {
+                    success = await handleAdd(value as API.CurrentUser);
+                } else {
+                    success = await handleUpdate(currentRow.id, value as API.CurrentUser);
+                }
                 if (success) {
                     handleModalOpen(false);
                     if (actionRef.current) {
@@ -44,6 +68,7 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef }: Create
         >
             <ProForm.Group>
                 <ProFormText
+                    initialValue={currentRow?.username}
                     label="账号"
                     rules={[
                         {
@@ -54,21 +79,24 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef }: Create
                     width="md"
                     name="username"
                 />
-                <ProFormText
-                    label="密码"
-                    rules={[
-                        {
-                            required: true,
-                            message: '密码不能为空',
-                        },
-                    ]}
-                    width="md"
-                    name="password"
-                />
-                <ProFormText label="姓名" width="md" name="nickname" />
-                <ProFormText label="邮箱" width="md" name="email" />
-                <ProFormTextArea label={'备注'} width="md" name="remark" />
+                {!isEdit && (
+                    <ProFormText
+                        label="密码"
+                        rules={[
+                            {
+                                required: true,
+                                message: '密码不能为空',
+                            },
+                        ]}
+                        width="md"
+                        name="password"
+                    />
+                )}
+                <ProFormText label="姓名" width="md" name="nickname" initialValue={currentRow?.profile?.nickname} />
+                <ProFormText label="邮箱" width="md" name="email" initialValue={currentRow?.profile?.email} />
+                <ProFormTextArea label={'备注'} width="md" name="remark" initialValue={currentRow?.profile?.remark} />
                 <ProFormRadio.Group
+                    initialValue={currentRow?.deletedAt ? 1 : 0}
                     name={'isDeleted'}
                     label={'是否启用'}
                     fieldProps={{ defaultValue: 0 }}
