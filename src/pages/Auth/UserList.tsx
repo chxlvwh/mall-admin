@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, message, Modal, Space, Switch } from 'antd';
+import { Button, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useModel } from '@@/exports';
-import { addUser, deleteUser, getUserById, restoreUser, user } from '@/services/user/api';
+import { deleteUser, getUserById, restoreUser, user } from '@/services/mall-service/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
 
 const UserList: React.FC = () => {

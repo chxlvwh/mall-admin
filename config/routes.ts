@@ -52,6 +52,18 @@ export default [
         component: './TableList',
     },
     {
+        name: 'product',
+        icon: 'bank',
+        path: '/product',
+        routes: [
+            {
+                name: 'brand-list',
+                path: '/product/brand',
+                component: './Product/BrandList',
+            },
+        ],
+    },
+    {
         name: 'auth',
         icon: 'key',
         path: '/auth',

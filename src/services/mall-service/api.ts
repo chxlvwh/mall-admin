@@ -25,7 +25,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 
 export async function user(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
-    const result = await request<API.UserList>('/api/v1/admin/user/list', {
+    const result = await request<API.RestList<API.CurrentUser>>('/api/v1/admin/user/list', {
         method: 'GET',
         params: { ...params },
         ...(options || {}),
@@ -82,6 +82,19 @@ export async function restoreUser(id: number, options?: { [key: string]: any }) 
         method: 'PUT',
         ...(options || {}),
     });
+}
+
+export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Brand>>('/api/v1/brand/list', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
 }
 
 /** 退出登录接口 POST /api/login/outLogin */

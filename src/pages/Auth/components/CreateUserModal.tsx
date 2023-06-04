@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
-import { addUser, updateUser } from '@/services/user/api';
+import { addUser, updateUser } from '@/services/mall-service/api';
 
 interface CreateUserModalProps {
     createModalOpen: boolean;

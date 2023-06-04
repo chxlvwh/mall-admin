@@ -2,17 +2,25 @@
 /* eslint-disable */
 
 declare namespace API {
+    type CommonDate = {
+        createdAt?: Date;
+        lastModified?: Date;
+    };
+
     type CurrentUser = {
         id: number;
         password: string;
         username?: string;
-        createdAt?: Date;
-        lastModified?: Date;
         deletedAt?: Date;
         profile?: Profile;
         logs?: object[];
         roles?: object[];
-    };
+    } & CommonDate;
+
+    type Brand = {
+        id: number;
+        name: string;
+    } & CommonDate;
 
     type Resp<T> = {
         code: number;
@@ -58,9 +66,9 @@ declare namespace API {
         progress?: number;
     };
 
-    type UserList = {
+    type RestList<T> = {
         data: {
-            elements: CurrentUser[];
+            elements: T[];
             paging: {
                 total: number;
             };
