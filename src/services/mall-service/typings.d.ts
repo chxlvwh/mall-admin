@@ -20,6 +20,7 @@ declare namespace API {
     type Brand = {
         id: number;
         name: string;
+        desc: string;
     } & CommonDate;
 
     type Resp<T> = {

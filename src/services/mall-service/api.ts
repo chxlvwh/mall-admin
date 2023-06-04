@@ -97,6 +97,40 @@ export async function getBrandList(params: { current?: number; pageSize?: number
     };
 }
 
+/** 新建用户 POST /api/rule */
+export async function addBrand(body: API.Brand, options?: { [key: string]: any }) {
+    return request<API.Brand>('/api/v1/brand', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 新建用户 POST /api/rule */
+export async function updateBrand(id: number, body: API.Brand, options?: { [key: string]: any }) {
+    return request<API.Brand>(`/api/v1/brand/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 根据Id查询用户 GET /api/rule */
+export async function getBrandById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Brand>>(`/api/v1/brand/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+/** 根据Id查询用户 GET /api/rule */
+export async function deleteBrand(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Brand>>(`/api/v1/brand/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
     return request<Record<string, any>>('/api/admin/user/login', {
