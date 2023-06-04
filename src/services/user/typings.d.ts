@@ -14,6 +14,12 @@ declare namespace API {
         roles?: object[];
     };
 
+    type Resp<T> = {
+        code: number;
+        data: T;
+        message: string;
+    };
+
     type Profile = {
         id?: number;
         gender?: number;

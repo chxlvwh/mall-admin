@@ -3,23 +3,8 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, message, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useModel } from '@@/exports';
-import { addUser, deleteUser, restoreUser, user } from '@/services/user/api';
+import { addUser, deleteUser, getUserById, restoreUser, user } from '@/services/user/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
-import UpdateForm from '@/pages/TableList/components/UpdateForm';
-
-const handleUpdate = async (fields: API.CurrentUser) => {
-    const hide = message.loading('正在更新');
-    try {
-        await addUser({ ...fields });
-        hide();
-        message.success('添加成功');
-        return true;
-    } catch (error) {
-        hide();
-        message.error('添加失败，请重试!');
-        return false;
-    }
-};
 
 const UserList: React.FC = () => {
     const { initialState } = useModel('@@initialState');
@@ -117,15 +102,17 @@ const UserList: React.FC = () => {
             render: (_, record) => {
                 return (
                     <Space>
-                        <a
-                            onClick={(event) => {
+                        <Button
+                            type={'primary'}
+                            onClick={async (event) => {
                                 event.preventDefault();
-                                setCurrentRow(record);
+                                const { data: userDetail } = await getUserById(record.id);
+                                setCurrentRow(userDetail);
                                 handleModalOpen(true);
                             }}
                         >
                             编辑
-                        </a>
+                        </Button>
                     </Space>
                 );
             },

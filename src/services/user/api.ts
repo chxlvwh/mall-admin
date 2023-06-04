@@ -47,9 +47,17 @@ export async function addUser(body: API.UserForm, options?: { [key: string]: any
     });
 }
 
+/** 根据Id查询用户 GET /api/rule */
+export async function getUserById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.CurrentUser>>(`/api/v1/admin/user/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
 /** 更新用户 POST /api/rule */
 export async function updateUser(id: number, body: API.UserForm, options?: { [key: string]: any }) {
-    return request<API.CurrentUser>(`/api/v1/admin/user/${id}`, {
+    return request<API.Resp<API.CurrentUser>>(`/api/v1/admin/user/${id}`, {
         method: 'PUT',
         data: body,
         ...(options || {}),
@@ -60,7 +68,7 @@ export async function updateUser(id: number, body: API.UserForm, options?: { [ke
  * 删除用户
  */
 export async function deleteUser(id: number, options?: { [key: string]: any }) {
-    return request<API.CurrentUser>(`/api/v1/admin/user/${id}`, {
+    return request<API.Resp<API.CurrentUser>>(`/api/v1/admin/user/${id}`, {
         method: 'DELETE',
         ...(options || {}),
     });
@@ -70,7 +78,7 @@ export async function deleteUser(id: number, options?: { [key: string]: any }) {
  * 恢复用户
  */
 export async function restoreUser(id: number, options?: { [key: string]: any }) {
-    return request<API.CurrentUser>(`/api/v1/admin/user/${id}/restore`, {
+    return request<API.Resp<API.CurrentUser>>(`/api/v1/admin/user/${id}/restore`, {
         method: 'PUT',
         ...(options || {}),
     });
