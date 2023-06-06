@@ -23,6 +23,20 @@ declare namespace API {
         desc: string;
     } & CommonDate;
 
+    type Category = {
+        id: number;
+        parentId: number;
+        name: string;
+        desc: string;
+        icon: string;
+        order: number;
+        isActive: boolean;
+        products: Product[];
+        parent: Category;
+        children: Category[];
+        deletedAt: Date;
+    } & CommonDate;
+
     type Resp<T> = {
         code: number;
         data: T;

@@ -85,7 +85,7 @@ export async function restoreUser(id: number, options?: { [key: string]: any }) 
 }
 
 export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
-    const result = await request<API.RestList<API.Brand>>('/api/v1/brand/list', {
+    const result = await request<API.RestList<API.Category>>('/api/v1/brand/list', {
         method: 'GET',
         params,
         ...(options || {}),
@@ -126,6 +126,48 @@ export async function getBrandById(id: number, options?: { [key: string]: any })
 /** 根据Id查询用户 GET /api/rule */
 export async function deleteBrand(id: number, options?: { [key: string]: any }) {
     return request<API.Resp<API.Brand>>(`/api/v1/brand/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+export async function getCategoryList(
+    params: { current?: number; pageSize?: number },
+    options?: { [key: string]: any },
+) {
+    const result = await request<API.RestList<API.Category>>('/api/v1/product-category/list', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+/** 新建用户 POST /api/rule */
+export async function addCategory(body: API.Category, options?: { [key: string]: any }) {
+    return request<API.Brand>('/api/v1/product-category', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 新建用户 POST /api/rule */
+export async function updateCategory(id: number, body: API.Brand, options?: { [key: string]: any }) {
+    return request<API.Brand>(`/api/v1/product-category/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 根据Id查询用户 GET /api/rule */
+export async function deleteCategory(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Brand>>(`/api/v1/product-category/${id}`, {
         method: 'DELETE',
         ...(options || {}),
     });

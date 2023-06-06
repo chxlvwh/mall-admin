@@ -57,6 +57,11 @@ export default [
         path: '/product',
         routes: [
             {
+                name: 'category-list',
+                path: '/product/category',
+                component: './Product/CategoryList',
+            },
+            {
                 name: 'brand-list',
                 path: '/product/brand',
                 component: './Product/BrandList',
