@@ -3,8 +3,8 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteBrand, getBrandById, getBrandList, getCategoryList } from '@/services/mall-service/api';
-import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
+import { deleteCategory, getCategoryById, getCategoryList } from '@/services/mall-service/api';
+import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 
 const CategoryList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
@@ -35,6 +35,16 @@ const CategoryList: React.FC = () => {
                     </a>
                 );
             },
+        },
+        {
+            title: '排序',
+            dataIndex: 'order',
+            search: false,
+        },
+        {
+            title: '分类描述',
+            dataIndex: 'desc',
+            search: false,
         },
         {
             title: '添加时间',
@@ -73,8 +83,8 @@ const CategoryList: React.FC = () => {
                             type={'primary'}
                             onClick={async (event) => {
                                 event.preventDefault();
-                                const { data: brandDetail } = await getBrandById(record.id);
-                                setCurrentRow(brandDetail);
+                                const { data: categoryDetail } = await getCategoryById(record.id);
+                                setCurrentRow(categoryDetail);
                                 handleModalOpen(true);
                             }}
                         >
@@ -87,9 +97,9 @@ const CategoryList: React.FC = () => {
                                 event.preventDefault();
                                 Modal.confirm({
                                     title: '确认',
-                                    content: `确定要删除${record.name}品牌吗？`,
+                                    content: `确定要删除${record.name}分类吗？`,
                                     onOk: () => {
-                                        deleteBrand(record.id);
+                                        deleteCategory(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
@@ -136,7 +146,7 @@ const CategoryList: React.FC = () => {
                 request={getCategoryList}
                 columns={columns}
             />
-            <CreateBrandModal
+            <CreateCategoryModal
                 createModalOpen={createModalOpen}
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}

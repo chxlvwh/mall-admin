@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
 import { addBrand, updateBrand } from '@/services/mall-service/api';

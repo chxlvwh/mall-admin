@@ -147,6 +147,13 @@ export async function getCategoryList(
     };
 }
 
+export async function getCategoryById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Category>>(`/api/v1/product-category/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
 /** 新建用户 POST /api/rule */
 export async function addCategory(body: API.Category, options?: { [key: string]: any }) {
     return request<API.Brand>('/api/v1/product-category', {
