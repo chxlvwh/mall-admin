@@ -140,7 +140,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             colorTextAppListIconHover: '#fff',
             colorTextAppListIcon: '#dfdfdf',
             sider: {
-                colorMenuBackground: '#fff',
+                colorMenuBackground: 'rgba(0,0,0,0)',
                 colorMenuItemDivider: '#dfdfdf',
                 colorTextMenu: '#595959',
                 colorTextMenuSelected: 'rgba(42,122,251,1)',
