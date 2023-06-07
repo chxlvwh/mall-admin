@@ -5,6 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
 import { deleteCategory, getCategoryById, getCategoryList, updateCategory } from '@/services/mall-service/api';
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
+import { searchProps } from '@/utils/consts';
 
 const CategoryList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
@@ -122,20 +123,11 @@ const CategoryList: React.FC = () => {
     return (
         <PageContainer>
             <ProTable<API.Category, API.PageParams>
+                cardBordered={true}
                 headerTitle={'用户列表'}
                 actionRef={actionRef}
                 rowKey="id"
-                search={{
-                    showHiddenNum: true,
-                    span: {
-                        xs: 24,
-                        sm: 24,
-                        md: 12,
-                        lg: 12,
-                        xl: 8,
-                        xxl: 6,
-                    },
-                }}
+                search={searchProps}
                 toolBarRender={() => [
                     <Button
                         type="primary"

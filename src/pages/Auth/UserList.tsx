@@ -5,6 +5,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useModel } from '@@/exports';
 import { deleteUser, getUserById, restoreUser, user } from '@/services/mall-service/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
+import { DragSortTable } from '@ant-design/pro-table';
+import { searchProps } from '@/utils/consts';
 
 const UserList: React.FC = () => {
     const { initialState } = useModel('@@initialState');
@@ -119,22 +121,14 @@ const UserList: React.FC = () => {
         },
     ];
     return (
-        <PageContainer>
+        <PageContainer fixedHeader={true}>
             <ProTable<API.CurrentUser, API.PageParams>
+                cardBordered={true}
+                revalidateOnFocus={false}
                 headerTitle={'用户列表'}
                 actionRef={actionRef}
                 rowKey="id"
-                search={{
-                    showHiddenNum: true,
-                    span: {
-                        xs: 24,
-                        sm: 24,
-                        md: 12,
-                        lg: 12,
-                        xl: 8,
-                        xxl: 6,
-                    },
-                }}
+                search={searchProps}
                 toolBarRender={() => [
                     <Button
                         type="primary"
