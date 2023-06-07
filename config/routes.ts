@@ -23,10 +23,10 @@ export default [
         ],
     },
     {
-        path: '/welcome',
-        name: 'welcome',
-        icon: 'smile',
-        component: './Welcome',
+        path: '/home',
+        name: 'home',
+        icon: 'home',
+        component: './Home',
     },
     {
         path: '/admin',
@@ -44,12 +44,6 @@ export default [
                 component: './Admin',
             },
         ],
-    },
-    {
-        name: 'list.table-list',
-        icon: 'table',
-        path: '/list',
-        component: './TableList',
     },
     {
         name: 'product',

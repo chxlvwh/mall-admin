@@ -2,7 +2,7 @@
 import { Question, SelectLang } from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -54,6 +54,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
     return {
+        siderWidth: 200,
         actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
         avatarProps: {
             src: initialState?.currentUser?.profile?.avatar || '/icons/default-avatar.jpg',
@@ -106,7 +107,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         // unAccessible: <div>unAccessible</div>,
         // 增加一个 loading 的状态
         childrenRender: (children) => {
-            // if (initialState?.loading) return <PageLoading />;
+            if (initialState?.loading) return <PageLoading />;
             return (
                 <>
                     <ConfigProvider theme={{ token: { borderRadius: 1 } }}>{children}</ConfigProvider>
@@ -125,6 +126,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             );
         },
         ...initialState?.settings,
+        token: {
+            header: {
+                colorBgHeader: '#292f33',
+                colorHeaderTitle: '#fff',
+                colorTextMenu: '#dfdfdf',
+                colorTextMenuSecondary: '#dfdfdf',
+                colorTextMenuSelected: '#fff',
+                colorBgMenuItemSelected: '#22272b',
+                colorTextMenuActive: 'rgba(255,255,255,0.85)',
+                colorTextRightActionsItem: '#dfdfdf',
+            },
+            colorTextAppListIconHover: '#fff',
+            colorTextAppListIcon: '#dfdfdf',
+            sider: {
+                colorMenuBackground: '#fff',
+                colorMenuItemDivider: '#dfdfdf',
+                colorTextMenu: '#595959',
+                colorTextMenuSelected: 'rgba(42,122,251,1)',
+                colorBgMenuItemSelected: 'rgba(230,243,254,1)',
+            },
+        },
     };
 };
 
