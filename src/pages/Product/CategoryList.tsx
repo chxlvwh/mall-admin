@@ -3,7 +3,7 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteCategory, getCategoryById, getCategoryList } from '@/services/mall-service/api';
+import { deleteCategory, getCategoryById, getCategoryList, updateCategory } from '@/services/mall-service/api';
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 
 const CategoryList: React.FC = () => {
@@ -14,6 +14,16 @@ const CategoryList: React.FC = () => {
         [1, '是'],
         [0, '否'],
     ]);
+    const switchActive = async (isActive: boolean, detail: API.Category) => {
+        Modal.confirm({
+            title: '确认',
+            content: isActive ? `确定激活【${detail.name}】分类吗？` : `确定冻结【${detail.name}】分类吗？`,
+            onOk: async () => {
+                await updateCategory(detail.id, { ...detail, isActive });
+                if (actionRef.current) actionRef.current?.reload();
+            },
+        });
+    };
 
     const columns: ProColumns<API.Category>[] = [
         {
@@ -64,12 +74,7 @@ const CategoryList: React.FC = () => {
             valueType: 'select',
             valueEnum,
             render: (_, record) => {
-                return (
-                    <Switch
-                        checked={record.isActive}
-                        // onChange={(val) => switchOpen(val, record.id)}
-                    />
-                );
+                return <Switch checked={record.isActive} onChange={(val) => switchActive(val, record)} />;
             },
         },
         {

@@ -164,7 +164,7 @@ export async function addCategory(body: API.Category, options?: { [key: string]:
 }
 
 /** 新建用户 POST /api/rule */
-export async function updateCategory(id: number, body: API.Brand, options?: { [key: string]: any }) {
+export async function updateCategory(id: number, body: API.Category, options?: { [key: string]: any }) {
     return request<API.Brand>(`/api/v1/product-category/${id}`, {
         method: 'PUT',
         data: body,
