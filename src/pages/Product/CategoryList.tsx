@@ -3,17 +3,29 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteCategory, getCategoryById, getCategoryList, updateCategory } from '@/services/mall-service/api';
+import {
+    deleteCategory,
+    getCategoryAncestorTree,
+    getCategoryById,
+    getCategoryList,
+    updateCategory,
+} from '@/services/mall-service/api';
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import { searchProps } from '@/utils/consts';
 import { history } from '@umijs/max';
-import { useParams } from 'react-router';
+import { Route, useParams } from 'react-router';
 
 const CategoryList: React.FC = () => {
     const [parentId, setParentId] = useState<number>();
+    const [parentList, setParentList] = useState<API.Category[]>([]);
     const routerParams = useParams();
     useEffect(() => {
         setParentId(Number(routerParams.id) || undefined);
+        if (routerParams.id) {
+            getCategoryAncestorTree(Number(routerParams.id)).then((res) => {
+                setParentList(res.data);
+            });
+        }
     }, [routerParams.id]);
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const [currentRow, setCurrentRow] = useState<API.Category>();
@@ -151,7 +163,53 @@ const CategoryList: React.FC = () => {
         <PageContainer>
             <ProTable<API.Category, API.PageParams & Partial<API.Category>>
                 cardBordered={true}
-                headerTitle={'商品分类列表'}
+                headerTitle={
+                    <div>
+                        <span className={'mr-10'}>商品分类列表</span>
+                        <span style={{ fontSize: '14px' }}>
+                            {routerParams.id && (
+                                <a
+                                    href=""
+                                    key={0}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        history.push(`/product/category`);
+                                    }}
+                                >
+                                    {'全部'} &gt;{' '}
+                                </a>
+                            )}
+                            {parentList.map((it, index) => {
+                                if (index === parentList.length - 1) {
+                                    return (
+                                        <a
+                                            href=""
+                                            key={it.id}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                history.push(`/product/category/${it.id}`);
+                                            }}
+                                        >
+                                            {it.name}
+                                        </a>
+                                    );
+                                }
+                                return (
+                                    <a
+                                        href=""
+                                        key={it.id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            history.push(`/product/category/${it.id}`);
+                                        }}
+                                    >
+                                        {it.name} &gt;{' '}
+                                    </a>
+                                );
+                            })}
+                        </span>
+                    </div>
+                }
                 actionRef={actionRef}
                 rowKey="id"
                 search={searchProps}

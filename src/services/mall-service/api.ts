@@ -138,6 +138,13 @@ export async function getCategoryTree(options?: { [key: string]: any }) {
     });
 }
 
+export async function getCategoryAncestorTree(id: number, options?: { [key: string]: any }) {
+    return await request<API.Resp<API.Category[]>>(`/api/v1/product-category/tree/ancestors/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
 export async function getCategoryList(
     params: { current?: number; pageSize?: number },
     options?: { [key: string]: any },
