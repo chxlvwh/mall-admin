@@ -94,7 +94,7 @@ const BrandList: React.FC = () => {
     return (
         <PageContainer>
             <ProTable<API.Brand, API.PageParams>
-                headerTitle={'用户列表'}
+                headerTitle={'品牌列表'}
                 actionRef={actionRef}
                 rowKey="id"
                 search={searchProps}

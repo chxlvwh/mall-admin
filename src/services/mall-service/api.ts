@@ -131,6 +131,13 @@ export async function deleteBrand(id: number, options?: { [key: string]: any }) 
     });
 }
 
+export async function getCategoryTree(options?: { [key: string]: any }) {
+    return await request<API.Resp<API.Category[]>>('/api/v1/product-category/tree', {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
 export async function getCategoryList(
     params: { current?: number; pageSize?: number },
     options?: { [key: string]: any },

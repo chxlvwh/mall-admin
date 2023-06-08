@@ -56,6 +56,10 @@ export default [
                 component: './Product/CategoryList',
             },
             {
+                path: '/product/category/:id',
+                component: './Product/CategoryList',
+            },
+            {
                 name: 'brand-list',
                 path: '/product/brand',
                 component: './Product/BrandList',
@@ -76,7 +80,7 @@ export default [
     },
     {
         path: '/',
-        redirect: '/welcome',
+        redirect: '/home',
     },
     {
         path: '*',

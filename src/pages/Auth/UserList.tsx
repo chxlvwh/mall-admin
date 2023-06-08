@@ -5,7 +5,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage, useModel } from '@@/exports';
 import { deleteUser, getUserById, restoreUser, user } from '@/services/mall-service/api';
 import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
-import { DragSortTable } from '@ant-design/pro-table';
 import { searchProps } from '@/utils/consts';
 
 const UserList: React.FC = () => {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ActionType, ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { ProForm, ProFormDigit } from '@ant-design/pro-form/lib';
+import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { ProForm, ProFormCascader, ProFormDigit } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
-import { addCategory, getCategoryList, updateCategory } from '@/services/mall-service/api';
-import { ProSchemaValueEnumMap } from '@ant-design/pro-utils/lib';
+import { addCategory, getCategoryTree, updateCategory } from '@/services/mall-service/api';
 
 interface CreateCategoryModalProps {
     createModalOpen: boolean;
@@ -13,7 +12,11 @@ interface CreateCategoryModalProps {
 }
 
 const handleAdd = async (fields: API.Category) => {
-    console.log('[CreateUserModal.tsx:] ', fields);
+    if (Array.isArray(fields.parentId) && fields.parentId.length) {
+        fields.parentId = fields.parentId[fields.parentId.length - 1];
+    } else {
+        fields.parentId = 0;
+    }
     const hide = message.loading('正在添加');
     try {
         await addCategory({ ...fields });
@@ -27,6 +30,11 @@ const handleAdd = async (fields: API.Category) => {
 };
 
 const handleUpdate = async (id: number, fields: API.Category) => {
+    if (Array.isArray(fields.parentId) && fields.parentId.length) {
+        fields.parentId = fields.parentId[fields.parentId.length - 1];
+    } else {
+        fields.parentId = 0;
+    }
     const hide = message.loading('正在更新');
     try {
         await updateCategory(id, { ...fields });
@@ -41,23 +49,18 @@ const handleUpdate = async (id: number, fields: API.Category) => {
 
 const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateCategoryModalProps) => {
     const isEdit = currentRow && !!currentRow.id;
-    const [topCategories, setTopCategories] = useState<ProSchemaValueEnumMap>();
+    const [categoryTree, setCategoryTree] = useState<API.Category[]>();
     const getALLCategories = () => {
-        getCategoryList({ current: 1, pageSize: 100 }).then((res) => {
-            const newTopCategories: ProSchemaValueEnumMap = new Map();
-            newTopCategories.set(0, { text: '无' });
-            if (res.data) {
-                res.data.forEach((item) => {
-                    newTopCategories.set(item.id, { text: item.name });
-                    // newTopCategories[item.id] = { text: item.name };
-                });
-                setTopCategories(newTopCategories);
-            }
+        getCategoryTree().then((res) => {
+            const topCategory = [{ name: '无', id: 0 }];
+            setCategoryTree(topCategory.concat(res.data));
         });
     };
     useEffect(() => {
-        getALLCategories();
-    }, []);
+        if (createModalOpen) {
+            getALLCategories();
+        }
+    }, [createModalOpen]);
     return (
         <ModalForm
             title={isEdit ? '更新分类' : '创建分类'}
@@ -94,16 +97,21 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
                     width="md"
                     name="name"
                 />
-                <ProFormSelect
+                <ProFormCascader
                     initialValue={currentRow?.parent?.name}
                     name="parentId"
                     label="上级分类"
                     width={'md'}
-                    valueEnum={topCategories}
-                    placeholder="请选择一个父级分类"
+                    fieldProps={{
+                        options: categoryTree,
+                        fieldNames: { label: 'name', value: 'id' },
+                        showSearch: true,
+                        changeOnSelect: true,
+                    }}
+                    placeholder="请选择一个父级分类，创建一级分类请选无"
                 />
                 <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
-                <ProFormTextArea initialValue={currentRow?.desc} label="品牌描述" width="md" name="desc" />
+                <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="md" name="desc" />
             </ProForm.Group>
         </ModalForm>
     );

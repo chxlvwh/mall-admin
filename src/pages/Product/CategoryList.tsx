@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Modal, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -6,8 +6,15 @@ import { FormattedMessage } from '@@/exports';
 import { deleteCategory, getCategoryById, getCategoryList, updateCategory } from '@/services/mall-service/api';
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import { searchProps } from '@/utils/consts';
+import { history } from '@umijs/max';
+import { useParams } from 'react-router';
 
 const CategoryList: React.FC = () => {
+    const [parentId, setParentId] = useState<number>();
+    const routerParams = useParams();
+    useEffect(() => {
+        setParentId(Number(routerParams.id) || undefined);
+    }, [routerParams.id]);
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const [currentRow, setCurrentRow] = useState<API.Category>();
     const actionRef = useRef<ActionType>();
@@ -20,7 +27,7 @@ const CategoryList: React.FC = () => {
             title: '确认',
             content: isActive ? `确定激活【${detail.name}】分类吗？` : `确定冻结【${detail.name}】分类吗？`,
             onOk: async () => {
-                await updateCategory(detail.id, { ...detail, isActive });
+                await updateCategory(detail.id, { ...detail, parentId: detail?.parent?.id, isActive });
                 if (actionRef.current) actionRef.current?.reload();
             },
         });
@@ -79,6 +86,26 @@ const CategoryList: React.FC = () => {
             },
         },
         {
+            title: '设置',
+            valueType: 'select',
+            search: false,
+            render: (_, record) => {
+                return (
+                    <div>
+                        <Button
+                            disabled={!record?.children?.length}
+                            onClick={() => {
+                                history.push(`/product/category/${record.id}`);
+                                setParentId(record.id);
+                            }}
+                        >
+                            查看下级
+                        </Button>
+                    </div>
+                );
+            },
+        },
+        {
             title: '操作',
             dataIndex: 'action',
             search: false,
@@ -103,9 +130,9 @@ const CategoryList: React.FC = () => {
                                 event.preventDefault();
                                 Modal.confirm({
                                     title: '确认',
-                                    content: `确定要删除${record.name}分类吗？`,
-                                    onOk: () => {
-                                        deleteCategory(record.id);
+                                    content: `确定要删除【${record.name}】分类吗？`,
+                                    onOk: async () => {
+                                        await deleteCategory(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
@@ -122,9 +149,9 @@ const CategoryList: React.FC = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.Category, API.PageParams>
+            <ProTable<API.Category, API.PageParams & Partial<API.Category>>
                 cardBordered={true}
-                headerTitle={'用户列表'}
+                headerTitle={'商品分类列表'}
                 actionRef={actionRef}
                 rowKey="id"
                 search={searchProps}
@@ -141,7 +168,12 @@ const CategoryList: React.FC = () => {
                     </Button>,
                 ]}
                 request={getCategoryList}
+                params={{ current: 1, pageSize: 10, parentId: parentId }}
                 columns={columns}
+                expandable={{
+                    expandedRowRender: () => <div></div>,
+                    rowExpandable: () => false,
+                }}
             />
             <CreateCategoryModal
                 createModalOpen={createModalOpen}

@@ -83,6 +83,9 @@ export const errorConfig: RequestConfig = {
                     if (typeof error.response.data.error.message === 'string') {
                         message.error(error.response.data.error.message);
                     }
+                    if (typeof error.response.data.error === 'string') {
+                        message.error(error.response.data.error);
+                    }
                 }
             } else if (error.request) {
                 // 请求已经成功发起，但没有收到响应

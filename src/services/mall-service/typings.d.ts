@@ -25,16 +25,16 @@ declare namespace API {
 
     type Category = {
         id: number;
-        parentId: number;
+        parentId?: number;
         name: string;
-        desc: string;
-        icon: string;
-        order: number;
-        isActive: boolean;
-        products: Product[];
-        parent: Category;
-        children: Category[];
-        deletedAt: Date;
+        desc?: string;
+        icon?: string;
+        order?: number;
+        isActive?: boolean;
+        products?: Product[];
+        parent?: Category;
+        children?: Category[];
+        deletedAt?: Date;
     } & CommonDate;
 
     type Resp<T> = {

@@ -30,7 +30,7 @@ export async function getInitialState(): Promise<{
             });
             return msg.data;
         } catch (error) {
-            history.push(loginPath);
+            console.log('[app.tsx:] ', error);
         }
         return undefined;
     };
@@ -140,7 +140,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             colorTextAppListIconHover: '#fff',
             colorTextAppListIcon: '#dfdfdf',
             sider: {
-                colorMenuBackground: 'rgba(0,0,0,0)',
+                // colorMenuBackground: 'rgba(0,0,0,0)',
+                colorMenuBackground: '#fff',
                 colorMenuItemDivider: '#dfdfdf',
                 colorTextMenu: '#595959',
                 colorTextMenuSelected: 'rgba(42,122,251,1)',
