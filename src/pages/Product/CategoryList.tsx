@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Space, Switch } from 'antd';
+import { Button, Modal, Popover, Space, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
 import {
@@ -54,11 +54,14 @@ const CategoryList: React.FC = () => {
         {
             title: '分类名称',
             dataIndex: 'name',
-            render: (dom, entity) => {
+            render: (dom, record) => {
                 return (
                     <a
-                        onClick={() => {
-                            setCurrentRow(entity);
+                        onClick={async (event) => {
+                            event.preventDefault();
+                            const { data: categoryDetail } = await getCategoryById(record.id);
+                            setCurrentRow(categoryDetail);
+                            handleModalOpen(true);
                         }}
                     >
                         {dom}
@@ -103,7 +106,7 @@ const CategoryList: React.FC = () => {
             search: false,
             render: (_, record) => {
                 return (
-                    <div>
+                    <Space>
                         <Button
                             disabled={!record?.children?.length}
                             onClick={() => {
@@ -113,7 +116,12 @@ const CategoryList: React.FC = () => {
                         >
                             查看下级
                         </Button>
-                    </div>
+                        <Popover content={'最后一级类目才能配置属性'} title="提示：">
+                            <Button disabled={!!record?.children?.length} onClick={() => {}}>
+                                属性配置
+                            </Button>
+                        </Popover>
+                    </Space>
                 );
             },
         },
