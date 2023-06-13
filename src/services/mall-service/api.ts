@@ -84,8 +84,8 @@ export async function restoreUser(id: number, options?: { [key: string]: any }) 
     });
 }
 
-export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
-    const result = await request<API.RestList<API.Category>>('/api/v1/brand/list', {
+export async function getAttrList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Attribute>>('/api/v1/product-attribute/list', {
         method: 'GET',
         params,
         ...(options || {}),
@@ -97,7 +97,49 @@ export async function getBrandList(params: { current?: number; pageSize?: number
     };
 }
 
-/** 新建用户 POST /api/rule */
+export async function addAttr(body: API.Attribute, options?: { [key: string]: any }) {
+    return request<API.Attribute>('/api/v1/product-attribute', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+export async function updateAttr(id: number, body: API.Attribute, options?: { [key: string]: any }) {
+    return request<API.Attribute>(`/api/v1/product-attribute/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+export async function getAttrById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Attribute>>(`/api/v1/product-attribute/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+export async function deleteAttr(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Attribute>>(`/api/v1/product-attribute/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Attribute>>('/api/v1/brand/list', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
 export async function addBrand(body: API.Brand, options?: { [key: string]: any }) {
     return request<API.Brand>('/api/v1/brand', {
         method: 'POST',
@@ -106,7 +148,6 @@ export async function addBrand(body: API.Brand, options?: { [key: string]: any }
     });
 }
 
-/** 新建用户 POST /api/rule */
 export async function updateBrand(id: number, body: API.Brand, options?: { [key: string]: any }) {
     return request<API.Brand>(`/api/v1/brand/${id}`, {
         method: 'PUT',
@@ -115,7 +156,6 @@ export async function updateBrand(id: number, body: API.Brand, options?: { [key:
     });
 }
 
-/** 根据Id查询用户 GET /api/rule */
 export async function getBrandById(id: number, options?: { [key: string]: any }) {
     return request<API.Resp<API.Brand>>(`/api/v1/brand/${id}`, {
         method: 'GET',
@@ -123,7 +163,6 @@ export async function getBrandById(id: number, options?: { [key: string]: any })
     });
 }
 
-/** 根据Id查询用户 GET /api/rule */
 export async function deleteBrand(id: number, options?: { [key: string]: any }) {
     return request<API.Resp<API.Brand>>(`/api/v1/brand/${id}`, {
         method: 'DELETE',

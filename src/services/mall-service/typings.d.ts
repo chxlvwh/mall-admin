@@ -25,8 +25,8 @@ declare namespace API {
 
     type Category = {
         id: number;
-        parentId?: number;
         name: string;
+        parentId?: number;
         desc?: string;
         icon?: string;
         order?: number;
@@ -34,6 +34,18 @@ declare namespace API {
         products?: Product[];
         parent?: Category;
         children?: Category[];
+        deletedAt?: Date;
+    } & CommonDate;
+
+    type Attribute = {
+        id: number;
+        name: string;
+        entryMethod: number;
+        isRequired: boolean;
+        canSearch: boolean;
+        type: number;
+        value: string;
+        productCategory: ProductCategory[];
         deletedAt?: Date;
     } & CommonDate;
 

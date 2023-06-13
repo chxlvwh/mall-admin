@@ -60,6 +60,11 @@ export default [
                 component: './Product/CategoryList',
             },
             {
+                name: 'attribute-list',
+                path: '/product/attribute',
+                component: './Product/AttributeList',
+            },
+            {
                 name: 'brand-list',
                 path: '/product/brand',
                 component: './Product/BrandList',

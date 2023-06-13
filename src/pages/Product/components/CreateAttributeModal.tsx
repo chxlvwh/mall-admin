@@ -4,15 +4,14 @@ import { ProForm } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
 import { addBrand, updateBrand } from '@/services/mall-service/api';
 
-interface CreateBrandModalProps {
+interface CreateAttrModalProps {
     createModalOpen: boolean;
     handleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     actionRef: React.MutableRefObject<ActionType | undefined>;
-    currentRow?: API.Brand;
+    currentRow?: API.Attribute;
 }
 
-const handleAdd = async (fields: API.Brand) => {
-    console.log('[CreateUserModal.tsx:] ', fields);
+const handleAdd = async (fields: API.Attribute) => {
     const hide = message.loading('正在添加');
     try {
         await addBrand({ ...fields });
@@ -26,7 +25,7 @@ const handleAdd = async (fields: API.Brand) => {
     }
 };
 
-const handleUpdate = async (id: number, fields: API.Brand) => {
+const handleUpdate = async (id: number, fields: API.Attribute) => {
     console.log('[CreateUserModal.tsx:] ', fields);
     const hide = message.loading('正在更新');
     try {
@@ -41,12 +40,12 @@ const handleUpdate = async (id: number, fields: API.Brand) => {
     }
 };
 
-const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateBrandModalProps) => {
+const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateAttrModalProps) => {
     const isEdit = currentRow && !!currentRow.id;
     console.log('[isEdit:] ', isEdit);
     return (
         <ModalForm
-            title={isEdit ? '更新品牌' : '创建品牌'}
+            title={isEdit ? '更新用户' : '创建用户'}
             modalProps={{ destroyOnClose: true }}
             open={createModalOpen}
             onOpenChange={handleModalOpen}
@@ -54,9 +53,9 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                 console.log('[CreateBrandModal.tsx:] ', value);
                 let success = false;
                 if (!isEdit) {
-                    success = await handleAdd(value as API.Brand);
+                    success = await handleAdd(value as API.Attribute);
                 } else {
-                    success = await handleUpdate(currentRow.id, value as API.Brand);
+                    success = await handleUpdate(currentRow.id, value as API.Attribute);
                 }
                 if (success) {
                     handleModalOpen(false);
