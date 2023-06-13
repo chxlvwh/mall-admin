@@ -63,6 +63,8 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
     }, [createModalOpen]);
     return (
         <ModalForm
+            layout={'horizontal'}
+            labelCol={{ span: 5 }}
             title={isEdit ? '更新分类' : '创建分类'}
             modalProps={{ destroyOnClose: true }}
             open={createModalOpen}
@@ -84,35 +86,33 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
                 }
             }}
         >
-            <ProForm.Group>
-                <ProFormText
-                    initialValue={currentRow?.name}
-                    label="分类名称"
-                    rules={[
-                        {
-                            required: true,
-                            message: '分类名称不能为空',
-                        },
-                    ]}
-                    width="md"
-                    name="name"
-                />
-                <ProFormCascader
-                    initialValue={currentRow?.parent?.name}
-                    name="parentId"
-                    label="上级分类"
-                    width={'md'}
-                    fieldProps={{
-                        options: categoryTree,
-                        fieldNames: { label: 'name', value: 'id' },
-                        showSearch: true,
-                        changeOnSelect: true,
-                    }}
-                    placeholder="请选择一个父级分类，创建一级分类请选无"
-                />
-                <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
-                <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="xl" name="desc" />
-            </ProForm.Group>
+            <ProFormText
+                initialValue={currentRow?.name}
+                label="分类名称"
+                rules={[
+                    {
+                        required: true,
+                        message: '分类名称不能为空',
+                    },
+                ]}
+                width="md"
+                name="name"
+            />
+            <ProFormCascader
+                initialValue={currentRow?.parent?.name}
+                name="parentId"
+                label="上级分类"
+                width={'md'}
+                fieldProps={{
+                    options: categoryTree,
+                    fieldNames: { label: 'name', value: 'id' },
+                    showSearch: true,
+                    changeOnSelect: true,
+                }}
+                placeholder="请选择一个父级分类，创建一级分类请选无"
+            />
+            <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
+            <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="lg" name="desc" />
         </ModalForm>
     );
 };

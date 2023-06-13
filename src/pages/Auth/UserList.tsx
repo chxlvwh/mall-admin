@@ -43,11 +43,14 @@ const UserList: React.FC = () => {
         {
             title: '账号',
             dataIndex: 'username',
-            render: (dom, entity) => {
+            render: (dom, record) => {
                 return (
                     <a
-                        onClick={() => {
-                            setCurrentRow(entity);
+                        onClick={async (event) => {
+                            event.preventDefault();
+                            const { data: detail } = await getUserById(record.id);
+                            setCurrentRow(detail);
+                            handleModalOpen(true);
                         }}
                     >
                         {dom}

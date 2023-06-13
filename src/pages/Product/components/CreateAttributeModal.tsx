@@ -182,7 +182,7 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                 width={'md'}
                 name="type"
             />
-            <ProFormTextArea initialValue={currentRow?.desc} label="属性描述" width="xl" name="desc" />
+            <ProFormTextArea initialValue={currentRow?.desc} label="属性描述" width="lg" name="desc" />
         </ModalForm>
     );
 };

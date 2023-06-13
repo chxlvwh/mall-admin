@@ -46,6 +46,8 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
     console.log('[isEdit:] ', isEdit);
     return (
         <ModalForm
+            layout={'horizontal'}
+            labelCol={{ span: 5 }}
             title={isEdit ? '更新品牌' : '创建品牌'}
             modalProps={{ destroyOnClose: true }}
             open={createModalOpen}
@@ -66,21 +68,19 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                 }
             }}
         >
-            <ProForm.Group>
-                <ProFormText
-                    initialValue={currentRow?.name}
-                    label="品牌名称"
-                    rules={[
-                        {
-                            required: true,
-                            message: '品牌名称不能为空',
-                        },
-                    ]}
-                    width="md"
-                    name="name"
-                />
-                <ProFormTextArea initialValue={currentRow?.desc} label="品牌描述" width="xl" name="desc" />
-            </ProForm.Group>
+            <ProFormText
+                initialValue={currentRow?.name}
+                label="品牌名称"
+                rules={[
+                    {
+                        required: true,
+                        message: '品牌名称不能为空',
+                    },
+                ]}
+                width="md"
+                name="name"
+            />
+            <ProFormTextArea initialValue={currentRow?.desc} label="品牌描述" width="lg" name="desc" />
         </ModalForm>
     );
 };

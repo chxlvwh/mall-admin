@@ -3,7 +3,7 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, Modal, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteBrand, getBrandById, getBrandList } from '@/services/mall-service/api';
+import { deleteBrand, getAttrById, getBrandById, getBrandList } from '@/services/mall-service/api';
 import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
 import { searchProps } from '@/utils/consts';
 
@@ -20,11 +20,14 @@ const BrandList: React.FC = () => {
         {
             title: '品牌名称',
             dataIndex: 'name',
-            render: (dom, entity) => {
+            render: (dom, record) => {
                 return (
                     <a
-                        onClick={() => {
-                            setCurrentRow(entity);
+                        onClick={async (event) => {
+                            event.preventDefault();
+                            const { data: detail } = await getBrandById(record.id);
+                            setCurrentRow(detail);
+                            handleModalOpen(true);
                         }}
                     >
                         {dom}
