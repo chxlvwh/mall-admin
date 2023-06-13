@@ -20,7 +20,6 @@ const AttrMgt: React.FC<AttrMgtProps> = ({ drawerVisit, setDrawerVisit, currentR
                 title={`属性配置 (${currentRow?.name})`}
                 open={drawerVisit}
                 onFinish={async (value) => {
-                    console.log('[value:] ', value);
                     await updateCategoryAttr(currentRow?.id as number, {
                         attributeIds: [...value.baseType, ...value.extendType],
                     });
@@ -33,15 +32,11 @@ const AttrMgt: React.FC<AttrMgtProps> = ({ drawerVisit, setDrawerVisit, currentR
                         fieldProps={{
                             showSearch: true,
                             mode: 'multiple',
-                            onChange: (value) => {
-                                console.log('[value:] ', value);
-                            },
                         }}
                         initialValue={currentRow?.productAttributes?.filter((it) => it.type === 1).map((it) => it.id)}
                         label="基本属性"
                         width={'md'}
                         debounceTime={500}
-                        params={{}}
                         name="baseType"
                         request={async (params) => {
                             const { data: list } = await getAttrList({
