@@ -40,6 +40,7 @@ declare namespace API {
     type Attribute = {
         id: number;
         name: string;
+        desc?: string;
         entryMethod: number;
         isRequired: boolean;
         canSearch: boolean;

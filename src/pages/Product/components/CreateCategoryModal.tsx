@@ -111,7 +111,7 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
                     placeholder="请选择一个父级分类，创建一级分类请选无"
                 />
                 <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
-                <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="md" name="desc" />
+                <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="xl" name="desc" />
             </ProForm.Group>
         </ModalForm>
     );

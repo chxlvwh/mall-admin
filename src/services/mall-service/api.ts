@@ -128,7 +128,7 @@ export async function deleteAttr(id: number, options?: { [key: string]: any }) {
 }
 
 export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
-    const result = await request<API.RestList<API.Attribute>>('/api/v1/brand/list', {
+    const result = await request<API.RestList<API.Brand>>('/api/v1/brand/list', {
         method: 'GET',
         params,
         ...(options || {}),

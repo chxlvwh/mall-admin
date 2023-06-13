@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Space } from 'antd';
+import { Button, Modal, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteCategory, getAttrById, getAttrList } from '@/services/mall-service/api';
+import { deleteAttr, getAttrById, getAttrList } from '@/services/mall-service/api';
 import { searchProps } from '@/utils/consts';
-import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
 import CreateAttributeModal from '@/pages/Product/components/CreateAttributeModal';
 
 const AttributeList: React.FC = () => {
@@ -38,25 +37,64 @@ const AttributeList: React.FC = () => {
             },
         },
         {
+            title: '属性类型',
+            dataIndex: 'type',
+            valueEnum: new Map([
+                [1, '基本属性'],
+                [2, '规格参数'],
+            ]),
+            render: (_, record) => {
+                return (
+                    <span>
+                        {record.type === 1 ? <Tag color="blue">基本属性</Tag> : <Tag color="green">规格参数</Tag>}
+                    </span>
+                );
+            },
+        },
+        {
+            title: '可选属性值',
+            dataIndex: 'value',
+            search: false,
+        },
+        {
             title: '录入方式',
             dataIndex: 'entryMethod',
+            valueEnum: new Map([
+                [1, '手动录入'],
+                [2, '列表选择'],
+            ]),
             render: (_, record) => {
-                return <span>{record.entryMethod === 1 ? '手动录入' : '列表选择'}</span>;
+                return (
+                    <span>
+                        {record.entryMethod === 1 ? (
+                            <Tag color="green">手动录入</Tag>
+                        ) : (
+                            <Tag color="blue">列表选择</Tag>
+                        )}
+                    </span>
+                );
             },
         },
         {
             title: '是否必填',
             dataIndex: 'isRequired',
+            valueEnum: new Map([
+                [1, '是'],
+                [0, '否'],
+            ]),
             render: (_, record) => {
-                return <span>{record.isRequired ? '是' : '否'}</span>;
+                return <span>{record.isRequired ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
             },
         },
         {
             title: '是否可搜索',
             dataIndex: 'canSearch',
-            search: false,
+            valueEnum: new Map([
+                [1, '是'],
+                [0, '否'],
+            ]),
             render: (_, record) => {
-                return <span>{record.canSearch ? '是' : '否'}</span>;
+                return <span>{record.canSearch ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
             },
         },
         {
@@ -98,7 +136,7 @@ const AttributeList: React.FC = () => {
                                     title: '确认',
                                     content: `确定要删除【${record.name}】分类吗？`,
                                     onOk: async () => {
-                                        await deleteCategory(record.id);
+                                        await deleteAttr(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
