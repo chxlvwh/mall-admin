@@ -27,6 +27,7 @@ declare namespace API {
         id: number;
         name: string;
         parentId?: number;
+        productIds?: number[];
         desc?: string;
         icon?: string;
         order?: number;
@@ -34,6 +35,7 @@ declare namespace API {
         products?: Product[];
         parent?: Category;
         children?: Category[];
+        productAttributes?: Attribute[];
         deletedAt?: Date;
     } & CommonDate;
 

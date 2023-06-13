@@ -13,7 +13,8 @@ import {
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import { searchProps } from '@/utils/consts';
 import { history } from '@umijs/max';
-import { Route, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import AttrMgt from '@/pages/Product/components/AttrMgt';
 
 const CategoryList: React.FC = () => {
     const [parentId, setParentId] = useState<number>();
@@ -44,6 +45,8 @@ const CategoryList: React.FC = () => {
             },
         });
     };
+
+    const [drawerVisit, setDrawerVisit] = useState<boolean>(false);
 
     const columns: ProColumns<API.Category>[] = [
         {
@@ -117,7 +120,13 @@ const CategoryList: React.FC = () => {
                             查看下级
                         </Button>
                         <Popover content={'最后一级类目才能配置属性'} title="提示：">
-                            <Button disabled={!!record?.children?.length} onClick={() => {}}>
+                            <Button
+                                disabled={!!record?.children?.length}
+                                onClick={() => {
+                                    setCurrentRow(record);
+                                    setDrawerVisit(true);
+                                }}
+                            >
                                 属性配置
                             </Button>
                         </Popover>
@@ -246,6 +255,12 @@ const CategoryList: React.FC = () => {
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}
                 currentRow={currentRow}
+            />
+            <AttrMgt
+                drawerVisit={drawerVisit}
+                setDrawerVisit={setDrawerVisit}
+                currentRow={currentRow}
+                actionRef={actionRef}
             />
         </PageContainer>
     );

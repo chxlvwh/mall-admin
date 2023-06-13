@@ -84,7 +84,10 @@ export async function restoreUser(id: number, options?: { [key: string]: any }) 
     });
 }
 
-export async function getAttrList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+export async function getAttrList(
+    params: { current?: number; pageSize?: number } & Partial<API.Attribute>,
+    options?: { [key: string]: any },
+) {
     const result = await request<API.RestList<API.Attribute>>('/api/v1/product-attribute/list', {
         method: 'GET',
         params,
@@ -217,8 +220,21 @@ export async function addCategory(body: API.Category, options?: { [key: string]:
 }
 
 /** 新建用户 POST /api/rule */
-export async function updateCategory(id: number, body: API.Category, options?: { [key: string]: any }) {
+export async function updateCategory(id: number, body: Partial<API.Category>, options?: { [key: string]: any }) {
     return request<API.Brand>(`/api/v1/product-category/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 新建用户 POST /api/rule */
+export async function updateCategoryAttr(
+    id: number,
+    body: { attributeIds: number[] },
+    options?: { [key: string]: any },
+) {
+    return request<API.Brand>(`/api/v1/product-category/${id}/attributes`, {
         method: 'PUT',
         data: body,
         ...(options || {}),
