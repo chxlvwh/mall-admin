@@ -39,10 +39,10 @@ export const errorConfig: RequestConfig = {
         },
         // 错误接收及处理
         errorHandler: (error: any, opts: any) => {
+            if (error.response.status === 401) {
+                localStorage.clear();
+            }
             if (opts?.skipErrorHandler) {
-                if (error.response.status === 401) {
-                    localStorage.clear();
-                }
                 throw error;
             }
             // 我们的 errorThrower 抛出的错误。
