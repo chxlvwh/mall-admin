@@ -3,7 +3,7 @@ import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro
 import { Button, Modal, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import { deleteBrand, getAttrById, getBrandById, getBrandList } from '@/services/mall-service/api';
+import { deleteBrand, getBrandById, getBrandList } from '@/services/mall-service/api';
 import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
 import { searchProps } from '@/utils/consts';
 

@@ -9,4 +9,5 @@ export const searchProps = {
         xl: 8,
         xxl: 6,
     },
+    defaultCollapsed: false,
 };

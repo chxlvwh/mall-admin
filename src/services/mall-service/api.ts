@@ -130,7 +130,10 @@ export async function deleteAttr(id: number, options?: { [key: string]: any }) {
     });
 }
 
-export async function getBrandList(params: { current?: number; pageSize?: number }, options?: { [key: string]: any }) {
+export async function getBrandList(
+    params: { current?: number; pageSize?: number } & Partial<API.Brand>,
+    options?: { [key: string]: any },
+) {
     const result = await request<API.RestList<API.Brand>>('/api/v1/brand/list', {
         method: 'GET',
         params,
@@ -210,7 +213,7 @@ export async function getCategoryById(id: number, options?: { [key: string]: any
     });
 }
 
-/** 新建用户 POST /api/rule */
+/** 新建用户 POST /api/v1/product-category */
 export async function addCategory(body: API.Category, options?: { [key: string]: any }) {
     return request<API.Brand>('/api/v1/product-category', {
         method: 'POST',
@@ -257,54 +260,22 @@ export async function outLogin(options?: { [key: string]: any }) {
     });
 }
 
-/** 此处后端没有提供注释 GET /api/notices */
-export async function getNotices(options?: { [key: string]: any }) {
-    return request<API.NoticeIconList>('/api/notices', {
+export async function getProductList(params: API.PageParams & Partial<API.Product>, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Product>>('/api/v1/product/list', {
         method: 'GET',
+        params,
         ...(options || {}),
     });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
 }
 
-/** 获取规则列表 GET /api/rule */
-export async function rule(
-    params: {
-        // query
-        /** 当前的页码 */
-        current?: number;
-        /** 页面的容量 */
-        pageSize?: number;
-    },
-    options?: { [key: string]: any },
-) {
-    return request<API.RuleList>('/api/rule', {
+export async function getProductById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Product>>(`/api/v1/product/${id}`, {
         method: 'GET',
-        params: {
-            ...params,
-        },
-        ...(options || {}),
-    });
-}
-
-/** 新建规则 PUT /api/rule */
-export async function updateRule(options?: { [key: string]: any }) {
-    return request<API.RuleListItem>('/api/rule', {
-        method: 'PUT',
-        ...(options || {}),
-    });
-}
-
-/** 新建规则 POST /api/rule */
-export async function addRule(options?: { [key: string]: any }) {
-    return request<API.RuleListItem>('/api/rule', {
-        method: 'POST',
-        ...(options || {}),
-    });
-}
-
-/** 删除规则 DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-    return request<Record<string, any>>('/api/rule', {
-        method: 'DELETE',
         ...(options || {}),
     });
 }

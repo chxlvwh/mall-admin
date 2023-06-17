@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { ProForm, ProFormCascader, ProFormDigit } from '@ant-design/pro-form/lib';
+import { ProFormCascader, ProFormDigit } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
 import { addCategory, getCategoryTree, updateCategory } from '@/services/mall-service/api';
 

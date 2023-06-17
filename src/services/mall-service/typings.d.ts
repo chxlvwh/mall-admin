@@ -39,6 +39,33 @@ declare namespace API {
         deletedAt?: Date;
     } & CommonDate;
 
+    type Sku = {
+        id: number;
+        price: number;
+        stock: number;
+        props: string;
+        product: Product;
+    } & CommonDate;
+
+    type Product = {
+        id: number;
+        name: string;
+        subtitle: string;
+        introduction: string;
+        originPrice: number;
+        salePrice: number;
+        stock: number;
+        status: number;
+        units: string;
+        weight: number;
+        brandId: number;
+        brand: Brand;
+        productCategoryId: number;
+        productCategory: Category;
+        skus: Sku[];
+        deletedAt?: Date;
+    } & CommonDate;
+
     type Attribute = {
         id: number;
         name: string;
