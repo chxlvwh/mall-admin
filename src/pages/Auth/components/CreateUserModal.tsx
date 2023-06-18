@@ -1,8 +1,7 @@
-import React from 'react';
-import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { ProForm } from '@ant-design/pro-form/lib';
-import { message } from 'antd';
 import { addUser, updateUser } from '@/services/mall-service/api';
+import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { message } from 'antd';
+import React from 'react';
 
 interface CreateUserModalProps {
     createModalOpen: boolean;
@@ -109,6 +108,10 @@ const CreateUserModal = ({ createModalOpen, handleModalOpen, actionRef, currentR
                             value: 1,
                         },
                     ]}
+                    request={undefined}
+                    debounceTime={undefined}
+                    params={undefined}
+                    valueEnum={undefined}
                 ></ProFormRadio.Group>
             )}
             <ProFormText label="姓名" width="md" name="nickname" initialValue={currentRow?.profile?.nickname} />

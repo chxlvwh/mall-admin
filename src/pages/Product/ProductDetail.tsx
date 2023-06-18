@@ -1,6 +1,6 @@
 import { getBrandList, getCategoryAttrs, getCategoryTree, getProductById } from '@/services/mall-service/api';
 import ProCard from '@ant-design/pro-card';
-import { ActionType, ProFormRadio, ProFormText, StepsForm } from '@ant-design/pro-components';
+import { ActionType, ProFormRadio, StepsForm } from '@ant-design/pro-components';
 import { ProFormField } from '@ant-design/pro-form';
 import {
     ProForm,
@@ -10,6 +10,7 @@ import {
     ProFormInstance,
     ProFormList,
     ProFormSelect,
+    ProFormText,
 } from '@ant-design/pro-form/lib';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
@@ -186,12 +187,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                                     </div>
                                                 )}
                                             >
-                                                <ProFormText
-                                                    key={Math.random()}
-                                                    name={Math.random()}
-                                                    allowClear={false}
-                                                    width="xs"
-                                                />
+                                                <ProFormText name={['propValue']} allowClear={false} width="xs" />
                                             </ProFormList>
                                         )}
                                         {item.entryMethod === 2 && item.value && (
