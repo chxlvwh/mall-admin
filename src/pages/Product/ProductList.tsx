@@ -1,31 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import {
-    deleteBrand,
-    getBrandList,
-    getCategoryTree,
-    getProductById,
-    getProductList,
-} from '@/services/mall-service/api';
-import { Button, Modal, Space, Switch } from 'antd';
+import { deleteBrand, getBrandList, getCategoryTree, getProductList } from '@/services/mall-service/api';
 import { searchProps } from '@/utils/consts';
-import { FormOutlined, PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from '@@/exports';
-import CreateProductModal from '@/pages/Product/components/CreateProductModal';
+import { FormOutlined, PlusOutlined } from '@ant-design/icons';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
+import { Button, Modal, Space, Switch } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 const ProductList: React.FC = () => {
-    const [createModalOpen, handleModalOpen] = useState<boolean>(false);
-    const [currentRow, setCurrentRow] = useState<API.Product>();
     const [categoryTree, setCategoryTree] = useState<API.Category[]>();
     const actionRef = useRef<ActionType>();
 
     useEffect(() => {
-        getCategoryTree({ current: 1, pageSize: 1 }).then((res) => {
+        getCategoryTree({ current: 1, pageSize: 100 }).then((res) => {
             setCategoryTree(res.data);
         });
     }, []);
 
-    const switchActive = async (val: boolean, record: API.Product) => {};
+    const switchActive = async () => {};
 
     const columns: ProColumns<API.Product>[] = [
         {
@@ -41,7 +33,7 @@ const ProductList: React.FC = () => {
         {
             title: '商品名称',
             dataIndex: 'name',
-            render: (dom, record) => {
+            render: (dom: any, record: API.Product) => {
                 return (
                     <div className={'text-center'}>
                         <div>{record.name}</div>
@@ -62,13 +54,13 @@ const ProductList: React.FC = () => {
                 ['1', '在售'],
                 ['0', '下架'],
             ]),
-            render: (dom, record) => {
+            render: (dom: any, record: API.Product) => {
                 return (
                     <Switch
                         checked={record.status === 1}
                         checkedChildren="在售"
                         unCheckedChildren={'下架'}
-                        onChange={(val) => switchActive(val, record)}
+                        onChange={() => switchActive()}
                     />
                 );
             },
@@ -77,7 +69,7 @@ const ProductList: React.FC = () => {
             title: '一口价',
             dataIndex: 'originPrice',
             search: false,
-            render: (dom, record) => {
+            render: (dom: any, record: { originPrice: number }) => {
                 return <div className={'text-center'}>{(record.originPrice / 100).toFixed(2)}</div>;
             },
         },
@@ -96,7 +88,7 @@ const ProductList: React.FC = () => {
             dataIndex: 'skus',
             search: false,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            render: (_, record) => {
+            render: () => {
                 return (
                     <div
                         className={'pointer text-center'}
@@ -150,8 +142,8 @@ const ProductList: React.FC = () => {
                 showSearch: true,
             },
             debounceTime: 800,
-            request: async (params) => {
-                const { data } = await getBrandList({ current: 1, pageSize: 1, name: params.keyWords });
+            request: async (params: { keyWords: any }) => {
+                const { data } = await getBrandList({ current: 1, pageSize: 100, name: params.keyWords });
                 return data.map((item) => {
                     return { label: item.name, value: item.id };
                 });
@@ -161,16 +153,14 @@ const ProductList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (_, record) => {
+            render: (_: any, record: { id: number; name: any }) => {
                 return (
                     <Space>
                         <Button
                             type={'primary'}
                             onClick={async (event) => {
                                 event.preventDefault();
-                                const { data: detail } = await getProductById(record.id);
-                                setCurrentRow(detail);
-                                handleModalOpen(true);
+                                history.push(`/product/detail/${record.id}`);
                             }}
                         >
                             编辑
@@ -211,26 +201,19 @@ const ProductList: React.FC = () => {
                         type="primary"
                         key="primary"
                         onClick={() => {
-                            setCurrentRow(undefined);
-                            handleModalOpen(true);
+                            history.push('/product/detail/new');
                         }}
                     >
                         <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
                     </Button>,
                 ]}
-                request={(params) => {
+                request={(params: API.PageParams & Partial<API.Product>) => {
                     if (params.productCategoryId && Array.isArray(params.productCategoryId)) {
                         params.productCategoryId = params.productCategoryId[params.productCategoryId.length - 1];
                     }
                     return getProductList(params);
                 }}
                 columns={columns}
-            />
-            <CreateProductModal
-                createModalOpen={createModalOpen}
-                handleModalOpen={handleModalOpen}
-                actionRef={actionRef}
-                currentRow={currentRow}
             />
         </PageContainer>
     );

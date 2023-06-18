@@ -56,6 +56,10 @@ export default [
                 component: './Product/ProductList',
             },
             {
+                path: '/product/detail/:id',
+                component: './Product/ProductDetail',
+            },
+            {
                 name: 'category-list',
                 path: '/product/category',
                 component: './Product/CategoryList',

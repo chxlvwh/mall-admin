@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Space, Tag } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@@/exports';
+import CreateAttributeModal from '@/pages/Product/components/CreateAttributeModal';
 import { deleteAttr, getAttrById, getAttrList } from '@/services/mall-service/api';
 import { searchProps } from '@/utils/consts';
-import CreateAttributeModal from '@/pages/Product/components/CreateAttributeModal';
+import { FormattedMessage } from '@@/exports';
+import { PlusOutlined } from '@ant-design/icons';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { Button, Modal, Space, Tag } from 'antd';
+import React, { useRef, useState } from 'react';
 
 const AttributeList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
@@ -21,7 +21,18 @@ const AttributeList: React.FC = () => {
         {
             title: '属性名称',
             dataIndex: 'name',
-            render: (dom, record) => {
+            render: (
+                dom:
+                    | string
+                    | number
+                    | boolean
+                    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+                    | React.ReactFragment
+                    | React.ReactPortal
+                    | null
+                    | undefined,
+                record: { id: number },
+            ) => {
                 return (
                     <a
                         onClick={async (event) => {
@@ -41,12 +52,12 @@ const AttributeList: React.FC = () => {
             dataIndex: 'type',
             valueEnum: new Map([
                 [1, '基本属性'],
-                [2, '规格参数'],
+                [2, '其他属性'],
             ]),
-            render: (_, record) => {
+            render: (_: any, record: { type: number }) => {
                 return (
                     <span>
-                        {record.type === 1 ? <Tag color="blue">基本属性</Tag> : <Tag color="green">规格参数</Tag>}
+                        {record.type === 1 ? <Tag color="blue">基本属性</Tag> : <Tag color="green">其他属性</Tag>}
                     </span>
                 );
             },
@@ -63,7 +74,7 @@ const AttributeList: React.FC = () => {
                 [1, '手动录入'],
                 [2, '列表选择'],
             ]),
-            render: (_, record) => {
+            render: (_: any, record: { entryMethod: number }) => {
                 return (
                     <span>
                         {record.entryMethod === 1 ? (
@@ -82,7 +93,7 @@ const AttributeList: React.FC = () => {
                 [1, '是'],
                 [0, '否'],
             ]),
-            render: (_, record) => {
+            render: (_: any, record: { isRequired: any }) => {
                 return <span>{record.isRequired ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
             },
         },
@@ -93,7 +104,7 @@ const AttributeList: React.FC = () => {
                 [1, '是'],
                 [0, '否'],
             ]),
-            render: (_, record) => {
+            render: (_: any, record: { canSearch: any }) => {
                 return <span>{record.canSearch ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
             },
         },
@@ -113,7 +124,7 @@ const AttributeList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (_, record) => {
+            render: (_: any, record: { id: number; name: any }) => {
                 return (
                     <Space>
                         <Button

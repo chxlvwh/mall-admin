@@ -50,6 +50,7 @@ declare namespace API {
     type Product = {
         id: number;
         name: string;
+        itemNo: string;
         subtitle: string;
         introduction: string;
         originPrice: number;

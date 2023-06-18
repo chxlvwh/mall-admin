@@ -84,6 +84,13 @@ export async function restoreUser(id: number, options?: { [key: string]: any }) 
     });
 }
 
+export async function getCategoryAttrs(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Attribute[]>>(`/api/v1/product-category/${id}/attributes`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
 export async function getAttrList(
     params: { current?: number; pageSize?: number } & Partial<API.Attribute>,
     options?: { [key: string]: any },
@@ -273,7 +280,7 @@ export async function getProductList(params: API.PageParams & Partial<API.Produc
     };
 }
 
-export async function getProductById(id: number, options?: { [key: string]: any }) {
+export async function getProductById(id: number | string, options?: { [key: string]: any }) {
     return request<API.Resp<API.Product>>(`/api/v1/product/${id}`, {
         method: 'GET',
         ...(options || {}),

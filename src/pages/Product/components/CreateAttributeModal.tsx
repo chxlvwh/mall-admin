@@ -1,8 +1,8 @@
-import React from 'react';
-import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { ProForm, ProFormSelect } from '@ant-design/pro-form/lib';
-import { message } from 'antd';
 import { addAttr, updateAttr } from '@/services/mall-service/api';
+import { ActionType, ModalForm, ProFormRadio, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { ProFormSelect } from '@ant-design/pro-form/lib';
+import { message } from 'antd';
+import React from 'react';
 
 interface CreateAttrModalProps {
     createModalOpen: boolean;
@@ -54,7 +54,7 @@ const handleUpdate = async (id: number, fields: API.Attribute) => {
 
 const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateAttrModalProps) => {
     const isEdit = currentRow && !!currentRow.id;
-    console.log('[isEdit:] ', isEdit);
+    // @ts-ignore
     return (
         <ModalForm
             layout={'horizontal'}
@@ -109,6 +109,10 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                     },
                 ]}
                 name="entryMethod"
+                request={undefined}
+                valueEnum={undefined}
+                debounceTime={undefined}
+                params={undefined}
             />
             <ProFormTextArea
                 initialValue={currentRow?.value && currentRow.value.replaceAll(',', '\n')}
@@ -136,6 +140,10 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                     },
                 ]}
                 name="isRequired"
+                request={undefined}
+                valueEnum={undefined}
+                debounceTime={undefined}
+                params={undefined}
             />
             <ProFormRadio.Group
                 fieldProps={{}}
@@ -158,6 +166,10 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                     },
                 ]}
                 name="canSearch"
+                request={undefined}
+                valueEnum={undefined}
+                debounceTime={undefined}
+                params={undefined}
             />
             <ProFormSelect
                 fieldProps={{}}
@@ -175,12 +187,16 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                         value: 1,
                     },
                     {
-                        label: '规格参数',
+                        label: '其他属性',
                         value: 2,
                     },
                 ]}
                 width={'md'}
                 name="type"
+                params={undefined}
+                debounceTime={undefined}
+                request={undefined}
+                valueEnum={undefined}
             />
             <ProFormTextArea initialValue={currentRow?.desc} label="属性描述" width="lg" name="desc" />
         </ModalForm>

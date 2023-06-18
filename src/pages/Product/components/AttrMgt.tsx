@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import { getAttrList, updateCategoryAttr } from '@/services/mall-service/api';
+import { ActionType, ProForm } from '@ant-design/pro-components';
 import { DrawerForm } from '@ant-design/pro-form';
 import { ProFormSelect } from '@ant-design/pro-form/lib';
-import { getAttrList, updateCategory, updateCategoryAttr } from '@/services/mall-service/api';
-import { ActionType, ProForm } from '@ant-design/pro-components';
+import React from 'react';
 
 interface AttrMgtProps {
     drawerVisit: boolean;
@@ -38,7 +38,7 @@ const AttrMgt: React.FC<AttrMgtProps> = ({ drawerVisit, setDrawerVisit, currentR
                         width={'md'}
                         debounceTime={500}
                         name="baseType"
-                        request={async (params) => {
+                        request={async (params: { keyWords: any }) => {
                             const { data: list } = await getAttrList({
                                 current: 1,
                                 pageSize: 100,
@@ -47,15 +47,17 @@ const AttrMgt: React.FC<AttrMgtProps> = ({ drawerVisit, setDrawerVisit, currentR
                             });
                             return list.map((it) => ({ label: it.name, value: it.id }));
                         }}
+                        params={undefined}
+                        valueEnum={undefined}
                     ></ProFormSelect>
                     <ProFormSelect
                         debounceTime={500}
                         fieldProps={{ showSearch: true, optionFilterProp: 'name', mode: 'multiple' }}
                         initialValue={currentRow?.productAttributes?.filter((it) => it.type === 2).map((it) => it.id)}
-                        label="规则参数"
+                        label="其他属性"
                         width={'md'}
                         name="extendType"
-                        request={async (params) => {
+                        request={async (params: { keyWords: any }) => {
                             const { data: list } = await getAttrList({
                                 current: 1,
                                 pageSize: 100,
@@ -64,6 +66,8 @@ const AttrMgt: React.FC<AttrMgtProps> = ({ drawerVisit, setDrawerVisit, currentR
                             });
                             return list.map((it) => ({ label: it.name, value: it.id }));
                         }}
+                        params={undefined}
+                        valueEnum={undefined}
                     ></ProFormSelect>
                 </ProForm.Group>
             </DrawerForm>

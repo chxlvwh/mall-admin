@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { addCategory, getCategoryTree, updateCategory } from '@/services/mall-service/api';
 import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { ProFormCascader, ProFormDigit } from '@ant-design/pro-form/lib';
 import { message } from 'antd';
-import { addCategory, getCategoryTree, updateCategory } from '@/services/mall-service/api';
+import React, { useEffect, useState } from 'react';
 
 interface CreateCategoryModalProps {
     createModalOpen: boolean;
@@ -110,6 +110,10 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
                     changeOnSelect: true,
                 }}
                 placeholder="请选择一个父级分类，创建一级分类请选无"
+                params={undefined}
+                debounceTime={undefined}
+                valueEnum={undefined}
+                request={undefined}
             />
             <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
             <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="lg" name="desc" />
