@@ -69,28 +69,29 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
 
                 it.items.forEach((item: { propValue: string }, idx: number) => {
                     if (index === 0) {
-                        result.push({ [baseProps[index].name]: item.propValue });
+                        result.push({ props: [{ name: baseProps[index].name, value: item.propValue }] });
                         newResult = [...result];
                     } else {
                         if (idx === 0) {
                             result.forEach((it: any) => {
-                                it[baseProps[index].name] = item.propValue;
+                                it.props.push({ name: baseProps[index].name, value: item.propValue });
                             });
                             newResult = [...result];
                         } else {
-                            newResult.forEach((it: any) => {
-                                if (it[baseProps[index].name] !== item.propValue) {
-                                    result.push({ ...it, [baseProps[index].name]: item.propValue });
-                                }
-                            });
+                            for (let i = 0; i < newResult.length; i++) {
+                                const props = newResult[i].props.filter((it) => it.name !== baseProps[index].name);
+                                const newItem = { ...newResult[i] };
+                                newItem.props = props.concat({ name: baseProps[index].name, value: item.propValue });
+                                result.push(newItem);
+                            }
                         }
                     }
                 });
             }
         });
         result.forEach((item, index) => {
-            item['id'] = index;
-            item['price'] = 0;
+            item['id'] = index.toString();
+            item['price'] = '';
             item['stock'] = 0;
             item['code'] = '';
         });
@@ -223,6 +224,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                         labelCol={{ span: 5 }}
                         onFinish={async () => {
                             console.log('[ProductDetail.tsx111:] ', formRef.current?.getFieldsValue());
+                            console.log('[dataSource:] ', dataSource);
                             console.log(
                                 '[ProductDetail.tsx:] ',
                                 formRef.current?.getFieldValue('baseProps')?.[1]?.items,
