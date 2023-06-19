@@ -79,7 +79,9 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             newResult = [...result];
                         } else {
                             for (let i = 0; i < newResult.length; i++) {
-                                const props = newResult[i].props.filter((it) => it.name !== baseProps[index].name);
+                                const props = newResult[i].props.filter(
+                                    (it: { name: string }) => it.name !== baseProps[index].name,
+                                );
                                 const newItem = { ...newResult[i] };
                                 newItem.props = props.concat({ name: baseProps[index].name, value: item.propValue });
                                 result.push(newItem);
@@ -225,10 +227,6 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                         onFinish={async () => {
                             console.log('[ProductDetail.tsx111:] ', formRef.current?.getFieldsValue());
                             console.log('[dataSource:] ', dataSource);
-                            console.log(
-                                '[ProductDetail.tsx:] ',
-                                formRef.current?.getFieldValue('baseProps')?.[1]?.items,
-                            );
                         }}
                     >
                         <ProFormDigit
@@ -288,9 +286,9 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                                 initialValue={[{ propValue: '' }]}
                                             >
                                                 <ProFormText
-                                                    fieldProps={{
-                                                        onChange: generateSkus,
-                                                    }}
+                                                    // fieldProps={{
+                                                    //     onChange: generateSkus,
+                                                    // }}
                                                     name={['propValue']}
                                                     allowClear={false}
                                                     width="xs"
@@ -326,9 +324,9 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                                 initialValue={[{ propValue: '' }]}
                                             >
                                                 <ProFormSelect
-                                                    fieldProps={{
-                                                        onChange: generateSkus,
-                                                    }}
+                                                    // fieldProps={{
+                                                    //     onChange: generateSkus,
+                                                    // }}
                                                     name={['propValue']}
                                                     width={'xs'}
                                                     options={item.value.split(',').map((it) => ({
@@ -352,6 +350,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             basePropsRule={basePropsRule}
                             dataSource={dataSource}
                             setDataSource={setDataSource}
+                            generateSkus={generateSkus}
                         />
                         <ProFormField
                             name="otherProps"

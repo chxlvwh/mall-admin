@@ -1,5 +1,6 @@
 import { ProForm } from '@ant-design/pro-form';
 import { EditableProTable } from '@ant-design/pro-table/lib';
+import { Button, Form, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 interface SkuEditTableProps {
@@ -8,15 +9,18 @@ interface SkuEditTableProps {
     basePropsRule: (index: string | number) => any[];
     dataSource: any[];
     setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
+    generateSkus: () => void;
 }
 
-const SkuEditTable: React.FC<SkuEditTableProps> = ({ baseProps, basePropsRule, dataSource, setDataSource }) => {
-    console.log(
-        '[dataSource.map((item) => item.id):] ',
-        dataSource.map((item) => item.id),
-    );
-    console.log('[datasrouce:] ', dataSource);
+const SkuEditTable: React.FC<SkuEditTableProps> = ({
+    baseProps,
+    basePropsRule,
+    dataSource,
+    setDataSource,
+    generateSkus,
+}) => {
     const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
+    const [form] = Form.useForm();
 
     useEffect(() => {
         setEditableRowKeys(dataSource.map((item) => item.id));
@@ -73,7 +77,6 @@ const SkuEditTable: React.FC<SkuEditTableProps> = ({ baseProps, basePropsRule, d
             },
         },
     ];
-    console.log('[editableKeys:] ', editableKeys);
 
     return (
         <ProForm.Item name="skus" label={'销售规格'}>
@@ -91,6 +94,7 @@ const SkuEditTable: React.FC<SkuEditTableProps> = ({ baseProps, basePropsRule, d
                 onChange={setDataSource}
                 recordCreatorProps={false}
                 editable={{
+                    form,
                     type: 'multiple',
                     editableKeys,
                     actionRender: (row: any, config: any, defaultDoms: { delete: any }) => {
@@ -102,6 +106,41 @@ const SkuEditTable: React.FC<SkuEditTableProps> = ({ baseProps, basePropsRule, d
                     onChange: setEditableRowKeys,
                 }}
             />
+            <Space>
+                <Button type={'primary'} onClick={() => generateSkus()}>
+                    刷新列表
+                </Button>
+                <Button
+                    type={'primary'}
+                    onClick={() => {
+                        const newDataSource = [...dataSource];
+                        newDataSource.forEach((item, index) => {
+                            item.price = newDataSource[0].price;
+                            form.setFieldsValue({
+                                [index]: { ...form.getFieldsValue()[index], price: newDataSource[0].price },
+                            });
+                        });
+                        setDataSource(newDataSource);
+                    }}
+                >
+                    同步价格
+                </Button>
+                <Button
+                    type={'primary'}
+                    onClick={() => {
+                        const newDataSource = [...dataSource];
+                        newDataSource.forEach((item, index) => {
+                            item.stock = newDataSource[0].stock;
+                            form.setFieldsValue({
+                                [index]: { ...form.getFieldsValue()[index], stock: newDataSource[0].stock },
+                            });
+                        });
+                        setDataSource(newDataSource);
+                    }}
+                >
+                    同步库存
+                </Button>
+            </Space>
         </ProForm.Item>
     );
 };
