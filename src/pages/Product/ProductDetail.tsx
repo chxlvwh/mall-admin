@@ -1,8 +1,10 @@
+import SkuEditTable from '@/pages/Product/components/SkuEditTable';
 import { getBrandList, getCategoryAttrs, getCategoryTree, getProductById } from '@/services/mall-service/api';
 import ProCard from '@ant-design/pro-card';
 import { ActionType, ProFormRadio, StepsForm } from '@ant-design/pro-components';
 import { ProFormField } from '@ant-design/pro-form';
 import {
+    FormListActionType,
     ProForm,
     ProFormCascader,
     ProFormDigit,
@@ -21,14 +23,21 @@ interface CreateProductModalProps {
     actionRef: React.MutableRefObject<ActionType | undefined>;
     currentRow?: API.Product;
 }
+
 const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     const formRef = useRef<ProFormInstance>();
+    const actionRef = useRef<
+        FormListActionType<{
+            name: string;
+        }>
+    >();
     const params = useParams();
     const { id } = params as { id: string };
     const isEdit = id && id !== 'new';
     const [productDetail, setProductDetail] = useState<API.Product>();
     const [baseProps, setBaseProps] = useState<API.Attribute[]>([]);
     const [otherProps, setOtherProps] = useState<API.Attribute[]>([]);
+    const [dataSource, setDataSource] = useState<DataSourceType[]>([]);
     useEffect(() => {
         if (isEdit) {
             getProductById(id).then((res) => {
@@ -37,6 +46,86 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
             });
         }
     }, []);
+
+    type AttrNameKeys = keyof (typeof baseProps)[number]['name'];
+
+    type DataSourceType = {
+        id: string;
+        price: string;
+        stock: string;
+        code?: string;
+        children?: DataSourceType[];
+    } & {
+        // eslint-disable-next-line no-unused-vars
+        [K in AttrNameKeys]: string;
+    };
+
+    const generateSkus = () => {
+        let result: any[] = [];
+        const basePropValues = formRef.current?.getFieldValue('baseProps');
+        basePropValues.forEach((it: { items: { propValue: string }[] }, index: number) => {
+            if (it.items) {
+                let newResult: any[] = [];
+
+                it.items.forEach((item: { propValue: string }, idx: number) => {
+                    if (index === 0) {
+                        result.push({ [baseProps[index].name]: item.propValue });
+                        newResult = [...result];
+                    } else {
+                        if (idx === 0) {
+                            result.forEach((it: any) => {
+                                it[baseProps[index].name] = item.propValue;
+                            });
+                            newResult = [...result];
+                        } else {
+                            newResult.forEach((it: any) => {
+                                if (it[baseProps[index].name] !== item.propValue) {
+                                    result.push({ ...it, [baseProps[index].name]: item.propValue });
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        result.forEach((item, index) => {
+            item['id'] = index;
+            item['price'] = 0;
+            item['stock'] = 0;
+            item['code'] = '';
+        });
+        console.log('[result:] ', result);
+        setDataSource(result);
+    };
+
+    const basePropsRule = (index: string | number) => {
+        return [
+            {
+                required: true,
+                validator: async (_: any, value?: string | any[]) => {
+                    console.log(value);
+                    if (value && value.length > 0) {
+                        return;
+                    }
+                    throw new Error('不能为空');
+                },
+            },
+            {
+                validator: async (_: any, value?: string) => {
+                    const selectedValue = formRef.current
+                        ?.getFieldValue('baseProps')
+                        ?.[index]?.items?.map((it: { propValue: string }) => it.propValue);
+
+                    if (selectedValue?.filter((it: string) => it?.trim() === value?.trim()).length <= 1) {
+                        return;
+                    }
+                    throw new Error('与其他项重复');
+                },
+            },
+        ];
+    };
+
+    // @ts-ignore
     return (
         <>
             <h2>{isEdit ? '编辑商品' : '创建商品'}</h2>
@@ -52,8 +141,8 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             const { category } = formRef.current?.getFieldsValue();
                             const categoryId = category[category.length - 1];
                             const { data: attrList } = await getCategoryAttrs(categoryId);
-                            const baseProps = attrList.filter((item) => item.type === 1);
-                            const otherProps = attrList.filter((item) => item.type === 2);
+                            const baseProps = attrList.filter((item: { type: number }) => item.type === 1);
+                            const otherProps = attrList.filter((item: { type: number }) => item.type === 2);
                             setBaseProps(baseProps);
                             setOtherProps(otherProps);
                             return true;
@@ -90,7 +179,10 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                     current: 1,
                                     name: params?.keywords,
                                 });
-                                return data.map((item) => ({ label: item.name, value: item.id }));
+                                return data.map((item: { name: any; id: any }) => ({
+                                    label: item.name,
+                                    value: item.id,
+                                }));
                             }}
                             rules={[{ required: true }]}
                             params={undefined}
@@ -131,6 +223,10 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                         labelCol={{ span: 5 }}
                         onFinish={async () => {
                             console.log('[ProductDetail.tsx111:] ', formRef.current?.getFieldsValue());
+                            console.log(
+                                '[ProductDetail.tsx:] ',
+                                formRef.current?.getFieldValue('baseProps')?.[1]?.items,
+                            );
                         }}
                     >
                         <ProFormDigit
@@ -156,7 +252,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                     <ProFormGroup
                                         key={item.id}
                                         style={{
-                                            width: '550px',
+                                            width: '35rem',
                                             background: '#f8f9fc',
                                             padding: '10px',
                                             border: '1px solid #ebeef5',
@@ -164,6 +260,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                     >
                                         {item.entryMethod === 1 && (
                                             <ProFormList
+                                                actionRef={actionRef}
                                                 name={['baseProps', index, 'items']}
                                                 label={item.name}
                                                 creatorButtonProps={{
@@ -186,8 +283,17 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                                         {action}
                                                     </div>
                                                 )}
+                                                initialValue={[{ propValue: '' }]}
                                             >
-                                                <ProFormText name={['propValue']} allowClear={false} width="xs" />
+                                                <ProFormText
+                                                    fieldProps={{
+                                                        onChange: generateSkus,
+                                                    }}
+                                                    name={['propValue']}
+                                                    allowClear={false}
+                                                    width="xs"
+                                                    rules={basePropsRule(index)}
+                                                />
                                             </ProFormList>
                                         )}
                                         {item.entryMethod === 2 && item.value && (
@@ -215,17 +321,23 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                                         {action}
                                                     </div>
                                                 )}
+                                                initialValue={[{ propValue: '' }]}
                                             >
                                                 <ProFormSelect
+                                                    fieldProps={{
+                                                        onChange: generateSkus,
+                                                    }}
                                                     name={['propValue']}
                                                     width={'xs'}
-                                                    options={item.value
-                                                        .split(',')
-                                                        .map((it) => ({ label: it, value: it }))}
+                                                    options={item.value.split(',').map((it) => ({
+                                                        label: it,
+                                                        value: it,
+                                                    }))}
                                                     params={undefined}
                                                     request={undefined}
                                                     debounceTime={undefined}
                                                     valueEnum={undefined}
+                                                    rules={basePropsRule(index)}
                                                 ></ProFormSelect>
                                             </ProFormList>
                                         )}
@@ -233,6 +345,12 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                 );
                             })}
                         </ProForm.Item>
+                        <SkuEditTable
+                            baseProps={baseProps}
+                            basePropsRule={basePropsRule}
+                            dataSource={dataSource}
+                            setDataSource={setDataSource}
+                        />
                         <ProFormField
                             name="otherProps"
                             label={'其他属性'}
