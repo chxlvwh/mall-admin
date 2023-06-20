@@ -65,6 +65,7 @@ declare namespace API {
         productCategory: Category;
         skus: Sku[];
         deletedAt?: Date;
+        props?: any[];
     } & CommonDate;
 
     type Attribute = {

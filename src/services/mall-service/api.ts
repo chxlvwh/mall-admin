@@ -286,3 +286,11 @@ export async function getProductById(id: number | string, options?: { [key: stri
         ...(options || {}),
     });
 }
+
+export async function addProduct(body: Partial<API.Product>, options?: { [key: string]: any }) {
+    return request<API.Product>('/api/v1/product', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
