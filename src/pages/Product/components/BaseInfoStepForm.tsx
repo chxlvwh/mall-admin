@@ -1,16 +1,23 @@
 import { ProFormText } from '@ant-design/pro-form/lib';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface BaseInfoStepFormProps {
     productDetail?: API.Product;
+    formRef: React.MutableRefObject<any>;
 }
 
-const BaseInfoStepForm: React.FC<BaseInfoStepFormProps> = ({ productDetail }) => {
+const BaseInfoStepForm: React.FC<BaseInfoStepFormProps> = ({ productDetail, formRef }) => {
+    useEffect(() => {
+        formRef.current?.setFieldsValue({
+            name: productDetail?.name,
+            subtitle: productDetail?.subtitle,
+            itemNo: productDetail?.itemNo,
+        });
+    });
     return (
         <>
             <ProFormText
                 required
-                initialValue={productDetail?.name}
                 name="name"
                 label="商品名称"
                 width={'xl'}
@@ -19,7 +26,6 @@ const BaseInfoStepForm: React.FC<BaseInfoStepFormProps> = ({ productDetail }) =>
                 rules={[{ required: true }]}
             />
             <ProFormText
-                initialValue={productDetail?.subtitle}
                 name="subtitle"
                 label="副标题"
                 width={'xl'}

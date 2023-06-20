@@ -3,7 +3,7 @@ import { DataSourceType } from '@/pages/Product/ProductDetail';
 import { ProFormRadio } from '@ant-design/pro-components';
 import { ProFormField } from '@ant-design/pro-form';
 import { ProForm, ProFormDigit, ProFormGroup, ProFormList, ProFormSelect, ProFormText } from '@ant-design/pro-form/lib';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface SaleStepFormProps {
     productDetail?: API.Product;
@@ -22,10 +22,21 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     formRef,
     otherProps,
 }) => {
+    useEffect(() => {
+        setTimeout(() => {
+            formRef.current?.setFieldsValue({
+                originPrice: productDetail?.originPrice,
+                salePrice: productDetail?.salePrice,
+                stock: productDetail?.stock,
+                status: productDetail?.status,
+            });
+        });
+    });
+
     const generateSkus = () => {
         let result: any[] = [];
         const basePropValues = formRef.current?.getFieldValue('baseProps');
-        basePropValues.forEach((it: { items: { propValue: string }[] }, index: number) => {
+        basePropValues?.forEach((it: { items: { propValue: string }[] }, index: number) => {
             if (it.items) {
                 let newResult: any[] = [];
 
@@ -93,7 +104,6 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
         <>
             <ProFormDigit
                 required
-                initialValue={productDetail?.originPrice}
                 label={'商品原价'}
                 name="originPrice"
                 width={'sm'}
@@ -102,138 +112,127 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
             />
             <ProFormDigit
                 required
-                initialValue={productDetail?.salePrice}
                 label={'销售价'}
                 name="salePrice"
                 width={'sm'}
                 min={0.01}
                 fieldProps={{ precision: 2, prefix: '￥' }}
             />
-            <ProFormDigit
-                required
-                initialValue={productDetail?.stock || 0}
-                label={'总数量'}
-                name="stock"
-                width={'sm'}
-                fieldProps={{ precision: 0 }}
-            />
-            <ProForm.Item name="baseProps" label={'基本属性'}>
-                {baseProps.map((item, index) => {
-                    return (
-                        <ProFormGroup
-                            key={item.id}
-                            style={{
-                                width: '35rem',
-                                background: '#f8f9fc',
-                                padding: '10px',
-                                border: '1px solid #ebeef5',
-                            }}
-                        >
-                            {item.entryMethod === 1 && (
-                                <ProFormList
-                                    // actionRef={actionRef}
-                                    name={['baseProps', index, 'items']}
-                                    label={item.name}
-                                    creatorButtonProps={{
-                                        creatorButtonText: '新增规格项',
-                                        icon: false,
-                                        type: 'link',
-                                        style: { width: 'unset' },
-                                    }}
-                                    min={1}
-                                    copyIconProps={false}
-                                    deleteIconProps={{ tooltipText: '删除' }}
-                                    itemRender={({ listDom, action }) => (
-                                        <div
-                                            style={{
-                                                display: 'inline-flex',
-                                                marginInlineEnd: 25,
-                                            }}
-                                        >
-                                            {listDom}
-                                            {action}
-                                        </div>
-                                    )}
-                                    initialValue={[{ propValue: '' }]}
-                                >
-                                    <ProFormText
-                                        // fieldProps={{
-                                        //     onChange: generateSkus,
-                                        // }}
-                                        name={['propValue']}
-                                        allowClear={false}
-                                        width="xs"
-                                        rules={basePropsRule(index)}
-                                    />
-                                </ProFormList>
-                            )}
-                            {item.entryMethod === 2 && item.value && (
-                                <ProFormList
-                                    name={['baseProps', index, 'items']}
-                                    label={item.name}
-                                    creatorButtonProps={{
-                                        creatorButtonText: '新增规格项',
-                                        icon: false,
-                                        type: 'link',
-                                        style: { width: 'unset' },
-                                    }}
-                                    min={1}
-                                    max={item.value.split(',').length}
-                                    copyIconProps={false}
-                                    deleteIconProps={{ tooltipText: '删除' }}
-                                    itemRender={({ listDom, action }) => (
-                                        <div
-                                            style={{
-                                                display: 'inline-flex',
-                                                marginInlineEnd: 25,
-                                            }}
-                                        >
-                                            {listDom}
-                                            {action}
-                                        </div>
-                                    )}
-                                    initialValue={[{ propValue: '' }]}
-                                >
-                                    <ProFormSelect
-                                        // fieldProps={{
-                                        //     onChange: generateSkus,
-                                        // }}
-                                        name={['propValue']}
-                                        width={'xs'}
-                                        options={item.value.split(',').map((it: any) => ({
-                                            label: it,
-                                            value: it,
-                                        }))}
-                                        params={undefined}
-                                        request={undefined}
-                                        debounceTime={undefined}
-                                        valueEnum={undefined}
-                                        rules={basePropsRule(index)}
-                                    ></ProFormSelect>
-                                </ProFormList>
-                            )}
-                        </ProFormGroup>
-                    );
-                })}
-            </ProForm.Item>
-            <SkuEditTable
-                baseProps={baseProps}
-                basePropsRule={basePropsRule}
-                dataSource={dataSource}
-                setDataSource={setDataSource}
-                generateSkus={generateSkus}
-            />
-            <ProFormField
-                name="otherProps"
-                label={'其他属性'}
-                style={{
-                    background: '#f8f9fc',
-                    padding: '10px',
-                    // borderRadius: '5px',
-                    border: '1px solid #ebeef5',
-                }}
-            >
-                <ProFormGroup
+            <ProFormDigit required label={'总数量'} name="stock" width={'sm'} fieldProps={{ precision: 0 }} />
+            {baseProps.length ? (
+                <ProForm.Item name="baseProps" label={'基本属性'}>
+                    {baseProps.map((item, index) => {
+                        return (
+                            <ProFormGroup
+                                key={item.id}
+                                style={{
+                                    width: '35rem',
+                                    background: '#f8f9fc',
+                                    padding: '10px',
+                                    border: '1px solid #ebeef5',
+                                }}
+                            >
+                                {item.entryMethod === 1 && (
+                                    <ProFormList
+                                        // actionRef={actionRef}
+                                        name={['baseProps', index, 'items']}
+                                        label={item.name}
+                                        creatorButtonProps={{
+                                            creatorButtonText: '新增规格项',
+                                            icon: false,
+                                            type: 'link',
+                                            style: { width: 'unset' },
+                                        }}
+                                        min={1}
+                                        copyIconProps={false}
+                                        deleteIconProps={{ tooltipText: '删除' }}
+                                        itemRender={({ listDom, action }) => (
+                                            <div
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    marginInlineEnd: 25,
+                                                }}
+                                            >
+                                                {listDom}
+                                                {action}
+                                            </div>
+                                        )}
+                                        initialValue={[{ propValue: '' }]}
+                                    >
+                                        <ProFormText
+                                            // fieldProps={{
+                                            //     onChange: generateSkus,
+                                            // }}
+                                            name={['propValue']}
+                                            allowClear={false}
+                                            width="xs"
+                                            rules={basePropsRule(index)}
+                                        />
+                                    </ProFormList>
+                                )}
+                                {item.entryMethod === 2 && item.value && (
+                                    <ProFormList
+                                        name={['baseProps', index, 'items']}
+                                        label={item.name}
+                                        creatorButtonProps={{
+                                            creatorButtonText: '新增规格项',
+                                            icon: false,
+                                            type: 'link',
+                                            style: { width: 'unset' },
+                                        }}
+                                        min={1}
+                                        max={item.value.split(',').length}
+                                        copyIconProps={false}
+                                        deleteIconProps={{ tooltipText: '删除' }}
+                                        itemRender={({ listDom, action }) => (
+                                            <div
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    marginInlineEnd: 25,
+                                                }}
+                                            >
+                                                {listDom}
+                                                {action}
+                                            </div>
+                                        )}
+                                        initialValue={[{ propValue: '' }]}
+                                    >
+                                        <ProFormSelect
+                                            // fieldProps={{
+                                            //     onChange: generateSkus,
+                                            // }}
+                                            name={['propValue']}
+                                            width={'xs'}
+                                            options={item.value.split(',').map((it: any) => ({
+                                                label: it,
+                                                value: it,
+                                            }))}
+                                            params={undefined}
+                                            request={undefined}
+                                            debounceTime={undefined}
+                                            valueEnum={undefined}
+                                            rules={basePropsRule(index)}
+                                        ></ProFormSelect>
+                                    </ProFormList>
+                                )}
+                            </ProFormGroup>
+                        );
+                    })}
+                </ProForm.Item>
+            ) : null}
+            {baseProps.length ? (
+                <SkuEditTable
+                    baseProps={baseProps}
+                    basePropsRule={basePropsRule}
+                    dataSource={dataSource}
+                    setDataSource={setDataSource}
+                    generateSkus={generateSkus}
+                />
+            ) : null}
+            {otherProps.length ? (
+                <ProFormField
+                    name="otherProps"
+                    label={'其他属性'}
                     style={{
                         background: '#f8f9fc',
                         padding: '10px',
@@ -241,38 +240,48 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                         border: '1px solid #ebeef5',
                     }}
                 >
-                    {otherProps.map((item, index) => {
-                        return (
-                            <div key={item.id}>
-                                {item.entryMethod === 1 && (
-                                    <ProFormText
-                                        name={['otherPropValues', index, 'items']}
-                                        style={{ marginBottom: '32px' }}
-                                        label={item.name}
-                                        width={150}
-                                    ></ProFormText>
-                                )}
-                                {item.entryMethod === 2 && item.value && (
-                                    <ProFormSelect
-                                        name={['otherPropValues', index, 'items']}
-                                        label={item.name}
-                                        width={150}
-                                        options={item.value.split(',').map((it: string) => ({ label: it, value: it }))}
-                                        params={undefined}
-                                        request={undefined}
-                                        debounceTime={undefined}
-                                        valueEnum={undefined}
-                                    ></ProFormSelect>
-                                )}
-                            </div>
-                        );
-                    })}
-                </ProFormGroup>
-            </ProFormField>
+                    <ProFormGroup
+                        style={{
+                            background: '#f8f9fc',
+                            padding: '10px',
+                            // borderRadius: '5px',
+                            border: '1px solid #ebeef5',
+                        }}
+                    >
+                        {otherProps.map((item, index) => {
+                            return (
+                                <div key={item.id}>
+                                    {item.entryMethod === 1 && (
+                                        <ProFormText
+                                            name={['otherPropValues', index, 'items']}
+                                            style={{ marginBottom: '32px' }}
+                                            label={item.name}
+                                            width={150}
+                                        ></ProFormText>
+                                    )}
+                                    {item.entryMethod === 2 && item.value && (
+                                        <ProFormSelect
+                                            name={['otherPropValues', index, 'items']}
+                                            label={item.name}
+                                            width={150}
+                                            options={item.value
+                                                .split(',')
+                                                .map((it: string) => ({ label: it, value: it }))}
+                                            params={undefined}
+                                            request={undefined}
+                                            debounceTime={undefined}
+                                            valueEnum={undefined}
+                                        ></ProFormSelect>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </ProFormGroup>
+                </ProFormField>
+            ) : null}
 
             <ProFormRadio.Group
                 required
-                initialValue={productDetail?.status === 0 ? 0 : 1}
                 name="status"
                 label="上架状态"
                 options={[

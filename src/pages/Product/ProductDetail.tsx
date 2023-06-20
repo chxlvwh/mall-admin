@@ -73,7 +73,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             return true;
                         }}
                     >
-                        <CategoryStepForm productDetail={productDetail} />
+                        <CategoryStepForm productDetail={productDetail} formRef={formRef} />
                     </StepsForm.StepForm>
                     <StepsForm.StepForm
                         name="base"
@@ -85,7 +85,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             return true;
                         }}
                     >
-                        <BaseInfoStepForm productDetail={productDetail} />
+                        <BaseInfoStepForm productDetail={productDetail} formRef={formRef} />
                     </StepsForm.StepForm>
                     <StepsForm.StepForm<{
                         originPrice: number;
@@ -111,7 +111,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             params.stock = stock;
                             params.skus = dataSource;
                             params.props = [];
-                            otherPropValues.forEach((item: { items: any }, index: number) => {
+                            otherPropValues?.forEach((item: { items: any }, index: number) => {
                                 const prop = otherProps[index];
                                 params.props?.push({ id: prop.id, name: prop.name, value: item.items });
                             });
