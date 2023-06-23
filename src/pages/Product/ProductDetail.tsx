@@ -26,11 +26,6 @@ export type DataSourceType = {
 
 const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     const formRef = useRef<ProFormInstance>();
-    // const actionRef = useRef<
-    //     FormListActionType<{
-    //         name: string;
-    //     }>
-    // >();
     const params = useParams();
     const { id } = params as { id: string };
     const isEdit = id && id !== 'new';

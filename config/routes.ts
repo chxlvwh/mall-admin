@@ -57,11 +57,12 @@ export default [
             },
             {
                 name: 'category-new',
+                path: '/product/detail/new',
+                component: './Product/ProductDetail',
+            },
+            {
                 path: '/product/detail/:id',
                 component: './Product/ProductDetail',
-                params: {
-                    id: 'new',
-                },
             },
             {
                 name: 'category-list',
