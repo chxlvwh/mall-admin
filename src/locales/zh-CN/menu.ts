@@ -26,6 +26,7 @@ export default {
     'menu.product': '商品',
     'menu.product.product-list': '商品列表',
     'menu.product.brand-list': '品牌列表',
+    'menu.product.category-new': '添加商品',
     'menu.product.category-list': '商品分类',
     'menu.product.attribute-list': '商品属性',
     'menu.auth': '权限',
