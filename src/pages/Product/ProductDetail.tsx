@@ -2,11 +2,12 @@ import BaseInfoStepForm from '@/pages/Product/components/BaseInfoStepForm';
 import CategoryStepForm from '@/pages/Product/components/CategoryStepForm';
 import SaleStepForm from '@/pages/Product/components/SaleStepForm';
 import { addProduct, getCategoryAttrs, getProductById } from '@/services/mall-service/api';
+import { history } from '@@/core/history';
 import ProCard from '@ant-design/pro-card';
 import { StepsForm } from '@ant-design/pro-components';
 import { ProFormInstance } from '@ant-design/pro-form/lib';
-import { history } from '@umijs/max';
 import { message } from 'antd';
+import { UploadFile } from 'antd/es/upload/interface';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 
@@ -35,6 +36,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     const [dataSource, setDataSource] = useState<DataSourceType[]>([]);
     const [preForm, setPreForm] = useState<{ productCategoryId?: number; brandId?: number }>({});
     const [baseForm, setBaseForm] = useState<{ name?: string; subTitle?: string; itemNo?: string }>({});
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
     useEffect(() => {
         if (isEdit) {
             getProductById(id).then((res) => {
@@ -106,6 +108,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             params.stock = stock;
                             params.skus = dataSource;
                             params.props = [];
+                            params.coverUrls = fileList.map((item) => item.response.data.url);
                             otherPropValues?.forEach((item: { items: any }, index: number) => {
                                 const prop = otherProps[index];
                                 params.props?.push({ id: prop.id, name: prop.name, value: item.items });
@@ -127,6 +130,8 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             otherProps={otherProps}
                             dataSource={dataSource}
                             setDataSource={setDataSource}
+                            fileList={fileList}
+                            setFileList={setFileList}
                         />
                     </StepsForm.StepForm>
                 </StepsForm>

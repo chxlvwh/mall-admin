@@ -58,12 +58,14 @@ declare namespace API {
         stock: number;
         status: number;
         units: string;
+        content: string;
         weight: number;
         brandId: number;
         brand: Brand;
         productCategoryId: number;
         productCategory: Category;
         skus: Sku[];
+        coverUrls: string[];
         deletedAt?: Date;
         props?: any[];
     } & CommonDate;

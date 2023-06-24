@@ -3,6 +3,9 @@ import { DataSourceType } from '@/pages/Product/ProductDetail';
 import { ProFormRadio } from '@ant-design/pro-components';
 import { ProFormField } from '@ant-design/pro-form';
 import { ProForm, ProFormDigit, ProFormGroup, ProFormList, ProFormSelect, ProFormText } from '@ant-design/pro-form/lib';
+import { Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import React, { useEffect } from 'react';
 
 interface SaleStepFormProps {
@@ -12,6 +15,8 @@ interface SaleStepFormProps {
     formRef: React.MutableRefObject<any>;
     otherProps: API.Attribute[];
     dataSource: DataSourceType[];
+    fileList: UploadFile[];
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>;
 }
 
 const SaleStepForm: React.FC<SaleStepFormProps> = ({
@@ -21,6 +26,8 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     setDataSource,
     formRef,
     otherProps,
+    fileList,
+    setFileList,
 }) => {
     useEffect(() => {
         setTimeout(() => {
@@ -74,12 +81,29 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
         setDataSource(result);
     };
 
+    const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as RcFile);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
     const basePropsRule = (index: string | number) => {
         return [
             {
                 required: true,
                 validator: async (_: any, value?: string | any[]) => {
-                    console.log(value);
                     if (value && value.length > 0) {
                         return;
                     }
@@ -279,7 +303,19 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                     </ProFormGroup>
                 </ProFormField>
             ) : null}
-
+            <ProFormField label={'上传主图'} required>
+                <ImgCrop rotationSlider>
+                    <Upload
+                        action="/api/v1/upload"
+                        listType="picture-card"
+                        fileList={fileList}
+                        onChange={onChange}
+                        onPreview={onPreview}
+                    >
+                        {fileList.length < 5 && '+ Upload'}
+                    </Upload>
+                </ImgCrop>
+            </ProFormField>
             <ProFormRadio.Group
                 required
                 name="status"
