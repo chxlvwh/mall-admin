@@ -37,10 +37,16 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     const [preForm, setPreForm] = useState<{ productCategoryId?: number; brandId?: number }>({});
     const [baseForm, setBaseForm] = useState<{ name?: string; subTitle?: string; itemNo?: string }>({});
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    // 编辑器内容
+    const [html, setHtml] = useState('');
+
     useEffect(() => {
         if (isEdit) {
             getProductById(id).then((res) => {
                 setProductDetail(res.data);
+                setFileList(res?.data?.coverUrls.map((url) => ({ uid: url, url })) as UploadFile[]);
+                setHtml(res?.data?.content);
                 console.log('[ProductDetail.tsx:] ', res.data);
             });
         }
@@ -97,8 +103,6 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                         layout={'horizontal'}
                         labelCol={{ span: 5 }}
                         onFinish={async () => {
-                            console.log('[ProductDetail.tsx111:] ', formRef.current?.getFieldsValue());
-                            console.log('[dataSource:] ', dataSource);
                             const params: Partial<API.Product> = { ...preForm, ...baseForm };
                             const { originPrice, salePrice, status, stock, otherPropValues } =
                                 formRef.current?.getFieldsValue();
@@ -108,11 +112,12 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             params.stock = stock;
                             params.skus = dataSource;
                             params.props = [];
-                            params.coverUrls = fileList.map((item) => item.response.data.url);
+                            params.coverUrls = fileList.map((item) => item.url || '');
                             otherPropValues?.forEach((item: { items: any }, index: number) => {
                                 const prop = otherProps[index];
                                 params.props?.push({ id: prop.id, name: prop.name, value: item.items });
                             });
+                            params.content = html;
                             try {
                                 await addProduct(params);
                                 message.success('添加成功');
@@ -132,6 +137,8 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             setDataSource={setDataSource}
                             fileList={fileList}
                             setFileList={setFileList}
+                            html={html}
+                            setHtml={setHtml}
                         />
                     </StepsForm.StepForm>
                 </StepsForm>

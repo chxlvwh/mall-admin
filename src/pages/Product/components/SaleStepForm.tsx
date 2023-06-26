@@ -1,3 +1,4 @@
+import RichTextEditor from '@/pages/Product/components/RichTextEditor';
 import SkuEditTable from '@/pages/Product/components/SkuEditTable';
 import { DataSourceType } from '@/pages/Product/ProductDetail';
 import { ProFormRadio } from '@ant-design/pro-components';
@@ -17,6 +18,8 @@ interface SaleStepFormProps {
     dataSource: DataSourceType[];
     fileList: UploadFile[];
     setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>;
+    html: string;
+    setHtml: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SaleStepForm: React.FC<SaleStepFormProps> = ({
@@ -28,6 +31,8 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     otherProps,
     fileList,
     setFileList,
+    html,
+    setHtml,
 }) => {
     useEffect(() => {
         setTimeout(() => {
@@ -82,7 +87,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     };
 
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
+        setFileList(newFileList.map((it) => ({ uid: it.uid, name: it.name, url: it.url || it.response?.data?.url })));
     };
 
     const onPreview = async (file: UploadFile) => {
@@ -315,6 +320,9 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                         {fileList.length < 5 && '+ Upload'}
                     </Upload>
                 </ImgCrop>
+            </ProFormField>
+            <ProFormField label={'上传商品内容'} required>
+                <RichTextEditor html={html} setHtml={setHtml} />
             </ProFormField>
             <ProFormRadio.Group
                 required
