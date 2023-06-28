@@ -4,7 +4,7 @@ import { DataSourceType } from '@/pages/Product/ProductDetail';
 import { ProFormRadio } from '@ant-design/pro-components';
 import { ProFormField } from '@ant-design/pro-form';
 import { ProForm, ProFormDigit, ProFormGroup, ProFormList, ProFormSelect, ProFormText } from '@ant-design/pro-form/lib';
-import { Upload } from 'antd';
+import { Modal, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { RcFile } from 'antd/lib/upload';
@@ -82,45 +82,54 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
         });
     });
 
-    const generateSkus = () => {
-        let result: any[] = [];
-        const basePropValues = formRef.current?.getFieldValue('baseProps');
-        basePropValues?.forEach((it: { items: { propValue: string }[] }, index: number) => {
-            if (it.items) {
-                let newResult: any[] = [];
+    const generateSkus = async () => {
+        Modal.confirm({
+            title: '如果此前sku有数据将会清空，确定要生成SKU吗？',
+            onOk: () => {
+                let result: any[] = [];
+                const basePropValues = formRef.current?.getFieldValue('baseProps');
+                basePropValues?.forEach((it: { items: { propValue: string }[] }, index: number) => {
+                    if (it.items) {
+                        let newResult: any[] = [];
 
-                it.items.forEach((item: { propValue: string }, idx: number) => {
-                    if (index === 0) {
-                        result.push({ props: [{ name: baseProps[index].name, value: item.propValue }] });
-                        newResult = [...result];
-                    } else {
-                        if (idx === 0) {
-                            result.forEach((it: any) => {
-                                it.props.push({ name: baseProps[index].name, value: item.propValue });
-                            });
-                            newResult = [...result];
-                        } else {
-                            for (let i = 0; i < newResult.length; i++) {
-                                const props = newResult[i].props.filter(
-                                    (it: { name: string }) => it.name !== baseProps[index].name,
-                                );
-                                const newItem = { ...newResult[i] };
-                                newItem.props = props.concat({ name: baseProps[index].name, value: item.propValue });
-                                result.push(newItem);
+                        it.items.forEach((item: { propValue: string }, idx: number) => {
+                            if (index === 0) {
+                                result.push({ props: [{ name: baseProps[index].name, value: item.propValue }] });
+                                newResult = [...result];
+                            } else {
+                                if (idx === 0) {
+                                    result.forEach((it: any) => {
+                                        it.props.push({ name: baseProps[index].name, value: item.propValue });
+                                    });
+                                    newResult = [...result];
+                                } else {
+                                    for (let i = 0; i < newResult.length; i++) {
+                                        const props = newResult[i].props.filter(
+                                            (it: { name: string }) => it.name !== baseProps[index].name,
+                                        );
+                                        const newItem = { ...newResult[i] };
+                                        newItem.props = props.concat({
+                                            name: baseProps[index].name,
+                                            value: item.propValue,
+                                        });
+                                        result.push(newItem);
+                                    }
+                                }
                             }
-                        }
+                        });
                     }
                 });
-            }
+                console.log('[dddd] ', dataSource);
+                result.forEach((item, index) => {
+                    item['id'] = index.toString();
+                    item['price'] = dataSource[index]?.price || 0;
+                    item['stock'] = dataSource[index]?.stock || 0;
+                    item['code'] = dataSource[index]?.code || '';
+                });
+                console.log('[skus:] ', result);
+                setDataSource(result);
+            },
         });
-        result.forEach((item, index) => {
-            item['id'] = index.toString();
-            item['price'] = '';
-            item['stock'] = 0;
-            item['code'] = '';
-        });
-        console.log('[skus:] ', result);
-        setDataSource(result);
     };
 
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {

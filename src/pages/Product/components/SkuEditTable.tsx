@@ -113,6 +113,7 @@ const SkuEditTable: React.FC<SkuEditTableProps> = ({
                 <Button
                     type={'primary'}
                     onClick={() => {
+                        console.log('[datasource:] ', dataSource);
                         const newDataSource = [...dataSource];
                         newDataSource.forEach((item, index) => {
                             item.price = newDataSource[0].price;
