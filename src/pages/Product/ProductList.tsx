@@ -80,14 +80,7 @@ const ProductList: React.FC = () => {
                 ['0', '下架'],
             ]),
             render: (dom: any, record: API.Product) => {
-                return (
-                    <Switch
-                        checked={record.status === 1}
-                        checkedChildren="在售"
-                        unCheckedChildren={'下架'}
-                        onChange={(status) => switchActive(record, status)}
-                    />
-                );
+                return <Switch checked={record.status === 1} onChange={(status) => switchActive(record, status)} />;
             },
         },
         {
