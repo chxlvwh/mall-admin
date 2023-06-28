@@ -8,7 +8,7 @@ import {
 } from '@/services/mall-service/api';
 import { searchProps } from '@/utils/consts';
 import { FormattedMessage } from '@@/exports';
-import { FormOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Button, Modal, Space, Switch } from 'antd';
@@ -50,9 +50,9 @@ const ProductList: React.FC = () => {
             render: (dom: any, record: API.Product) => {
                 return (
                     <div className={'text-center'}>
-                        <div>{record.name}</div>
+                        <div style={{ color: 'red' }}>{record.name}</div>
                         <br />
-                        <div>品牌：{record.brand.name}</div>
+                        <div style={{ color: 'yellowgreen' }}>品牌：{record.brand.name}</div>
                     </div>
                 );
             },
@@ -97,28 +97,28 @@ const ProductList: React.FC = () => {
             dataIndex: 'unit',
             search: false,
         },
-        {
-            title: 'Sku',
-            dataIndex: 'skus',
-            search: false,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            render: () => {
-                return (
-                    <div
-                        className={'pointer text-center'}
-                        style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: '#1890ff',
-                            lineHeight: '40px',
-                        }}
-                    >
-                        <FormOutlined style={{ color: 'white' }} />
-                    </div>
-                );
-            },
-        },
+        // {
+        //     title: 'Sku',
+        //     dataIndex: 'skus',
+        //     search: false,
+        //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        //     render: () => {
+        //         return (
+        //             <div
+        //                 className={'pointer text-center'}
+        //                 style={{
+        //                     width: '40px',
+        //                     height: '40px',
+        //                     borderRadius: '50%',
+        //                     background: '#1890ff',
+        //                     lineHeight: '40px',
+        //                 }}
+        //             >
+        //                 <FormOutlined style={{ color: 'white' }} />
+        //             </div>
+        //         );
+        //     },
+        // },
         {
             title: '商品描述',
             dataIndex: 'desc',
