@@ -1,5 +1,5 @@
 import {
-    deleteBrand,
+    deleteProduct,
     getBrandList,
     getCategoryTree,
     getProductList,
@@ -43,6 +43,17 @@ const ProductList: React.FC = () => {
             title: '商品图片',
             dataIndex: 'icon',
             search: false,
+            render: (dom: any, record: API.Product) => {
+                return (
+                    <div style={{ padding: '20px' }}>
+                        <img
+                            src={record.coverUrls[0]}
+                            alt={record.name}
+                            style={{ width: '100px', height: '100px', borderRadius: '5px' }}
+                        />
+                    </div>
+                );
+            },
         },
         {
             title: '商品名称',
@@ -186,9 +197,9 @@ const ProductList: React.FC = () => {
                                 event.preventDefault();
                                 Modal.confirm({
                                     title: '确认',
-                                    content: `确定要删除${record.name}品牌吗？`,
-                                    onOk: () => {
-                                        deleteBrand(record.id);
+                                    content: `确定要删除【${record.name}】产品吗？`,
+                                    onOk: async () => {
+                                        await deleteProduct(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
@@ -209,6 +220,7 @@ const ProductList: React.FC = () => {
                 headerTitle={'品牌列表'}
                 actionRef={actionRef}
                 rowKey="id"
+                bordered={true}
                 search={searchProps}
                 toolBarRender={() => [
                     <Button

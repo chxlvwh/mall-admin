@@ -316,3 +316,10 @@ export async function setProductOffSale(id: number, options?: { [key: string]: a
         ...(options || {}),
     });
 }
+
+export async function deleteProduct(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Product>>(`/api/v1/product/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
