@@ -294,3 +294,25 @@ export async function addProduct(body: Partial<API.Product>, options?: { [key: s
         ...(options || {}),
     });
 }
+
+export async function updateProduct(id: number, body: Partial<API.Product>, options?: { [key: string]: any }) {
+    return request<API.Product>(`/api/v1/product/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+export async function setProductOnSale(id: number, options?: { [key: string]: any }) {
+    return request<API.Product>(`/api/v1/product/${id}/status/on-sale`, {
+        method: 'PUT',
+        ...(options || {}),
+    });
+}
+
+export async function setProductOffSale(id: number, options?: { [key: string]: any }) {
+    return request<API.Product>(`/api/v1/product/${id}/status/off-sale`, {
+        method: 'PUT',
+        ...(options || {}),
+    });
+}

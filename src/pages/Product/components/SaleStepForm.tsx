@@ -6,8 +6,9 @@ import { ProFormField } from '@ant-design/pro-form';
 import { ProForm, ProFormDigit, ProFormGroup, ProFormList, ProFormSelect, ProFormText } from '@ant-design/pro-form/lib';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-import React, { useEffect } from 'react';
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { RcFile } from 'antd/lib/upload';
+import React, { useEffect, useState } from 'react';
 
 interface SaleStepFormProps {
     productDetail?: API.Product;
@@ -34,6 +35,42 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     html,
     setHtml,
 }) => {
+    const [initBasePropsMap, setInitBasePropsMap] = useState<{ [key: string]: string[] }>({});
+    const initDataSource = () => {
+        return (
+            productDetail?.skus?.map((it, index) => {
+                return {
+                    id: index,
+                    price: it.price,
+                    stock: it.stock,
+                    code: it.code,
+                    props: it.props,
+                };
+            }) || []
+        );
+    };
+
+    const initBaseProps = () => {
+        const skus = initDataSource();
+        const skuProps = skus.map((it) => it.props);
+        let basePropsMap: { [key: string]: string[] } = {};
+        skuProps.forEach((item) => {
+            item.forEach((it: { name: string; value: string }) => {
+                if (basePropsMap[it.name] && basePropsMap[it.name].indexOf(it.value) === -1) {
+                    basePropsMap[it.name].push(it.value);
+                } else if (!basePropsMap[it.name]) {
+                    basePropsMap[it.name] = [it.value];
+                }
+            });
+        });
+        setInitBasePropsMap(basePropsMap);
+    };
+    useEffect(() => {
+        setTimeout(() => {
+            initBaseProps();
+            setDataSource(initDataSource());
+        });
+    }, [productDetail]);
     useEffect(() => {
         setTimeout(() => {
             formRef.current?.setFieldsValue({
@@ -82,7 +119,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
             item['stock'] = 0;
             item['code'] = '';
         });
-        console.log('[result:] ', result);
+        console.log('[skus:] ', result);
         setDataSource(result);
     };
 
@@ -91,6 +128,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     };
 
     const onPreview = async (file: UploadFile) => {
+        // window.open(file.url);
         let src = file.url as string;
         if (!src) {
             src = await new Promise((resolve) => {
@@ -186,12 +224,9 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                                 {action}
                                             </div>
                                         )}
-                                        initialValue={[{ propValue: '' }]}
+                                        initialValue={initBasePropsMap[item.name].map((it) => ({ propValue: it }))}
                                     >
                                         <ProFormText
-                                            // fieldProps={{
-                                            //     onChange: generateSkus,
-                                            // }}
                                             name={['propValue']}
                                             allowClear={false}
                                             width="xs"
@@ -224,12 +259,9 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                                 {action}
                                             </div>
                                         )}
-                                        initialValue={[{ propValue: '' }]}
+                                        initialValue={initBasePropsMap[item.name].map((it) => ({ propValue: it }))}
                                     >
                                         <ProFormSelect
-                                            // fieldProps={{
-                                            //     onChange: generateSkus,
-                                            // }}
                                             name={['propValue']}
                                             width={'xs'}
                                             options={item.value.split(',').map((it: any) => ({

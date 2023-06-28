@@ -40,10 +40,11 @@ declare namespace API {
     } & CommonDate;
 
     type Sku = {
-        id: number;
+        id?: number;
         price: number;
         stock: number;
-        props: string;
+        props: { name: string; value: string }[];
+        code: string;
         product: Product;
     } & CommonDate;
 

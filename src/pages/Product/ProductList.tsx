@@ -1,4 +1,11 @@
-import { deleteBrand, getBrandList, getCategoryTree, getProductList } from '@/services/mall-service/api';
+import {
+    deleteBrand,
+    getBrandList,
+    getCategoryTree,
+    getProductList,
+    setProductOffSale,
+    setProductOnSale,
+} from '@/services/mall-service/api';
 import { searchProps } from '@/utils/consts';
 import { FormattedMessage } from '@@/exports';
 import { FormOutlined, PlusOutlined } from '@ant-design/icons';
@@ -17,7 +24,14 @@ const ProductList: React.FC = () => {
         });
     }, []);
 
-    const switchActive = async () => {};
+    const switchActive = async (record: API.Product, status: boolean) => {
+        if (status) {
+            await setProductOnSale(record.id);
+        } else {
+            await setProductOffSale(record.id);
+        }
+        actionRef.current?.reload();
+    };
 
     const columns: ProColumns<API.Product>[] = [
         {
@@ -60,7 +74,7 @@ const ProductList: React.FC = () => {
                         checked={record.status === 1}
                         checkedChildren="在售"
                         unCheckedChildren={'下架'}
-                        onChange={() => switchActive()}
+                        onChange={(status) => switchActive(record, status)}
                     />
                 );
             },
