@@ -339,6 +339,9 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                             style={{ marginBottom: '32px' }}
                                             label={item.name}
                                             width={150}
+                                            initialValue={
+                                                (productDetail?.props || []).find((it) => it.id === item.id)?.value
+                                            }
                                         ></ProFormText>
                                     )}
                                     {item.entryMethod === 2 && item.value && (
@@ -353,6 +356,9 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                             request={undefined}
                                             debounceTime={undefined}
                                             valueEnum={undefined}
+                                            initialValue={
+                                                (productDetail?.props || []).find((it) => it.id === item.id)?.value
+                                            }
                                         ></ProFormSelect>
                                     )}
                                 </div>
