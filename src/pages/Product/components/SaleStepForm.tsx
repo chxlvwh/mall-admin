@@ -233,7 +233,13 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                                 {action}
                                             </div>
                                         )}
-                                        initialValue={initBasePropsMap[item.name].map((it) => ({ propValue: it }))}
+                                        initialValue={
+                                            initBasePropsMap[item.name]
+                                                ? initBasePropsMap[item.name].length
+                                                    ? initBasePropsMap[item.name].map((it) => ({ propValue: it }))
+                                                    : [{ propValue: '' }]
+                                                : [{ propValue: '' }]
+                                        }
                                     >
                                         <ProFormText
                                             name={['propValue']}
@@ -268,7 +274,13 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                                 {action}
                                             </div>
                                         )}
-                                        initialValue={initBasePropsMap[item.name].map((it) => ({ propValue: it }))}
+                                        initialValue={
+                                            initBasePropsMap[item.name]
+                                                ? initBasePropsMap[item.name].length
+                                                    ? initBasePropsMap[item.name].map((it) => ({ propValue: it }))
+                                                    : [{ propValue: '' }]
+                                                : [{ propValue: '' }]
+                                        }
                                     >
                                         <ProFormSelect
                                             name={['propValue']}
