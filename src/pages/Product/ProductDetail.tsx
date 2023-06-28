@@ -1,7 +1,7 @@
 import BaseInfoStepForm from '@/pages/Product/components/BaseInfoStepForm';
 import CategoryStepForm from '@/pages/Product/components/CategoryStepForm';
 import SaleStepForm from '@/pages/Product/components/SaleStepForm';
-import { addProduct, getCategoryAttrs, getProductById } from '@/services/mall-service/api';
+import { addProduct, getCategoryAttrs, getProductById, updateProduct } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
 import ProCard from '@ant-design/pro-card';
 import { StepsForm } from '@ant-design/pro-components';
@@ -23,6 +23,7 @@ export type DataSourceType = {
     price: string;
     stock: string;
     code?: string;
+    props: object;
 } & API.Sku;
 
 const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
@@ -110,7 +111,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             params.salePrice = salePrice;
                             params.status = status;
                             params.stock = stock;
-                            params.skus = dataSource;
+                            params.skus = (dataSource || []).map((it) => ({ ...it, id: undefined }));
                             params.props = [];
                             params.coverUrls = fileList.map((item) => item.url || '');
                             otherPropValues?.forEach((item: { items: any }, index: number) => {
@@ -119,8 +120,13 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             });
                             params.content = html;
                             try {
-                                await addProduct(params);
-                                message.success('添加成功');
+                                if (isEdit) {
+                                    await updateProduct(productDetail?.id as number, params);
+                                    message.success('更新成功');
+                                } else {
+                                    await addProduct(params);
+                                    message.success('添加成功');
+                                }
                                 history.push('/product/list');
                                 return true;
                             } catch (e) {
