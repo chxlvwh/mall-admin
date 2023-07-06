@@ -201,7 +201,7 @@ export async function getCategoryList(
     params: { current?: number; pageSize?: number },
     options?: { [key: string]: any },
 ) {
-    const result = await request<API.RestList<API.Category>>('/api/v1/product-category/list', {
+    const result = await request<API.RestList<API.Category>>('/api/v1/product-category', {
         method: 'GET',
         params,
         ...(options || {}),

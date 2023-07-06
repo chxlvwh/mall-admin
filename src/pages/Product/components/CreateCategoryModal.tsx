@@ -53,7 +53,7 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
     const getALLCategories = () => {
         getCategoryTree().then((res) => {
             const topCategory = [{ name: '无', id: 0 }];
-            setCategoryTree(topCategory.concat(res.data));
+            setCategoryTree(topCategory.concat(res.data.map((item) => ({ name: item.name, id: item.id }))));
         });
     };
     useEffect(() => {
