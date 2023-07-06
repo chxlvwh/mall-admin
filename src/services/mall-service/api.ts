@@ -268,7 +268,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 export async function getProductList(params: API.PageParams & Partial<API.Product>, options?: { [key: string]: any }) {
-    const result = await request<API.RestList<API.Product>>('/api/v1/product/list', {
+    const result = await request<API.RestList<API.Product>>('/api/v1/product', {
         method: 'GET',
         params,
         ...(options || {}),

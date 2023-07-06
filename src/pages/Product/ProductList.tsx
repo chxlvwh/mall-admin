@@ -97,6 +97,11 @@ const ProductList: React.FC = () => {
             search: false,
         },
         {
+            title: '销量',
+            dataIndex: 'sales',
+            search: false,
+        },
+        {
             title: '单位',
             dataIndex: 'unit',
             search: false,

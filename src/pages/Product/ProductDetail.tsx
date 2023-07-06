@@ -107,11 +107,15 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             const params: Partial<API.Product> = { ...preForm, ...baseForm };
                             const { originPrice, salePrice, status, stock, otherPropValues } =
                                 formRef.current?.getFieldsValue();
-                            params.originPrice = originPrice;
-                            params.salePrice = salePrice;
+                            params.originPrice = originPrice * 100;
+                            params.salePrice = salePrice * 100;
                             params.status = status;
                             params.stock = stock;
-                            params.skus = (dataSource || []).map((it) => ({ ...it, id: undefined }));
+                            params.skus = (dataSource || []).map((it) => ({
+                                ...it,
+                                id: undefined,
+                                price: it.price * 100,
+                            }));
                             params.props = [];
                             params.coverUrls = fileList.map((item) => item.url || '');
                             otherPropValues?.forEach((item: { items: any }, index: number) => {
