@@ -1,8 +1,15 @@
 import { addCategory, getCategoryTree, updateCategory } from '@/services/mall-service/api';
+
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { ActionType, ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { ProFormField } from '@ant-design/pro-form';
 import { ProFormCascader, ProFormDigit } from '@ant-design/pro-form/lib';
-import { message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { message, Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { UploadChangeParam } from 'antd/es/upload';
+
+import { UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { useEffect, useState } from 'react';
 
 interface CreateCategoryModalProps {
     createModalOpen: boolean;
@@ -50,6 +57,10 @@ const handleUpdate = async (id: number, fields: API.Category) => {
 const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, currentRow }: CreateCategoryModalProps) => {
     const isEdit = currentRow && !!currentRow.id;
     const [categoryTree, setCategoryTree] = useState<API.Category[]>();
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>();
+
+    console.log('[CreateCategoryModal.tsx:] ', currentRow);
     const getALLCategories = () => {
         getCategoryTree().then((res) => {
             const topCategory = [{ name: '无', id: 0 }];
@@ -59,8 +70,27 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
     useEffect(() => {
         if (createModalOpen) {
             getALLCategories();
+            setImageUrl(currentRow?.picture);
         }
     }, [createModalOpen]);
+
+    const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            setImageUrl(info.fileList[0].response.data.url);
+        }
+    };
+
+    const uploadButton = (
+        <div>
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </div>
+    );
+
     return (
         <ModalForm
             layout={'horizontal'}
@@ -72,6 +102,7 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
             onFinish={async (value) => {
                 console.log('[CreateCategoryModal.tsx:] ', value);
                 let success = false;
+                value.picture = imageUrl;
                 if (!isEdit) {
                     success = await handleAdd(value as API.Category);
                 } else {
@@ -115,6 +146,21 @@ const CreateCategoryModal = ({ createModalOpen, handleModalOpen, actionRef, curr
                 valueEnum={undefined}
                 request={undefined}
             />
+            <ProFormField label={'上传图片'} required name="picture" initialValue={currentRow?.picture}>
+                <Upload
+                    name="file"
+                    listType="picture-card"
+                    className="avatar-uploader"
+                    showUploadList={false}
+                    action="/api/v1/upload"
+                    onChange={handleChange}
+                >
+                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                </Upload>
+                <ImgCrop rotationSlider>
+                    <Upload action="/api/v1/upload" listType="picture-card"></Upload>
+                </ImgCrop>
+            </ProFormField>
             <ProFormDigit initialValue={currentRow?.order} label="排序" width="md" name="order" />
             <ProFormTextArea initialValue={currentRow?.desc} label="分类描述" width="lg" name="desc" />
         </ModalForm>

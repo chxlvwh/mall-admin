@@ -1,8 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Popover, Space, Switch } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@@/exports';
+import AttrMgt from '@/pages/Product/components/AttrMgt';
+import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import {
     deleteCategory,
     getCategoryAncestorTree,
@@ -10,11 +7,14 @@ import {
     getCategoryList,
     updateCategory,
 } from '@/services/mall-service/api';
-import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import { searchProps } from '@/utils/consts';
+import { FormattedMessage } from '@@/exports';
+import { PlusOutlined } from '@ant-design/icons';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
+import { Button, Modal, Popover, Space, Switch } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import AttrMgt from '@/pages/Product/components/AttrMgt';
 
 const CategoryList: React.FC = () => {
     const [parentId, setParentId] = useState<number>();
@@ -69,6 +69,23 @@ const CategoryList: React.FC = () => {
                     >
                         {dom}
                     </a>
+                );
+            },
+        },
+        {
+            title: '分类图片',
+            dataIndex: 'picture',
+            render: (dom: any, record: API.Category) => {
+                return (
+                    <div style={{ padding: '20px' }}>
+                        {record.picture && (
+                            <img
+                                src={record.picture}
+                                alt={record.name}
+                                style={{ width: '100px', height: 'auto', borderRadius: '5px' }}
+                            />
+                        )}
+                    </div>
                 );
             },
         },

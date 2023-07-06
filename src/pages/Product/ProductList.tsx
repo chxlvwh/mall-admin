@@ -49,7 +49,7 @@ const ProductList: React.FC = () => {
                         <img
                             src={record.coverUrls[0]}
                             alt={record.name}
-                            style={{ width: '100px', height: '100px', borderRadius: '5px' }}
+                            style={{ width: '100px', height: 'auto', borderRadius: '5px' }}
                         />
                     </div>
                 );

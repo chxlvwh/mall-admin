@@ -29,6 +29,7 @@ declare namespace API {
         parentId?: number;
         productIds?: number[];
         desc?: string;
+        picture?: string;
         icon?: string;
         order?: number;
         isActive?: boolean;
