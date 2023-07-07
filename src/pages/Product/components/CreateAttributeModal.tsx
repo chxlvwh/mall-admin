@@ -89,6 +89,7 @@ const CreateBrandModal = ({ createModalOpen, handleModalOpen, actionRef, current
                 width="md"
                 name="name"
             />
+            <ProFormText initialValue={currentRow?.displayName} label="展示名称" width="md" name="displayName" />
             <ProFormRadio.Group
                 initialValue={currentRow?.entryMethod}
                 label="录入方式"

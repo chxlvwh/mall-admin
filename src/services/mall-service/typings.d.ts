@@ -81,6 +81,7 @@ declare namespace API {
         canSearch: boolean;
         type: number;
         value: string;
+        displayName: string;
         productCategory: ProductCategory[];
         deletedAt?: Date;
     } & CommonDate;

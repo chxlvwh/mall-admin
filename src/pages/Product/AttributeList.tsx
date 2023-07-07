@@ -21,18 +21,7 @@ const AttributeList: React.FC = () => {
         {
             title: '属性名称',
             dataIndex: 'name',
-            render: (
-                dom:
-                    | string
-                    | number
-                    | boolean
-                    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-                    | React.ReactFragment
-                    | React.ReactPortal
-                    | null
-                    | undefined,
-                record: { id: number },
-            ) => {
+            render: (dom: any, record: { id: number }) => {
                 return (
                     <a
                         onClick={async (event) => {
@@ -46,6 +35,10 @@ const AttributeList: React.FC = () => {
                     </a>
                 );
             },
+        },
+        {
+            title: '展示名称',
+            dataIndex: 'displayName',
         },
         {
             title: '属性类型',

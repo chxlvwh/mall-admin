@@ -41,7 +41,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
             productDetail?.skus?.map((it, index) => {
                 return {
                     id: index,
-                    price: it.price,
+                    price: it.price / 100,
                     stock: it.stock,
                     code: it.code,
                     props: it.props,
@@ -94,12 +94,24 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
 
                         it.items.forEach((item: { propValue: string }, idx: number) => {
                             if (index === 0) {
-                                result.push({ props: [{ name: baseProps[index].name, value: item.propValue }] });
+                                result.push({
+                                    props: [
+                                        {
+                                            name: baseProps[index].name,
+                                            displayName: baseProps[index].displayName,
+                                            value: item.propValue,
+                                        },
+                                    ],
+                                });
                                 newResult = [...result];
                             } else {
                                 if (idx === 0) {
                                     result.forEach((it: any) => {
-                                        it.props.push({ name: baseProps[index].name, value: item.propValue });
+                                        it.props.push({
+                                            name: baseProps[index].name,
+                                            displayName: baseProps[index].displayName,
+                                            value: item.propValue,
+                                        });
                                     });
                                     newResult = [...result];
                                 } else {
@@ -110,6 +122,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                                         const newItem = { ...newResult[i] };
                                         newItem.props = props.concat({
                                             name: baseProps[index].name,
+                                            displayName: baseProps[index].displayName,
                                             value: item.propValue,
                                         });
                                         result.push(newItem);

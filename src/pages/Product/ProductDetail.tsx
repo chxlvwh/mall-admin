@@ -45,6 +45,8 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     useEffect(() => {
         if (isEdit) {
             getProductById(id).then((res) => {
+                res.data.originPrice = res.data.originPrice / 100;
+                res.data.salePrice = res.data.salePrice / 100;
                 setProductDetail(res.data);
                 setFileList(res?.data?.coverUrls.map((url) => ({ uid: url, url })) as UploadFile[]);
                 setHtml(res?.data?.content);
