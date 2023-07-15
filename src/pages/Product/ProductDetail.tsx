@@ -107,12 +107,13 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                         labelCol={{ span: 5 }}
                         onFinish={async () => {
                             const params: Partial<API.Product> = { ...preForm, ...baseForm };
-                            const { originPrice, salePrice, status, stock, otherPropValues } =
+                            const { originPrice, salePrice, status, stock, otherPropValues, unit } =
                                 formRef.current?.getFieldsValue();
                             params.originPrice = originPrice * 100;
                             params.salePrice = salePrice * 100;
                             params.status = status;
                             params.stock = stock;
+                            params.unit = unit;
                             params.skus = (dataSource || []).map((it) => ({
                                 ...it,
                                 id: undefined,

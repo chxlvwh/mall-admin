@@ -208,6 +208,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                 fieldProps={{ precision: 2, prefix: '￥' }}
             />
             <ProFormDigit required label={'总数量'} name="stock" width={'sm'} fieldProps={{ precision: 0 }} />
+            <ProFormText initialValue={productDetail?.unit} label={'单位'} name="unit" width={'sm'} />
             {baseProps.length ? (
                 <ProForm.Item name="baseProps" label={'基本属性'}>
                     {baseProps.map((item, index) => {

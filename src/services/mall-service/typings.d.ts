@@ -59,7 +59,7 @@ declare namespace API {
         salePrice: number;
         stock: number;
         status: number;
-        units: string;
+        unit: string;
         content: string;
         weight: number;
         brandId: number;
