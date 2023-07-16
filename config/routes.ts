@@ -86,6 +86,18 @@ export default [
         ],
     },
     {
+        name: 'marking',
+        icon: 'accountBook',
+        path: '/marking',
+        routes: [
+            {
+                name: 'coupon',
+                path: '/marking/list',
+                component: './marking/CouponList',
+            },
+        ],
+    },
+    {
         name: 'auth',
         icon: 'key',
         path: '/auth',

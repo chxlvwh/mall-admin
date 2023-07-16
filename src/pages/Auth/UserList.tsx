@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import { searchProps } from '@/constants/consts';
+import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
+import { deleteUser, getUserById, restoreUser, user } from '@/services/mall-service/api';
+import { FormattedMessage, useModel } from '@@/exports';
+import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Modal, Space, Switch } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage, useModel } from '@@/exports';
-import { deleteUser, getUserById, restoreUser, user } from '@/services/mall-service/api';
-import CreateUserModal from '@/pages/Auth/components/CreateUserModal';
-import { searchProps } from '@/utils/consts';
+import React, { useRef, useState } from 'react';
 
 const UserList: React.FC = () => {
     const { initialState } = useModel('@@initialState');

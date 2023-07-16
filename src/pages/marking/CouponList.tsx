@@ -1,33 +1,34 @@
+import CreateCouponModal from '@/components/coupon/CreateCouponModal';
 import { searchProps } from '@/constants/consts';
-import CreateAttributeModal from '@/pages/Product/components/CreateAttributeModal';
-import { deleteAttr, getAttrById, getAttrList } from '@/services/mall-service/api';
+import { getCouponById, getCouponList } from '@/services/mall-service/api';
+import { getDateTime } from '@/utils/utils';
 import { FormattedMessage } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Modal, Space, Tag } from 'antd';
-import React, { useRef, useState } from 'react';
+import dayjs from 'dayjs';
+import { useRef, useState } from 'react';
 
-const AttributeList: React.FC = () => {
+const CouponList = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
-    const [currentRow, setCurrentRow] = useState<API.Attribute>();
+    const [currentRow, setCurrentRow] = useState<API.Coupon>();
     const actionRef = useRef<ActionType>();
-
-    const columns: ProColumns<API.Attribute>[] = [
+    const columns: ProColumns<API.Coupon>[] = [
         {
             title: '编号',
             dataIndex: 'id',
             search: false,
         },
         {
-            title: '属性名称',
+            title: '优惠券名称',
             dataIndex: 'name',
-            render: (dom: any, record: { id: number }) => {
+            render: (dom: string, record: API.Coupon) => {
                 return (
                     <a
                         onClick={async (event) => {
                             event.preventDefault();
-                            const { data: attrDetail } = await getAttrById(record.id);
-                            setCurrentRow(attrDetail);
+                            const { data: detail } = await getCouponById(record.id);
+                            setCurrentRow(detail);
                             handleModalOpen(true);
                         }}
                     >
@@ -37,69 +38,79 @@ const AttributeList: React.FC = () => {
             },
         },
         {
-            title: '展示名称',
-            dataIndex: 'displayName',
-        },
-        {
-            title: '属性类型',
+            title: '优惠券类型',
             dataIndex: 'type',
-            valueEnum: new Map([
-                [1, '基本属性'],
-                [2, '其他属性'],
-            ]),
-            render: (_: any, record: { type: number }) => {
-                return (
-                    <span>
-                        {record.type === 1 ? <Tag color="blue">基本属性</Tag> : <Tag color="green">其他属性</Tag>}
-                    </span>
-                );
+            render: (dom: any) => {
+                switch (dom) {
+                    case 'DISCOUNT_AMOUNT':
+                        return '满减优惠';
+                    case 'PERCENTAGE':
+                        return '打折';
+                    case 'PAY_AMOUNT':
+                        return '直减';
+                    default:
+                        return '未知';
+                }
             },
+            valueEnum: new Map([
+                ['DISCOUNT_AMOUNT', '满减优惠'],
+                // ['PERCENTAGE', '打折'],
+                // ['PAY_AMOUNT', '直减'],
+            ]),
         },
         {
-            title: '可选属性值',
+            title: '使用门槛',
+            dataIndex: 'threshold',
+            search: false,
+        },
+        {
+            title: '面值',
             dataIndex: 'value',
             search: false,
         },
         {
-            title: '录入方式',
-            dataIndex: 'entryMethod',
-            valueEnum: new Map([
-                [1, '手动录入'],
-                [2, '列表选择'],
-            ]),
-            render: (_: any, record: { entryMethod: number }) => {
+            title: '有效期',
+            render: (dom: any, record: API.Coupon) => {
                 return (
-                    <span>
-                        {record.entryMethod === 1 ? (
-                            <Tag color="green">手动录入</Tag>
-                        ) : (
-                            <Tag color="blue">列表选择</Tag>
-                        )}
-                    </span>
+                    <div>
+                        {getDateTime(record.startDate)} ~ {getDateTime(record.endDate)}
+                    </div>
                 );
             },
-        },
-        {
-            title: '是否必填',
-            dataIndex: 'isRequired',
-            valueEnum: new Map([
-                [1, '是'],
-                [0, '否'],
-            ]),
-            render: (_: any, record: { isRequired: any }) => {
-                return <span>{record.isRequired ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
+            valueType: 'dateTimeRange',
+            fieldProps: {
+                showTime: {
+                    defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
+                },
             },
         },
         {
-            title: '是否可搜索',
-            dataIndex: 'canSearch',
-            valueEnum: new Map([
-                [1, '是'],
-                [0, '否'],
-            ]),
-            render: (_: any, record: { canSearch: any }) => {
-                return <span>{record.canSearch ? <Tag color="red">是</Tag> : <Tag color="blue">否</Tag>}</span>;
+            title: '状态',
+            dataIndex: 'status',
+            render: (dom: string, record: API.Coupon) => {
+                switch (record.status) {
+                    case 'NOT_STARTED':
+                        return <Tag color={'blue'}>未开始</Tag>;
+                    case 'ONGOING':
+                        return <Tag color={'green'}>进行中</Tag>;
+                    case 'EXPIRED':
+                        return <Tag color={'error'}>已过期</Tag>;
+                    case 'ENDED':
+                        return <Tag color={'red'}>手动结束</Tag>;
+                    case 'FINISHED':
+                        return <Tag color={'gold'}>已领完</Tag>;
+
+                    default:
+                        return '未知';
+                }
             },
+            valueEnum: new Map([
+                ['NOT_STARTED', '未开始'],
+                ['ONGOING', '进行中'],
+                ['EXPIRED', '已过期'],
+                ['ENDED', '手动结束'],
+                ['FINISHED', '已领完'],
+            ]),
         },
         {
             title: '添加时间',
@@ -117,15 +128,15 @@ const AttributeList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (_: any, record: { id: number; name: any }) => {
+            render: (_: any, record: API.Coupon) => {
                 return (
                     <Space>
                         <Button
                             type={'primary'}
                             onClick={async (event) => {
                                 event.preventDefault();
-                                const { data: categoryDetail } = await getAttrById(record.id);
-                                setCurrentRow(categoryDetail);
+                                const { data: detail } = await getCouponById(record.id);
+                                setCurrentRow(detail);
                                 handleModalOpen(true);
                             }}
                         >
@@ -138,9 +149,9 @@ const AttributeList: React.FC = () => {
                                 event.preventDefault();
                                 Modal.confirm({
                                     title: '确认',
-                                    content: `确定要删除【${record.name}】分类吗？`,
-                                    onOk: async () => {
-                                        await deleteAttr(record.id);
+                                    content: `确定要删除优惠券【${record.name}】吗？`,
+                                    onOk: () => {
+                                        // deleteBrand(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
@@ -157,8 +168,8 @@ const AttributeList: React.FC = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.Attribute, API.PageParams>
-                headerTitle={'商品属性列表'}
+            <ProTable<API.Coupon, API.PageParams & API.Coupon>
+                headerTitle={'优惠券列表'}
                 actionRef={actionRef}
                 rowKey="id"
                 search={searchProps}
@@ -174,10 +185,10 @@ const AttributeList: React.FC = () => {
                         <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
                     </Button>,
                 ]}
-                request={getAttrList}
+                request={getCouponList}
                 columns={columns}
             />
-            <CreateAttributeModal
+            <CreateCouponModal
                 createModalOpen={createModalOpen}
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}
@@ -187,4 +198,4 @@ const AttributeList: React.FC = () => {
     );
 };
 
-export default AttributeList;
+export default CouponList;

@@ -323,3 +323,34 @@ export async function deleteProduct(id: number, options?: { [key: string]: any }
         ...(options || {}),
     });
 }
+
+// 优惠券列表
+export async function getCouponList(params: API.PageParams & Partial<API.Coupon>, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Coupon>>('/api/v1/coupon', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+// 优惠券详情
+export async function getCouponById(id: number | string, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Coupon>>(`/api/v1/coupon/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+// 新增优惠券
+export async function addCoupon(body: Partial<API.Coupon>, options?: { [key: string]: any }) {
+    return request<API.Coupon>('/api/v1/coupon', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}

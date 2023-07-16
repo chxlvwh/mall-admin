@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import { searchProps } from '@/constants/consts';
+import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
+import { deleteBrand, getBrandById, getBrandList } from '@/services/mall-service/api';
+import { FormattedMessage } from '@@/exports';
+import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Modal, Space } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage } from '@@/exports';
-import { deleteBrand, getBrandById, getBrandList } from '@/services/mall-service/api';
-import CreateBrandModal from '@/pages/Product/components/CreateBrandModal';
-import { searchProps } from '@/utils/consts';
+import React, { useRef, useState } from 'react';
 
 const BrandList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
@@ -20,7 +20,7 @@ const BrandList: React.FC = () => {
         {
             title: '品牌名称',
             dataIndex: 'name',
-            render: (dom, record) => {
+            render: (dom: string, record: API.Brand) => {
                 return (
                     <a
                         onClick={async (event) => {
@@ -56,7 +56,7 @@ const BrandList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (_, record) => {
+            render: (_: any, record: API.Brand) => {
                 return (
                     <Space>
                         <Button

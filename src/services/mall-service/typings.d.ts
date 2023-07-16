@@ -23,6 +23,34 @@ declare namespace API {
         desc: string;
     } & CommonDate;
 
+    type CouponItem = {
+        id: number;
+        code: string;
+        usedDate: Date;
+        receivedDate: Date;
+        user: CurrentUser;
+        coupon: Coupon;
+    };
+
+    type Coupon = {
+        id: number;
+        name: string;
+        type: number;
+        status: string;
+        threshold: number;
+        value: number;
+        startDate: Date;
+        endDate: Date;
+        quantity: number;
+        quantityPerUser: number;
+        scope: string;
+        products: Product[];
+        productIds?: number[] | string[];
+        categoryIds?: number[] | string[];
+        categories: Category[];
+        couponItems: CouponItem[];
+    } & CommonDate;
+
     type Category = {
         id: number;
         name: string;

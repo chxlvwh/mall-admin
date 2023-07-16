@@ -1,3 +1,4 @@
+import { searchProps } from '@/constants/consts';
 import AttrMgt from '@/pages/Product/components/AttrMgt';
 import CreateCategoryModal from '@/pages/Product/components/CreateCategoryModal';
 import {
@@ -7,7 +8,6 @@ import {
     getCategoryList,
     updateCategory,
 } from '@/services/mall-service/api';
-import { searchProps } from '@/utils/consts';
 import { FormattedMessage } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -75,6 +75,7 @@ const CategoryList: React.FC = () => {
         {
             title: '分类图片',
             dataIndex: 'picture',
+            search: false,
             render: (dom: any, record: API.Category) => {
                 return (
                     <div style={{ padding: '20px' }}>

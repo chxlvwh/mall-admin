@@ -1,3 +1,4 @@
+import { searchProps } from '@/constants/consts';
 import {
     deleteProduct,
     getBrandList,
@@ -6,7 +7,6 @@ import {
     setProductOffSale,
     setProductOnSale,
 } from '@/services/mall-service/api';
-import { searchProps } from '@/utils/consts';
 import { FormattedMessage } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
