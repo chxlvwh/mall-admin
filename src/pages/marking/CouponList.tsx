@@ -1,6 +1,6 @@
 import CreateCouponModal from '@/components/coupon/CreateCouponModal';
 import { searchProps } from '@/constants/consts';
-import { getCouponById, getCouponList } from '@/services/mall-service/api';
+import { deleteCoupon, getCouponById, getCouponList } from '@/services/mall-service/api';
 import { getDateTime } from '@/utils/utils';
 import { FormattedMessage } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
@@ -153,8 +153,8 @@ const CouponList = () => {
                                 Modal.confirm({
                                     title: '确认',
                                     content: `确定要删除优惠券【${record.name}】吗？`,
-                                    onOk: () => {
-                                        // deleteBrand(record.id);
+                                    onOk: async () => {
+                                        await deleteCoupon(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }

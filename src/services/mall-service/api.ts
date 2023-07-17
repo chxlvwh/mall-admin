@@ -363,3 +363,11 @@ export async function updateCoupon(id: number, body: Partial<API.Coupon>, option
         ...(options || {}),
     });
 }
+
+// 删除优惠券
+export async function deleteCoupon(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Coupon>>(`/api/v1/coupon/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}

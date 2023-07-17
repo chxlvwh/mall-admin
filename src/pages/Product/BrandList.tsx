@@ -78,8 +78,8 @@ const BrandList: React.FC = () => {
                                 Modal.confirm({
                                     title: '确认',
                                     content: `确定要删除${record.name}品牌吗？`,
-                                    onOk: () => {
-                                        deleteBrand(record.id);
+                                    onOk: async () => {
+                                        await deleteBrand(record.id);
                                         if (actionRef.current) {
                                             actionRef.current.reload();
                                         }
