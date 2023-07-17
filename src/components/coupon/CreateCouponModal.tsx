@@ -1,6 +1,6 @@
 import CouponCategories from '@/components/coupon/CouponCategories';
 import CouponProducts from '@/components/coupon/CouponProducts';
-import { addCoupon } from '@/services/mall-service/api';
+import { addCoupon, updateCoupon } from '@/services/mall-service/api';
 import { ActionType, ModalForm, ProFormRadio, ProFormText } from '@ant-design/pro-components';
 import { ProFormDateTimeRangePicker } from '@ant-design/pro-form';
 import { ProFormDigit, ProFormSelect } from '@ant-design/pro-form/lib';
@@ -51,7 +51,6 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
     }, [createModalOpen]);
 
     const handleAdd = async (fields: API.Coupon & { validPeriod: Date[] }) => {
-        console.log('[fields] ', fields);
         const { threshold, value, validPeriod, scope } = fields;
         const hide = message.loading('正在添加');
         try {
@@ -73,19 +72,24 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
         }
     };
 
-    const handleUpdate = async (id: number, fields: API.Coupon) => {
+    const handleUpdate = async (id: number, fields: API.Coupon & { validPeriod: Date[] }) => {
         console.log('[CreateUserModal.tsx:] ', fields);
-        // const hide = message.loading('正在更新');
-        // try {
-        //     await updateBrand(id, { ...fields });
-        //     hide();
-        //     message.success('更新成功');
-        //     return true;
-        // } catch (error) {
-        //     hide();
-        //     message.error('更新失败，请重试!');
-        //     return false;
-        // }
+        const hide = message.loading('正在更新');
+        const { validPeriod, scope } = fields;
+        try {
+            await updateCoupon(id, {
+                startDate: validPeriod[0],
+                endDate: validPeriod[1],
+                productIds: scope === 'PRODUCT' ? selectedProducts.map((it) => it.key as number) : [],
+                categoryIds: scope === 'CATEGORY' ? selectedCategories.map((it) => it.value as number) : [],
+            });
+            hide();
+            message.success('更新成功');
+            return true;
+        } catch (error) {
+            hide();
+            return false;
+        }
     };
 
     return (
@@ -114,6 +118,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
             }}
         >
             <ProFormText
+                disabled={isEdit}
                 initialValue={currentRow?.name}
                 label="优惠券名称"
                 rules={[
@@ -126,6 +131,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
                 name="name"
             />
             <ProFormSelect
+                disabled={isEdit}
                 initialValue={currentRow?.type || 'DISCOUNT_AMOUNT'}
                 allowClear={false}
                 label="优惠券类型"
@@ -143,6 +149,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
                 valueEnum={undefined}
             ></ProFormSelect>
             <ProFormDigit
+                disabled={isEdit}
                 initialValue={currentRow?.threshold ? currentRow.threshold / 100 : undefined}
                 label="使用门槛"
                 fieldProps={{ addonBefore: '满', addonAfter: '元可用' }}
@@ -156,6 +163,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
                 ]}
             ></ProFormDigit>
             <ProFormDigit
+                disabled={isEdit}
                 initialValue={currentRow?.value ? currentRow.value / 100 : undefined}
                 label="优惠金额"
                 fieldProps={{ addonAfter: '元' }}
@@ -187,6 +195,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
             ></ProFormDateTimeRangePicker>
             {/*发放总量*/}
             <ProFormDigit
+                disabled={isEdit}
                 initialValue={currentRow?.quantity}
                 label="优惠券数量"
                 fieldProps={{ precision: 0, addonAfter: '张' }}
@@ -202,6 +211,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
             ></ProFormDigit>
             {/*优惠券每人限领数量*/}
             <ProFormSelect
+                disabled={isEdit}
                 initialValue={currentRow?.quantityPerUser || 1}
                 allowClear={false}
                 label="每人限领张数"
@@ -240,6 +250,7 @@ const CreateCouponModal = ({ createModalOpen, handleModalOpen, actionRef, curren
             ></ProFormSelect>
             {/*优惠券使用范围*/}
             <ProFormRadio.Group
+                disabled={isEdit}
                 initialValue={currentRow?.scope || 'ALL'}
                 radioType={'button'}
                 fieldProps={{

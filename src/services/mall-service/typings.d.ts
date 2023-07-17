@@ -35,7 +35,7 @@ declare namespace API {
     type Coupon = {
         id: number;
         name: string;
-        type: number;
+        type: string;
         status: string;
         threshold: number;
         value: number;

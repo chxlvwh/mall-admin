@@ -40,8 +40,8 @@ const CouponList = () => {
         {
             title: '优惠券类型',
             dataIndex: 'type',
-            render: (dom: any) => {
-                switch (dom) {
+            render: (dom: any, record: API.Coupon) => {
+                switch (record.type) {
                     case 'DISCOUNT_AMOUNT':
                         return '满减优惠';
                     case 'PERCENTAGE':
@@ -82,6 +82,9 @@ const CouponList = () => {
                 showTime: {
                     defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('23:59:59', 'HH:mm:ss')],
                 },
+            },
+            search: {
+                transform: (value: any) => ({ startDate: value[0], endDate: value[1] }),
             },
         },
         {

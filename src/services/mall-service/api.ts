@@ -354,3 +354,12 @@ export async function addCoupon(body: Partial<API.Coupon>, options?: { [key: str
         ...(options || {}),
     });
 }
+
+// 更新优惠券
+export async function updateCoupon(id: number, body: Partial<API.Coupon>, options?: { [key: string]: any }) {
+    return request<API.Coupon>(`/api/v1/coupon/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
