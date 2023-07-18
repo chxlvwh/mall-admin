@@ -48,7 +48,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                 res.data.originPrice = res.data.originPrice / 100;
                 res.data.salePrice = res.data.salePrice / 100;
                 setProductDetail(res.data);
-                setFileList(res?.data?.coverUrls.map((url) => ({ uid: url, url })) as UploadFile[]);
+                setFileList(res?.data?.coverUrls?.map((url) => ({ uid: url, url })) as UploadFile[]);
                 setHtml(res?.data?.content);
                 console.log('[ProductDetail.tsx:] ', res.data);
             });

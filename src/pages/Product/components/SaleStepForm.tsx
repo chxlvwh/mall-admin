@@ -390,7 +390,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                         onChange={onChange}
                         onPreview={onPreview}
                     >
-                        {fileList.length < 5 && '+ Upload'}
+                        {fileList?.length < 5 && '+ Upload'}
                     </Upload>
                 </ImgCrop>
             </ProFormField>
