@@ -28,6 +28,7 @@ export type DataSourceType = {
 
 const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
     const formRef = useRef<ProFormInstance>();
+    const formMapRef = useRef<React.MutableRefObject<ProFormInstance<any> | undefined>[]>([]);
     const params = useParams();
     const { id } = params as { id: string };
     const isEdit = id && id !== 'new';
@@ -55,13 +56,29 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (productDetail) {
+            formMapRef?.current?.forEach((formInstanceRef) => {
+                formInstanceRef.current?.setFieldsValue({
+                    name: productDetail?.name,
+                    subtitle: productDetail?.subtitle,
+                    itemNo: productDetail?.itemNo,
+                    originPrice: productDetail?.originPrice,
+                    salePrice: productDetail?.salePrice,
+                    stock: productDetail?.stock,
+                    status: productDetail?.status,
+                });
+            });
+        }
+    }, [productDetail]);
+
     // @ts-ignore
     return (
         <>
             <h2>{isEdit ? '编辑商品' : '创建商品'}</h2>
             <br />
             <ProCard>
-                <StepsForm formRef={formRef}>
+                <StepsForm formRef={formRef} formMapRef={formMapRef}>
                     <StepsForm.StepForm<{ category: number[]; brandId: number }>
                         layout={'horizontal'}
                         labelCol={{ span: 5 }}
@@ -91,7 +108,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             return true;
                         }}
                     >
-                        <BaseInfoStepForm productDetail={productDetail} formRef={formRef} />
+                        <BaseInfoStepForm productDetail={productDetail} />
                     </StepsForm.StepForm>
                     <StepsForm.StepForm<{
                         originPrice: number;
@@ -120,11 +137,19 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                                 price: it.price * 100,
                             }));
                             params.props = [];
+                            if (!fileList || fileList.length === 0) {
+                                message.error('请上传商品图片');
+                                return false;
+                            }
                             params.coverUrls = fileList.map((item) => item.url || '');
                             otherPropValues?.forEach((item: { items: any }, index: number) => {
                                 const prop = otherProps[index];
                                 params.props?.push({ id: prop.id, name: prop.name, value: item.items });
                             });
+                            if (!html) {
+                                message.error('请填写商品详情');
+                                return false;
+                            }
                             params.content = html;
                             try {
                                 if (isEdit) {

@@ -69,6 +69,15 @@ const CouponList = () => {
             search: false,
         },
         {
+            title: '使用范围',
+            dataIndex: 'scope',
+            valueEnum: new Map([
+                ['ALL', '全局使用'],
+                ['CATEGORY', '指定分类'],
+                ['PRODUCT', '指定商品'],
+            ]),
+        },
+        {
             title: '有效期',
             render: (dom: any, record: API.Coupon) => {
                 return (

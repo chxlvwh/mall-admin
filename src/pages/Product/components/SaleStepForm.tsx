@@ -71,16 +71,6 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
             setDataSource(initDataSource());
         });
     }, [productDetail]);
-    useEffect(() => {
-        setTimeout(() => {
-            formRef.current?.setFieldsValue({
-                originPrice: productDetail?.originPrice,
-                salePrice: productDetail?.salePrice,
-                stock: productDetail?.stock,
-                status: productDetail?.status,
-            });
-        });
-    });
 
     const generateSkus = async () => {
         Modal.confirm({
@@ -139,7 +129,6 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                     item['stock'] = dataSource[index]?.stock || 0;
                     item['code'] = dataSource[index]?.code || '';
                 });
-                console.log('[skus:] ', result);
                 setDataSource(result);
             },
         });
@@ -390,7 +379,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                         onChange={onChange}
                         onPreview={onPreview}
                     >
-                        {fileList?.length < 5 && '+ Upload'}
+                        {(!fileList || fileList?.length < 5) && '+ Upload'}
                     </Upload>
                 </ImgCrop>
             </ProFormField>

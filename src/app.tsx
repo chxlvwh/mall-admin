@@ -1,16 +1,15 @@
 // import Footer from '@/components/Footer';
 import { Question, SelectLang } from '@/components/RightContent';
+import { currentUser as queryCurrentUser } from '@/services/mall-service/api';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
-import defaultSettings from '../config/defaultSettings';
-import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/mall-service/api';
-import React from 'react';
-import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { ConfigProvider } from 'antd';
+import defaultSettings from '../config/defaultSettings';
+import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
+import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -59,7 +58,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         avatarProps: {
             src: initialState?.currentUser?.profile?.avatar || '/icons/default-avatar.jpg',
             title: <AvatarName />,
-            render: (_, avatarChildren) => {
+            render: (_: any, avatarChildren: any) => {
                 return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
             },
         },
@@ -136,6 +135,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 colorBgMenuItemSelected: '#22272b',
                 colorTextMenuActive: 'rgba(255,255,255,0.85)',
                 colorTextRightActionsItem: '#dfdfdf',
+                heightLayoutHeader: '48px',
             },
             colorTextAppListIconHover: '#fff',
             colorTextAppListIcon: '#dfdfdf',
