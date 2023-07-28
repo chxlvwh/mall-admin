@@ -62,11 +62,17 @@ const CouponList = () => {
             title: '使用门槛',
             dataIndex: 'threshold',
             search: false,
+            render: (dom: any, record: API.Coupon) => {
+                return <div>{record.threshold / 100}</div>;
+            },
         },
         {
             title: '面值',
             dataIndex: 'value',
             search: false,
+            render: (dom: any, record: API.Coupon) => {
+                return <div>{record.value / 100}</div>;
+            },
         },
         {
             title: '使用范围',
@@ -144,6 +150,7 @@ const CouponList = () => {
                 return (
                     <Space>
                         <Button
+                            disabled={record.status === 'ONGOING'}
                             type={'primary'}
                             onClick={async (event) => {
                                 event.preventDefault();
