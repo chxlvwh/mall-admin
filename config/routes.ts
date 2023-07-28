@@ -98,6 +98,18 @@ export default [
         ],
     },
     {
+        name: 'order',
+        icon: 'accountBook',
+        path: '/order',
+        routes: [
+            {
+                name: 'order',
+                path: '/order/list',
+                component: './order/OrderList',
+            },
+        ],
+    },
+    {
         name: 'auth',
         icon: 'key',
         path: '/auth',

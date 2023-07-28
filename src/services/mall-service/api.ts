@@ -371,3 +371,17 @@ export async function deleteCoupon(id: number, options?: { [key: string]: any })
         ...(options || {}),
     });
 }
+
+// 查询order列表
+export async function getOrderList(params: API.PageParams & Partial<API.Order>, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.Order>>('/api/v1/order', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}

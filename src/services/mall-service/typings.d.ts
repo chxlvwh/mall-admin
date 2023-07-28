@@ -100,6 +100,50 @@ declare namespace API {
         props?: any[];
     } & CommonDate;
 
+    type Receiver = {
+        id: number;
+        name: string;
+        phone: string;
+        address: string;
+        houseNo: string;
+        addressName: string;
+        province: string;
+        city: string;
+        region: string;
+        zip: string;
+        isDefault: boolean;
+        user: CurrentUser;
+        orders: Order[];
+    };
+
+    type OrderItem = {
+        id: number;
+        quantity: number;
+        discountedPrice: number;
+        status: string;
+        coupon: Coupon;
+        order: Order;
+        product: Product;
+        sku: Sku;
+    };
+
+    type Order = {
+        id: string;
+        paymentMethod: string;
+        orderSource: string;
+        status: string;
+        remark: string;
+        createdAt: Date;
+        paymentTime: Date;
+        lastModifiedAt: Date;
+        deletedAt?: Date;
+        totalPrice: number;
+        user: CurrentUser;
+        receiver: Receiver;
+        items: OrderItem[];
+        generalCoupon: Coupon;
+    } & CommonDate;
+
     type Attribute = {
         id: number;
         name: string;

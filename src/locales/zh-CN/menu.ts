@@ -29,6 +29,8 @@ export default {
     'menu.product.category-new': '添加商品',
     'menu.product.category-list': '商品分类',
     'menu.product.attribute-list': '商品属性',
+    'menu.order': '订单',
+    'menu.order.order': '订单列表',
     'menu.marking': '营销',
     'menu.marking.coupon': '优惠券列表',
     'menu.auth': '权限',
