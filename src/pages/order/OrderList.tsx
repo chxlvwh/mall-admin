@@ -47,7 +47,7 @@ const OrderList: React.FC = () => {
             title: '订单来源',
             dataIndex: 'orderSource',
             valueEnum: new Map([
-                ['APP', 'APP'],
+                ['Mobile', 'Mobile'],
                 ['PC', 'PC'],
             ]),
         },
