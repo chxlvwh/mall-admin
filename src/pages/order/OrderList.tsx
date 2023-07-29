@@ -21,6 +21,12 @@ const OrderList: React.FC = () => {
             dataIndex: 'orderNo',
         },
         {
+            title: '提交时间（本地时间）',
+            dataIndex: 'createdAt',
+            search: false,
+            valueType: 'dateTime',
+        },
+        {
             title: '用户账号',
             dataIndex: 'username',
             render: (dom: any, record: API.Order) => {

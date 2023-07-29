@@ -102,13 +102,13 @@ const AttributeList: React.FC = () => {
             },
         },
         {
-            title: '添加时间',
+            title: '添加时间（本地时间）',
             valueType: 'dateTime',
             dataIndex: 'createdAt',
             search: false,
         },
         {
-            title: '最后修改时间',
+            title: '最后修改时间（本地时间）',
             valueType: 'dateTime',
             dataIndex: 'lastModifiedAt',
             search: false,

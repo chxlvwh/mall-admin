@@ -57,7 +57,7 @@ const CategoryList: React.FC = () => {
         {
             title: '分类名称',
             dataIndex: 'name',
-            render: (dom, record) => {
+            render: (dom: any, record: API.Category) => {
                 return (
                     <a
                         onClick={async (event) => {
@@ -101,13 +101,13 @@ const CategoryList: React.FC = () => {
             search: false,
         },
         {
-            title: '添加时间',
+            title: '添加时间（本地时间）',
             valueType: 'dateTime',
             dataIndex: 'createdAt',
             search: false,
         },
         {
-            title: '最后修改时间',
+            title: '最后修改时间（本地时间）',
             valueType: 'dateTime',
             dataIndex: 'lastModifiedAt',
             search: false,
@@ -117,7 +117,7 @@ const CategoryList: React.FC = () => {
             dataIndex: 'isActive',
             valueType: 'select',
             valueEnum,
-            render: (_, record) => {
+            render: (_: any, record: API.Category) => {
                 return <Switch checked={record.isActive} onChange={(val) => switchActive(val, record)} />;
             },
         },
@@ -125,7 +125,7 @@ const CategoryList: React.FC = () => {
             title: '设置',
             valueType: 'select',
             search: false,
-            render: (_, record) => {
+            render: (_: any, record: API.Category) => {
                 return (
                     <Space>
                         <Button
@@ -156,7 +156,7 @@ const CategoryList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (_, record) => {
+            render: (_: any, record: API.Category) => {
                 return (
                     <Space>
                         <Button
