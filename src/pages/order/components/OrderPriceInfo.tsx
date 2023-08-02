@@ -44,7 +44,7 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ orderDetail }) => {
             title: '订单总金额',
             dataIndex: 'totalPrice',
             render: (dom: any, record: API.Order) => {
-                return <div>¥{record.totalPrice / 100}</div>;
+                return <h3 className={'danger-color'}>¥{record.totalPrice / 100}</h3>;
             },
         },
     ];

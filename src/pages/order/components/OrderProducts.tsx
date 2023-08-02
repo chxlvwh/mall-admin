@@ -104,6 +104,7 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ items }) => {
                 bordered
             >
                 <ProTable
+                    rowKey="id"
                     columns={columns}
                     dataSource={items}
                     search={false}
