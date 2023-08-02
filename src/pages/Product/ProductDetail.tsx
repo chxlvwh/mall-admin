@@ -42,6 +42,17 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
 
     // 编辑器内容
     const [html, setHtml] = useState('');
+    const initDataSource = (): DataSourceType[] => {
+        return (productDetail?.skus?.map((it) => {
+            return {
+                id: it.id,
+                price: it.price / 100,
+                stock: it.stock,
+                code: it.code,
+                props: it.props,
+            };
+        }) || []) as DataSourceType[];
+    };
 
     useEffect(() => {
         if (isEdit) {
@@ -131,11 +142,28 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             params.status = status;
                             params.stock = stock;
                             params.unit = unit;
-                            params.skus = (dataSource || []).map((it) => ({
-                                ...it,
-                                id: undefined,
-                                price: it.price * 100,
-                            }));
+                            params.skus = (dataSource || []).map((it) => {
+                                const initSkus = initDataSource();
+                                let initItem;
+                                if (initSkus) {
+                                    initItem = initSkus.find((item) => {
+                                        return (
+                                            item.props.length === it.props.length &&
+                                            item.props.every((prop) => {
+                                                return it.props.find(
+                                                    (itProp) =>
+                                                        itProp.name === prop.name && itProp.value === prop.value,
+                                                );
+                                            })
+                                        );
+                                    });
+                                }
+                                return {
+                                    ...it,
+                                    id: initItem ? initItem.id : undefined,
+                                    price: it.price * 100,
+                                };
+                            });
                             params.props = [];
                             if (!fileList || fileList.length === 0) {
                                 message.error('请上传商品图片');
@@ -177,6 +205,7 @@ const ProductDetail: React.FC<CreateProductModalProps> = ({}) => {
                             setFileList={setFileList}
                             html={html}
                             setHtml={setHtml}
+                            initDataSource={initDataSource}
                         />
                     </StepsForm.StepForm>
                 </StepsForm>

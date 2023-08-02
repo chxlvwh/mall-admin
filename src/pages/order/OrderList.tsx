@@ -1,21 +1,22 @@
 import { searchProps } from '@/constants/consts';
 import { getOrderList } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
-import { FormattedMessage } from '@@/exports';
-import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, Space } from 'antd';
 import React, { useRef } from 'react';
+
+export enum OrderStatus {
+    UNPAID = '未支付',
+    DELIVERING = '待发货',
+    DELIVERED = '已发货',
+    COMPLETED = '已完成',
+    CLOSED = '已关闭',
+}
 
 const OrderList: React.FC = () => {
     const actionRef = useRef<ActionType>();
 
     const columns: ProColumns<API.Product>[] = [
-        {
-            title: '编号',
-            dataIndex: 'id',
-            search: false,
-        },
         {
             title: '订单编号',
             dataIndex: 'orderNo',
@@ -61,11 +62,11 @@ const OrderList: React.FC = () => {
             title: '订单状态',
             dataIndex: 'status',
             valueEnum: new Map([
-                ['UNPAID', '待支付'],
-                ['DELIVERING', '待发货'],
-                ['DELIVERED', '已发货'],
-                ['COMPLETED', '已完成'],
-                ['CLOSED', '已关闭'],
+                ['UNPAID', OrderStatus.UNPAID],
+                ['DELIVERING', OrderStatus.DELIVERING],
+                ['DELIVERED', OrderStatus.DELIVERED],
+                ['COMPLETED', OrderStatus.COMPLETED],
+                ['CLOSED', OrderStatus.CLOSED],
             ]),
         },
         {
@@ -79,7 +80,7 @@ const OrderList: React.FC = () => {
                             type={'default'}
                             onClick={async (event) => {
                                 event.preventDefault();
-                                history.push(`/product/detail/${record.id}`);
+                                history.push(`/order/detail/${record.orderNo}`);
                             }}
                         >
                             查看订单
@@ -94,20 +95,9 @@ const OrderList: React.FC = () => {
             <ProTable<API.Order, API.PageParams & API.Order>
                 headerTitle={'品牌列表'}
                 actionRef={actionRef}
-                rowKey="id"
+                rowKey="orderNo"
                 bordered={true}
                 search={searchProps}
-                toolBarRender={() => [
-                    <Button
-                        type="primary"
-                        key="primary"
-                        onClick={() => {
-                            history.push('/product/detail/new');
-                        }}
-                    >
-                        <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
-                    </Button>,
-                ]}
                 request={getOrderList}
                 columns={columns}
             />

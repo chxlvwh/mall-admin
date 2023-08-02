@@ -21,9 +21,11 @@ interface SaleStepFormProps {
     setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>;
     html: string;
     setHtml: React.Dispatch<React.SetStateAction<string>>;
+    initDataSource: () => DataSourceType[];
 }
 
 const SaleStepForm: React.FC<SaleStepFormProps> = ({
+    initDataSource,
     productDetail,
     baseProps,
     dataSource,
@@ -36,19 +38,6 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     setHtml,
 }) => {
     const [initBasePropsMap, setInitBasePropsMap] = useState<{ [key: string]: string[] }>({});
-    const initDataSource = () => {
-        return (
-            productDetail?.skus?.map((it, index) => {
-                return {
-                    id: index,
-                    price: it.price / 100,
-                    stock: it.stock,
-                    code: it.code,
-                    props: it.props,
-                };
-            }) || []
-        );
-    };
 
     const initBaseProps = () => {
         const skus = initDataSource();
@@ -186,7 +175,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                 name="originPrice"
                 width={'sm'}
                 min={0.01}
-                fieldProps={{ precision: 2, prefix: '￥' }}
+                fieldProps={{ precision: 2, prefix: '¥' }}
             />
             <ProFormDigit
                 required
@@ -194,7 +183,7 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                 name="salePrice"
                 width={'sm'}
                 min={0.01}
-                fieldProps={{ precision: 2, prefix: '￥' }}
+                fieldProps={{ precision: 2, prefix: '¥' }}
             />
             <ProFormDigit required label={'总数量'} name="stock" width={'sm'} fieldProps={{ precision: 0 }} />
             <ProFormText initialValue={productDetail?.unit} label={'单位'} name="unit" width={'sm'} />

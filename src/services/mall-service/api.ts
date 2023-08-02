@@ -385,3 +385,11 @@ export async function getOrderList(params: API.PageParams & Partial<API.Order>, 
         success: true,
     };
 }
+
+// 查询order详情
+export async function getOrderByOrderNo(orderNo: string, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}

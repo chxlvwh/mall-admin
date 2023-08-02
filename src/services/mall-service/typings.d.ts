@@ -121,27 +121,37 @@ declare namespace API {
         quantity: number;
         discountedPrice: number;
         status: string;
-        coupon: Coupon;
+        coupon: Coupon[];
         order: Order;
         product: Product;
         sku: Sku;
     };
 
+    type OrderStatus = 'UNPAID' | 'DELIVERING' | 'DELIVERED' | 'COMPLETED' | 'CLOSED';
+
     type Order = {
         id: string;
+        orderNo: string;
         paymentMethod: string;
         orderSource: string;
-        status: string;
+        status: OrderStatus;
         remark: string;
+        deliveryNo: string;
+        logisticsCompany: string;
+        logisticsNo: string;
+        autoReceiveDate: Date;
         createdAt: Date;
         paymentTime: Date;
+        deliveryTime: Date;
+        receiveTime: Date;
+        commentTime: Date;
         lastModifiedAt: Date;
         deletedAt?: Date;
         totalPrice: number;
         user: CurrentUser;
         receiver: Receiver;
         items: OrderItem[];
-        generalCoupon: Coupon;
+        generalCoupon: Coupon[];
     } & CommonDate;
 
     type Attribute = {

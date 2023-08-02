@@ -107,6 +107,10 @@ export default [
                 path: '/order/list',
                 component: './order/OrderList',
             },
+            {
+                path: '/order/detail/:orderNo',
+                component: './order/OrderDetail',
+            },
         ],
     },
     {
