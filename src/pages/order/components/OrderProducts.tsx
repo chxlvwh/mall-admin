@@ -57,6 +57,18 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ items }) => {
             },
         },
         {
+            title: '数量',
+            dataIndex: 'quantity',
+            search: false,
+        },
+        {
+            title: '优惠前价格',
+            dataIndex: 'totalPrice',
+            render: (dom: any, record: API.OrderItem) => {
+                return <div>¥{record.totalPrice / 100}</div>;
+            },
+        },
+        {
             title: '优惠券优惠',
             dataIndex: 'name',
             search: false,
@@ -69,24 +81,11 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ items }) => {
             },
         },
         {
-            title: '成交价',
-            dataIndex: 'name',
-            search: false,
-            render: (dom: any, record: API.OrderItem) => {
-                return <div>¥{record.discountedPrice / 100}</div>;
-            },
-        },
-        {
-            title: '数量',
-            dataIndex: 'quantity',
-            search: false,
-        },
-        {
             title: '小计',
             dataIndex: 'total',
             search: false,
             render: (dom: any, record: API.OrderItem) => {
-                return <div>¥{(record.discountedPrice / 100) * record.quantity}</div>;
+                return <div>¥{record.discountedTotalPrice / 100}</div>;
             },
         },
     ];

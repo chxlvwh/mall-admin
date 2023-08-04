@@ -119,7 +119,9 @@ declare namespace API {
     type OrderItem = {
         id: number;
         quantity: number;
-        discountedPrice: number;
+        basePrice: number;
+        totalPrice: number;
+        discountedTotalPrice: number;
         status: string;
         coupon: Coupon[];
         order: Order;
