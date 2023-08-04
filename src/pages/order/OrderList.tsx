@@ -10,7 +10,10 @@ export enum OrderStatus {
     DELIVERING = '待发货',
     DELIVERED = '已发货',
     COMPLETED = '已完成',
+    COMMENTING = '待评价',
     CLOSED = '已关闭',
+    REFUNDING = '退款中',
+    REFUNDED = '已退款',
 }
 
 const OrderList: React.FC = () => {
@@ -66,6 +69,9 @@ const OrderList: React.FC = () => {
                 ['DELIVERING', OrderStatus.DELIVERING],
                 ['DELIVERED', OrderStatus.DELIVERED],
                 ['COMPLETED', OrderStatus.COMPLETED],
+                ['REFUNDING', OrderStatus.REFUNDING],
+                ['REFUNDING', OrderStatus.COMMENTING],
+                ['REFUNDED', OrderStatus.REFUNDED],
                 ['CLOSED', OrderStatus.CLOSED],
             ]),
         },
