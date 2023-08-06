@@ -73,8 +73,8 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ items }) => {
             dataIndex: 'name',
             search: false,
             render: (dom: any, record: API.OrderItem) => {
-                if (record.coupon && record.coupon[0]) {
-                    return <div>-¥{record.coupon[0].value / 100}</div>;
+                if (record.couponItem && record.couponItem.coupon) {
+                    return <div>-¥{record.couponItem.coupon.value / 100}</div>;
                 } else {
                     return <div>-</div>;
                 }

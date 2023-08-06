@@ -123,7 +123,7 @@ declare namespace API {
         totalPrice: number;
         discountedTotalPrice: number;
         status: string;
-        coupon: Coupon[];
+        couponItem: CouponItem;
         order: Order;
         product: Product;
         sku: Sku;
@@ -153,7 +153,7 @@ declare namespace API {
         user: CurrentUser;
         receiver: Receiver;
         items: OrderItem[];
-        generalCoupon: Coupon[];
+        generalCouponItem: CouponItem;
     } & CommonDate;
 
     type Attribute = {
