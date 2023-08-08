@@ -393,3 +393,11 @@ export async function getOrderByOrderNo(orderNo: string, options?: { [key: strin
         ...(options || {}),
     });
 }
+
+/** 取消订单 */
+export async function cancelOrder(orderNo: string, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}/cancel`, {
+        method: 'PUT',
+        ...(options || {}),
+    });
+}

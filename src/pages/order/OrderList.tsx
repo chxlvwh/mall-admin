@@ -1,8 +1,8 @@
 import { searchProps } from '@/constants/consts';
-import { getOrderList } from '@/services/mall-service/api';
+import { cancelOrder, getOrderList } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Space } from 'antd';
+import { Button, Modal, Space } from 'antd';
 import React, { useRef } from 'react';
 
 export enum OrderStatus {
@@ -91,6 +91,25 @@ const OrderList: React.FC = () => {
                         >
                             查看订单
                         </Button>
+                        {/*取消订单*/}
+                        {record.status === 'UNPAID' && (
+                            <Button
+                                danger
+                                onClick={async () => {
+                                    Modal.confirm({
+                                        title: '确认取消订单？',
+                                        content: '取消订单后，订单将无法恢复',
+                                        onOk: async () => {
+                                            cancelOrder(record.orderNo).then(() => {
+                                                actionRef.current?.reload();
+                                            });
+                                        },
+                                    });
+                                }}
+                            >
+                                取消订单
+                            </Button>
+                        )}
                     </Space>
                 );
             },
