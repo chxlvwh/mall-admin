@@ -2,7 +2,7 @@ import { searchProps } from '@/constants/consts';
 import { cancelOrder, getOrderList } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Space } from 'antd';
+import { Button, Modal, Space, Tag } from 'antd';
 import React, { useRef } from 'react';
 
 export enum OrderStatus {
@@ -64,16 +64,31 @@ const OrderList: React.FC = () => {
         {
             title: '订单状态',
             dataIndex: 'status',
-            valueEnum: new Map([
-                ['UNPAID', OrderStatus.UNPAID],
-                ['DELIVERING', OrderStatus.DELIVERING],
-                ['DELIVERED', OrderStatus.DELIVERED],
-                ['COMPLETED', OrderStatus.COMPLETED],
-                ['REFUNDING', OrderStatus.REFUNDING],
-                ['REFUNDING', OrderStatus.COMMENTING],
-                ['REFUNDED', OrderStatus.REFUNDED],
-                ['CLOSED', OrderStatus.CLOSED],
-            ]),
+            render: (dom: any, record: API.Order) => {
+                switch (record.status) {
+                    case 'UNPAID':
+                        return <Tag color={'warning'}>{OrderStatus[record.status]}</Tag>;
+                    case 'DELIVERING':
+                        return <Tag color={'lime'}>{OrderStatus[record.status]}</Tag>;
+                    case 'DELIVERED':
+                        return <Tag color={'blue'}>{OrderStatus[record.status]}</Tag>;
+                    case 'COMPLETED':
+                        return <Tag color={'green'}>{OrderStatus[record.status]}</Tag>;
+                    case 'COMMENTING':
+                        return <Tag color={'purple'}>{OrderStatus[record.status]}</Tag>;
+                    case 'CLOSED':
+                        return <Tag>{OrderStatus[record.status]}</Tag>;
+                    case 'REFUNDING':
+                        return <Tag color={'magenta'}>{OrderStatus[record.status]}</Tag>;
+                    case 'REFUNDED':
+                        return <Tag>{OrderStatus[record.status]}</Tag>;
+                }
+            },
+        },
+        {
+            title: '备注',
+            dataIndex: 'remark',
+            search: false,
         },
         {
             title: '操作',

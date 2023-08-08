@@ -129,7 +129,15 @@ declare namespace API {
         sku: Sku;
     };
 
-    type OrderStatus = 'UNPAID' | 'DELIVERING' | 'DELIVERED' | 'COMPLETED' | 'CLOSED';
+    type OrderStatus =
+        | 'UNPAID'
+        | 'DELIVERING'
+        | 'DELIVERED'
+        | 'COMPLETED'
+        | 'CLOSED'
+        | 'COMMENTING'
+        | 'REFUNDING'
+        | 'REFUNDED';
 
     type Order = {
         id: string;
