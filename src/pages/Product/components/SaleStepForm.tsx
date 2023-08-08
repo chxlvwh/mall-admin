@@ -38,6 +38,8 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
     setHtml,
 }) => {
     const [initBasePropsMap, setInitBasePropsMap] = useState<{ [key: string]: string[] }>({});
+    /**是否disable总数量 */
+    const [disableTotalStock, setDisableTotalStock] = useState<boolean>(false);
 
     const initBaseProps = () => {
         const skus = initDataSource();
@@ -60,6 +62,16 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
             setDataSource(initDataSource());
         });
     }, [productDetail]);
+
+    useEffect(() => {
+        if (dataSource.length) {
+            setDisableTotalStock(true);
+            const totalStock = dataSource.reduce((prev, cur) => prev + parseInt(cur.stock), 0);
+            formRef.current?.setFieldsValue({ stock: totalStock });
+        } else {
+            setDisableTotalStock(false);
+        }
+    }, [dataSource]);
 
     const generateSkus = async () => {
         Modal.confirm({
@@ -185,7 +197,14 @@ const SaleStepForm: React.FC<SaleStepFormProps> = ({
                 min={0.01}
                 fieldProps={{ precision: 2, prefix: '¥' }}
             />
-            <ProFormDigit required label={'总数量'} name="stock" width={'sm'} fieldProps={{ precision: 0 }} />
+            <ProFormDigit
+                required
+                label={'总数量'}
+                name="stock"
+                width={'sm'}
+                fieldProps={{ precision: 0 }}
+                disabled={disableTotalStock}
+            />
             <ProFormText initialValue={productDetail?.unit} label={'单位'} name="unit" width={'sm'} />
             {baseProps.length ? (
                 <ProForm.Item name="baseProps" label={'基本属性'}>
