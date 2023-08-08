@@ -14,7 +14,7 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ items }) => {
     const totalProductPrice = useMemo(() => {
         return (
             items?.reduce((pre, cur) => {
-                return pre + (cur.sku ? cur.sku.price : cur.product.salePrice) * cur.quantity;
+                return pre + cur.discountedTotalPrice;
             }, 0) || 0
         );
     }, [items]);
