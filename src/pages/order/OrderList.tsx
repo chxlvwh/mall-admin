@@ -1,8 +1,16 @@
 import { searchProps } from '@/constants/consts';
-import { cancelOrder, getOrderList } from '@/services/mall-service/api';
+import { cancelOrder, deleteOrder, getOrderList, updateOrder } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
-import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Button, Modal, Space, Tag } from 'antd';
+import { EditTwoTone } from '@ant-design/icons';
+import {
+    ActionType,
+    ModalForm,
+    PageContainer,
+    ProColumns,
+    ProFormTextArea,
+    ProTable,
+} from '@ant-design/pro-components';
+import { Button, Form, Modal, Space, Tag } from 'antd';
 import React, { useRef } from 'react';
 
 export enum OrderStatus {
@@ -18,6 +26,7 @@ export enum OrderStatus {
 
 const OrderList: React.FC = () => {
     const actionRef = useRef<ActionType>();
+    const [remarkForm] = Form.useForm();
 
     const columns: ProColumns<API.Product>[] = [
         {
@@ -89,6 +98,30 @@ const OrderList: React.FC = () => {
             title: '备注',
             dataIndex: 'remark',
             search: false,
+            render: (dom: any, record: API.Order) => {
+                return (
+                    <Space>
+                        {record.remark || '-'}
+                        <ModalForm<{ remark: string }>
+                            form={remarkForm}
+                            title="更新备注"
+                            layout={'horizontal'}
+                            width={400}
+                            trigger={<EditTwoTone className={'pointer'} />}
+                            onOpenChange={() => {
+                                remarkForm.setFieldsValue({ remark: record.remark });
+                            }}
+                            onFinish={async (values) => {
+                                await updateOrder(record.orderNo, { remark: values.remark });
+                                actionRef.current?.reload();
+                                return true;
+                            }}
+                        >
+                            <ProFormTextArea width="md" name="remark" label="备注" placeholder="请输入" />
+                        </ModalForm>
+                    </Space>
+                );
+            },
         },
         {
             title: '操作',
@@ -123,6 +156,28 @@ const OrderList: React.FC = () => {
                                 }}
                             >
                                 取消订单
+                            </Button>
+                        )}
+                        {/*删除订单*/}
+                        {(record.status === 'CLOSED' ||
+                            record.status === 'COMPLETED' ||
+                            record.status === 'REFUNDED') && (
+                            <Button
+                                type={'primary'}
+                                danger
+                                onClick={async () => {
+                                    Modal.confirm({
+                                        title: '确认删除订单？',
+                                        content: '删除订单后，订单将无法恢复',
+                                        onOk: async () => {
+                                            deleteOrder(record.orderNo).then(() => {
+                                                actionRef.current?.reload();
+                                            });
+                                        },
+                                    });
+                                }}
+                            >
+                                删除订单
                             </Button>
                         )}
                     </Space>

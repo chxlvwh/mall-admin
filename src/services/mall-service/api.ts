@@ -401,3 +401,20 @@ export async function cancelOrder(orderNo: string, options?: { [key: string]: an
         ...(options || {}),
     });
 }
+
+/** 删除订单 */
+export async function deleteOrder(orderNo: string, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 更新订单 */
+export async function updateOrder(orderNo: string, body: Partial<API.Order>, options?: { [key: string]: any }) {
+    return request<API.Order>(`/api/v1/order/${orderNo}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
