@@ -418,3 +418,48 @@ export async function updateOrder(orderNo: string, body: Partial<API.Order>, opt
         ...(options || {}),
     });
 }
+
+/** 新增退款原因 */
+export async function addRefundReason(body: Partial<API.RefundReason>, options?: { [key: string]: any }) {
+    return request<API.RefundReason>('/api/v1/refund-reason', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 更新退款原因 */
+export async function updateRefundReason(
+    id: number,
+    body: Partial<API.RefundReason>,
+    options?: { [key: string]: any },
+) {
+    return request<API.RefundReason>(`/api/v1/refund-reason/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 删除退款原因 */
+export async function deleteRefundReason(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.RefundReason>>(`/api/v1/refund-reason/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 获取退款原因列表 */
+export async function getRefundReasonList(options?: { [key: string]: any }) {
+    return request<API.Resp<API.RefundReason[]>>('/api/v1/refund-reason', {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+/** 根据id获取退款原因 */
+export async function getRefundReasonById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.RefundReason>>(`/api/v1/refund-reason/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}

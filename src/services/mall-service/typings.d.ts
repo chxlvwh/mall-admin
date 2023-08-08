@@ -17,6 +17,13 @@ declare namespace API {
         roles?: object[];
     } & CommonDate;
 
+    type RefundReason = {
+        id: number;
+        value: string;
+        isActive: boolean;
+        sort: number;
+    } & CommonDate;
+
     type Brand = {
         id: number;
         name: string;

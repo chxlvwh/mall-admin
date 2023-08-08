@@ -111,6 +111,11 @@ export default [
                 path: '/order/detail/:orderNo',
                 component: './order/OrderDetail',
             },
+            {
+                name: 'refund.reason',
+                path: '/order/refundReason',
+                component: './order/RefundReasonList',
+            },
         ],
     },
     {
