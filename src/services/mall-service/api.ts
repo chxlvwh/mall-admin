@@ -463,3 +463,20 @@ export async function getRefundReasonById(id: number, options?: { [key: string]:
         ...(options || {}),
     });
 }
+
+/** 查询订单设置 */
+export async function getOrderSetting(options?: { [key: string]: any }) {
+    return request<API.Resp<API.OrderSetting[]>>('/api/v1/order-setting', {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+/** 批量更新订单设置 */
+export async function updateOrderSetting(body: Partial<API.OrderSetting>[], options?: { [key: string]: any }) {
+    return request<API.Resp<API.OrderSetting[]>>(`/api/v1/order-setting/bulk`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}

@@ -30,6 +30,7 @@ export default {
     'menu.product.category-list': '商品分类',
     'menu.product.attribute-list': '商品属性',
     'menu.order': '订单',
+    'menu.order.order.settings': '订单设置',
     'menu.order.refund.reason': '退款原因配置',
     'menu.order.order': '订单列表',
     'menu.marking': '营销',

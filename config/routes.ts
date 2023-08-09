@@ -112,6 +112,11 @@ export default [
                 component: './order/OrderDetail',
             },
             {
+                name: 'order.settings',
+                path: '/order/settings',
+                component: './order/OrderSetting',
+            },
+            {
                 name: 'refund.reason',
                 path: '/order/refundReason',
                 component: './order/RefundReasonList',

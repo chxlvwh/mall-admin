@@ -123,6 +123,14 @@ declare namespace API {
         orders: Order[];
     };
 
+    type OrderSetting = {
+        id: number;
+        key: string;
+        value: number;
+        unit: string;
+        description: string;
+    };
+
     type OrderItem = {
         id: number;
         quantity: number;
