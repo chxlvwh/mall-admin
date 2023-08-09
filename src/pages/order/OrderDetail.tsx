@@ -26,6 +26,9 @@ const OrderDetail: React.FC<OrderDetailProps> = () => {
     }, []);
     const orderStatus = ['UNPAID', 'PAID', 'DELIVERING', 'DELIVERED', 'CLOSED'];
     const statusIndex = useMemo(() => {
+        if (orderDetail?.status === 'CLOSED') {
+            return 1;
+        }
         return orderStatus.findIndex((it) => it === orderDetail?.status);
     }, [orderDetail?.status]);
     const items: StepProps[] = [
