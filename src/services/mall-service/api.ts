@@ -373,7 +373,10 @@ export async function deleteCoupon(id: number, options?: { [key: string]: any })
 }
 
 // 查询order列表
-export async function getOrderList(params: API.PageParams & Partial<API.Order>, options?: { [key: string]: any }) {
+export async function getOrderList(
+    params: API.PageParams & Partial<API.Order> & { withLogistic?: boolean },
+    options?: { [key: string]: any },
+) {
     const result = await request<API.RestList<API.Order>>('/api/v1/order', {
         method: 'GET',
         params,
@@ -496,6 +499,19 @@ export async function orderDeliver(
     options?: { [key: string]: any },
 ) {
     return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}/deliver`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 更新订单发货信息 */
+export async function updateDeliverOrder(
+    orderNo: string,
+    body: { logisticCompanyId: number; logisticNo: string },
+    options?: { [key: string]: any },
+) {
+    return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}/updateDeliveryInfo`, {
         method: 'PUT',
         data: body,
         ...(options || {}),

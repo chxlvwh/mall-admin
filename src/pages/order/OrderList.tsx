@@ -5,6 +5,7 @@ import {
     getLogisticList,
     getOrderList,
     orderDeliver,
+    updateDeliverOrder,
     updateOrder,
 } from '@/services/mall-service/api';
 import { history } from '@@/core/history';
@@ -156,10 +157,14 @@ const OrderList: React.FC = () => {
                             查看订单
                         </Button>
                         {/*订单发货*/}
-                        {record.status === 'DELIVERING' && (
+                        {(record.status === 'DELIVERING' || record.status === 'DELIVERED') && (
                             <ModalForm<{ logisticCompanyId: number; logisticNo: string }>
-                                title="订单发货"
-                                trigger={<Button onClick={async () => {}}>订单发货</Button>}
+                                title={record.status === 'DELIVERING' ? '订单发货' : '修改发货信息'}
+                                trigger={
+                                    <Button onClick={async () => {}}>
+                                        {record.status === 'DELIVERING' ? '订单发货' : '修改发货信息'}
+                                    </Button>
+                                }
                                 // 重新打开窗口时，重置表单(验证/数据)
                                 modalProps={{ destroyOnClose: true }}
                                 onOpenChange={() => {
@@ -171,9 +176,14 @@ const OrderList: React.FC = () => {
                                     if (!logisticCompanyId || !logisticNo) {
                                         return false;
                                     }
-                                    orderDeliver(record.orderNo, { logisticCompanyId, logisticNo }).then(() => {
+                                    if (record.status === 'DELIVERING') {
+                                        await orderDeliver(record.orderNo, { logisticCompanyId, logisticNo });
                                         actionRef.current?.reload();
-                                    });
+                                    } else {
+                                        await updateDeliverOrder(record.orderNo, { logisticCompanyId, logisticNo });
+                                        actionRef.current?.reload();
+                                    }
+                                    return true;
                                 }}
                             >
                                 <ProForm.Group>
@@ -209,6 +219,7 @@ const OrderList: React.FC = () => {
                                         valueEnum={undefined}
                                         request={undefined}
                                         debounceTime={undefined}
+                                        initialValue={record?.logistic?.id}
                                         options={LogisticList.map((item) => {
                                             return { label: item.name, value: item.id };
                                         })}
@@ -219,6 +230,7 @@ const OrderList: React.FC = () => {
                                         label={'快递单号'}
                                         placeholder={'请输入'}
                                         name={'logisticNo'}
+                                        initialValue={record?.logisticNo}
                                     ></ProFormText>
                                 </ProForm.Group>
                             </ModalForm>
@@ -277,7 +289,9 @@ const OrderList: React.FC = () => {
                 rowKey="orderNo"
                 bordered={true}
                 search={searchProps}
-                request={getOrderList}
+                request={async (params: Partial<API.Order>) => {
+                    return await getOrderList({ ...params, withLogistic: true });
+                }}
                 columns={columns}
             />
         </PageContainer>
