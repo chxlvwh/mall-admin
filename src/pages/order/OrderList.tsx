@@ -74,8 +74,8 @@ const OrderList: React.FC = () => {
             title: '支付方式',
             dataIndex: 'paymentMethod',
             valueEnum: new Map([
-                ['WECHAT', '微信支付'],
-                ['ALIPAY', '支付宝支付'],
+                [1, '微信支付'],
+                [2, '支付宝支付'],
             ]),
         },
         {
