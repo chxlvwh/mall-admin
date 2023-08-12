@@ -109,7 +109,17 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             if (initialState?.loading) return <PageLoading />;
             return (
                 <>
-                    <ConfigProvider theme={{ token: { borderRadius: 1 } }}>{children}</ConfigProvider>
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                borderRadius: 1,
+                                colorFillAlter: '#f2f6fc',
+                                colorBorderSecondary: '#dcdfe6',
+                            },
+                        }}
+                    >
+                        {children}
+                    </ConfigProvider>
                     <SettingDrawer
                         disableUrlParams
                         enableDarkTheme
