@@ -33,6 +33,11 @@ const OrderSetting: React.FC = () => {
                 style={{ padding: '0 100px' }}
                 form={formRef}
                 onFinish={submit}
+                submitter={{
+                    render: (_, dom) => {
+                        return <div>{dom.find((it) => it.key === 'submit')}</div>;
+                    },
+                }}
             >
                 <ProForm.Group key={'key'}>
                     <ProFormDigit
@@ -42,7 +47,6 @@ const OrderSetting: React.FC = () => {
                         min={1}
                         max={2880}
                         width="md"
-                        initialValue={30}
                         fieldProps={{ addonAfter: '分' }}
                     />
                     <span style={{ lineHeight: '36px' }}>未付款，订单自动关闭</span>
@@ -54,7 +58,6 @@ const OrderSetting: React.FC = () => {
                         min={1}
                         max={14}
                         width="md"
-                        initialValue={7}
                         fieldProps={{ addonAfter: '天' }}
                     />
                     <span style={{ lineHeight: '36px' }}>自动五星好评</span>
