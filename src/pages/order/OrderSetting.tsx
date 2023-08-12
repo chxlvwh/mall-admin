@@ -2,7 +2,7 @@ import { getOrderSetting, updateOrderSetting } from '@/services/mall-service/api
 import { PageContainer } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form';
 import { ProFormDigit } from '@ant-design/pro-form/lib';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
 import React, { useEffect } from 'react';
 
 const OrderSetting: React.FC = () => {
@@ -19,8 +19,10 @@ const OrderSetting: React.FC = () => {
 
     const submit = (values: any) => {
         const params = Object.keys(values).map((key) => ({ key, value: values[key] }));
-        return updateOrderSetting(params).then((res) => {
-            console.log(res);
+        return updateOrderSetting(params).then(async (res) => {
+            if (res.data) {
+                message.success('更新成功');
+            }
         });
     };
 
