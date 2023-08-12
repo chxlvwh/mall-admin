@@ -168,9 +168,10 @@ declare namespace API {
         remark: string;
         deliveryNo: string;
         logisticsCompany: string;
-        logisticsNo: string;
+        logisticNo: string;
         autoReceiveDate: Date;
         createdAt: Date;
+        logistic: Logistic;
         paymentTime: Date;
         deliveryTime: Date;
         receiveTime: Date;

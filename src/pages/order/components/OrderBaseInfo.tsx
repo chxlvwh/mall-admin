@@ -34,11 +34,6 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ orderDetail }) => {
                         copyable: true,
                     },
                     {
-                        title: '发货单流水号',
-                        key: 'deliveryNo',
-                        dataIndex: 'deliveryNo',
-                    },
-                    {
                         title: '用户账号',
                         key: 'state2',
                         dataIndex: 'user.username',
@@ -51,8 +46,8 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ orderDetail }) => {
                         key: 'date',
                         dataIndex: 'paymentMethod',
                         valueEnum: new Map([
-                            ['WECHAT', '微信支付'],
-                            ['ALIPAY', '支付宝支付'],
+                            [1, '微信'],
+                            [2, '支付宝'],
                         ]),
                     },
                     {
@@ -64,11 +59,14 @@ const OrderBaseInfo: React.FC<OrderDetailProps> = ({ orderDetail }) => {
                         title: '配送方式',
                         key: 'logisticsCompany',
                         dataIndex: 'logisticsCompany',
+                        render: (dom: any, record: API.Order) => {
+                            return <div>{record?.logistic?.name}</div>;
+                        },
                     },
                     {
                         title: '物流单号',
-                        key: 'logisticsNo',
-                        dataIndex: 'logisticsNo',
+                        key: 'logisticNo',
+                        dataIndex: 'logisticNo',
                     },
                     {
                         title: '自动确认收货时间',
