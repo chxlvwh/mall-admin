@@ -24,7 +24,7 @@ const OrderDetail: React.FC<OrderDetailProps> = () => {
             setOrderDetail(res.data);
         });
     }, []);
-    const orderStatus = ['UNPAID', 'PAID', 'DELIVERING', 'DELIVERED', 'CLOSED'];
+    const orderStatus = ['UNPAID', 'PAID', 'DELIVERING', 'DELIVERED', 'COMPLETED'];
     const statusIndex = useMemo(() => {
         if (orderDetail?.status === 'CLOSED') {
             return 1;
@@ -54,7 +54,7 @@ const OrderDetail: React.FC<OrderDetailProps> = () => {
         },
         {
             title: '完成评价',
-            status: statusIndex > 4 ? 'finish' : statusIndex === 3 ? 'process' : 'wait',
+            status: statusIndex === 4 ? 'finish' : statusIndex === 3 ? 'process' : 'wait',
             description: orderDetail?.commentTime ? getDateTime(orderDetail?.commentTime) : '',
         },
     ];
