@@ -90,6 +90,16 @@ const OrderList: React.FC = () => {
         {
             title: '订单状态',
             dataIndex: 'status',
+            valueEnum: new Map([
+                ['UNPAID', '未支付'],
+                ['DELIVERING', '待发货'],
+                ['DELIVERED', '已发货'],
+                ['COMPLETED', '已完成'],
+                ['COMMENTING', '待评价'],
+                ['CLOSED', '已关闭'],
+                ['REFUNDING', '退款中'],
+                ['REFUNDED', '已退款'],
+            ]),
             render: (dom: any, record: API.Order) => {
                 switch (record.status) {
                     case 'UNPAID':
