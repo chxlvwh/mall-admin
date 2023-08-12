@@ -480,3 +480,24 @@ export async function updateOrderSetting(body: Partial<API.OrderSetting>[], opti
         ...(options || {}),
     });
 }
+
+/** 查询物流公司列表 */
+export async function getLogisticList(options?: { [key: string]: any }) {
+    return request<API.Resp<API.Logistic[]>>('/api/v1/order/logistic', {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+/** 订单发货 */
+export async function orderDeliver(
+    orderNo: string,
+    body: { logisticCompanyId: number; logisticNo: string },
+    options?: { [key: string]: any },
+) {
+    return request<API.Resp<API.Order>>(`/api/v1/order/${orderNo}/deliver`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}

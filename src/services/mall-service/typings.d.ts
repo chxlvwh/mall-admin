@@ -7,6 +7,11 @@ declare namespace API {
         lastModified?: Date;
     };
 
+    type Logistic = {
+        id: number;
+        name: string;
+    };
+
     type CurrentUser = {
         id: number;
         password: string;

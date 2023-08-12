@@ -1,5 +1,12 @@
 import { searchProps } from '@/constants/consts';
-import { cancelOrder, deleteOrder, getOrderList, updateOrder } from '@/services/mall-service/api';
+import {
+    cancelOrder,
+    deleteOrder,
+    getLogisticList,
+    getOrderList,
+    orderDeliver,
+    updateOrder,
+} from '@/services/mall-service/api';
 import { history } from '@@/core/history';
 import { EditTwoTone } from '@ant-design/icons';
 import {
@@ -10,8 +17,10 @@ import {
     ProFormTextArea,
     ProTable,
 } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-form';
+import { ProFormSelect, ProFormText } from '@ant-design/pro-form/lib';
 import { Button, Form, Modal, Space, Tag } from 'antd';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export enum OrderStatus {
     UNPAID = '未支付',
@@ -27,6 +36,13 @@ export enum OrderStatus {
 const OrderList: React.FC = () => {
     const actionRef = useRef<ActionType>();
     const [remarkForm] = Form.useForm();
+    const [LogisticList, setLogisticList] = useState<API.Logistic[]>([]);
+
+    useEffect(() => {
+        getLogisticList().then((res) => {
+            setLogisticList(res.data);
+        });
+    }, []);
 
     const columns: ProColumns<API.Product>[] = [
         {
@@ -139,6 +155,74 @@ const OrderList: React.FC = () => {
                         >
                             查看订单
                         </Button>
+                        {/*订单发货*/}
+                        {record.status === 'DELIVERING' && (
+                            <ModalForm<{ logisticCompanyId: number; logisticNo: string }>
+                                title="订单发货"
+                                trigger={<Button onClick={async () => {}}>订单发货</Button>}
+                                // 重新打开窗口时，重置表单(验证/数据)
+                                modalProps={{ destroyOnClose: true }}
+                                onOpenChange={() => {
+                                    remarkForm.setFieldsValue({ remark: record.remark });
+                                }}
+                                onFinish={async (values) => {
+                                    console.log('[values:] ', values);
+                                    const { logisticCompanyId, logisticNo } = values;
+                                    if (!logisticCompanyId || !logisticNo) {
+                                        return false;
+                                    }
+                                    orderDeliver(record.orderNo, { logisticCompanyId, logisticNo }).then(() => {
+                                        actionRef.current?.reload();
+                                    });
+                                }}
+                            >
+                                <ProForm.Group>
+                                    <ProFormText
+                                        disabled
+                                        width={'md'}
+                                        label={'收货人'}
+                                        name={'name'}
+                                        initialValue={record.receiver.name}
+                                    ></ProFormText>
+                                    <ProFormText
+                                        disabled
+                                        width={'md'}
+                                        label={'手机号'}
+                                        name={'phone'}
+                                        initialValue={record.receiver.phone}
+                                    ></ProFormText>
+                                </ProForm.Group>
+                                <ProFormText
+                                    disabled
+                                    width={'lg'}
+                                    label={'收货地址'}
+                                    name={'address'}
+                                    initialValue={record.receiver.address}
+                                ></ProFormText>
+                                <ProForm.Group>
+                                    <ProFormSelect
+                                        rules={[{ required: true, message: '请选择快递公司' }]}
+                                        width={'md'}
+                                        label={'快递公司'}
+                                        name={'logisticCompanyId'}
+                                        params={undefined}
+                                        valueEnum={undefined}
+                                        request={undefined}
+                                        debounceTime={undefined}
+                                        options={LogisticList.map((item) => {
+                                            return { label: item.name, value: item.id };
+                                        })}
+                                    ></ProFormSelect>
+                                    <ProFormText
+                                        rules={[{ required: true }]}
+                                        width={'md'}
+                                        label={'快递单号'}
+                                        placeholder={'请输入'}
+                                        name={'logisticNo'}
+                                    ></ProFormText>
+                                </ProForm.Group>
+                            </ModalForm>
+                        )}
                         {/*取消订单*/}
                         {record.status === 'UNPAID' && (
                             <Button

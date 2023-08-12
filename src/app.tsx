@@ -115,6 +115,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                                 borderRadius: 1,
                                 colorFillAlter: '#f2f6fc',
                                 colorBorderSecondary: '#dcdfe6',
+                                colorTextDisabled: 'rgba(0,0,0,0.6)',
                             },
                         }}
                     >
