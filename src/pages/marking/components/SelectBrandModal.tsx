@@ -30,6 +30,7 @@ const SelectBrandModal: React.FC<SelectBrandModalProps> = ({ createModalOpen, ha
 
     useEffect(() => {
         if (!createModalOpen) return;
+        setDefaultIds([]);
         onSearch('');
     }, [createModalOpen]);
 
@@ -63,8 +64,11 @@ const SelectBrandModal: React.FC<SelectBrandModalProps> = ({ createModalOpen, ha
             open={createModalOpen}
             onOpenChange={handleModalOpen}
             onFinish={async () => {
-                const brandIds = selectedRows.map((item) => item.id);
-                if (brandIds.length === 0) return;
+                const brandIds = selectedRows.map((item) => item.id).filter((item) => !defaultIds.includes(item));
+                if (brandIds.length === 0) {
+                    handleModalOpen(false);
+                    return;
+                }
                 addRecommendBrand({ brandIds }).then(() => {
                     handleModalOpen(false);
                     actionRef.current?.reload();
@@ -85,13 +89,10 @@ const SelectBrandModal: React.FC<SelectBrandModalProps> = ({ createModalOpen, ha
                         // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
                         // 注释该行则默认不显示下拉选项
                         selections: false,
-                        defaultSelectedRowKeys: defaultIds,
+                        defaultSelectedRowKeys: [],
                         onChange: (_: any, selectedRows: React.SetStateAction<API.Brand[]>) => {
                             setSelectedRows(selectedRows);
                         },
-                        getCheckboxProps: (record: API.Brand) => ({
-                            disabled: defaultIds.includes(record.id),
-                        }),
                     }}
                     tableAlertRender={false}
                     tableAlertOptionRender={false}
