@@ -92,8 +92,13 @@ export default [
         routes: [
             {
                 name: 'coupon',
-                path: '/marking/list',
+                path: '/marking/coupon',
                 component: './marking/CouponList',
+            },
+            {
+                name: 'brand',
+                path: '/marking/brand',
+                component: './marking/RecommendBrandList',
             },
         ],
     },

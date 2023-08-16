@@ -517,3 +517,59 @@ export async function updateDeliverOrder(
         ...(options || {}),
     });
 }
+
+/** 查询品牌推荐列表 */
+export async function getRecommendBrandList(
+    params: API.PageParams & Partial<API.RecommendBrand>,
+    options?: { [key: string]: any },
+) {
+    const result = await request<API.RestList<API.RecommendBrand>>('/api/v1/recommend-brand', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+/** 新增品牌推荐 */
+export async function addRecommendBrand(body: { brandIds: number[] }, options?: { [key: string]: any }) {
+    return request<API.RecommendBrand>('/api/v1/recommend-brand', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 删除品牌推荐 */
+export async function deleteRecommendBrand(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendBrand>>(`/api/v1/recommend-brand/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 批量查询推荐品牌 */
+export async function getRecommendBrandByIds(brandIds: number[], options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendBrand[]>>(`/api/v1/recommend-brand/getByBrandIds`, {
+        method: 'GET',
+        params: { brandIds },
+        ...(options || {}),
+    });
+}
+
+/** 更新品牌推荐 */
+export async function updateRecommendBrand(
+    id: number,
+    body: Partial<API.RecommendBrand>,
+    options?: { [key: string]: any },
+) {
+    return request<API.RecommendBrand>(`/api/v1/recommend-brand/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
