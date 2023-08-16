@@ -89,6 +89,9 @@ const SelectBrandModal: React.FC<SelectBrandModalProps> = ({ createModalOpen, ha
                         onChange: (_: any, selectedRows: React.SetStateAction<API.Brand[]>) => {
                             setSelectedRows(selectedRows);
                         },
+                        getCheckboxProps: (record: API.Brand) => ({
+                            disabled: defaultIds.includes(record.id),
+                        }),
                     }}
                     tableAlertRender={false}
                     tableAlertOptionRender={false}
