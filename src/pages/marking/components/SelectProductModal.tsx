@@ -1,4 +1,4 @@
-import { addRecommendNew, getProductList, getRecommendNewByIds } from '@/services/mall-service/api';
+import { getProductList } from '@/services/mall-service/api';
 import { ActionType, ModalForm, ProTable } from '@ant-design/pro-components';
 import Search from 'antd/es/input/Search';
 import React, { useEffect, useState } from 'react';
@@ -7,8 +7,16 @@ interface SelectProductModalProps {
     createModalOpen: boolean;
     handleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     actionRef: React.MutableRefObject<ActionType | undefined>;
+    createFn: ({ productIds }: { productIds: number[] }) => Promise<any>;
+    getByIdsFn: (productIds: number[]) => Promise<{ data: API.RecommendNew[] }>;
 }
-const SelectProductModal: React.FC<SelectProductModalProps> = ({ createModalOpen, handleModalOpen, actionRef }) => {
+const SelectProductModal: React.FC<SelectProductModalProps> = ({
+    createModalOpen,
+    handleModalOpen,
+    actionRef,
+    createFn,
+    getByIdsFn,
+}) => {
     const [productList, setProductList] = useState<API.Product[]>([]);
     const [selectedRows, setSelectedRows] = useState<API.Product[]>([]);
     const [total, setTotal] = useState(0);
@@ -20,7 +28,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ createModalOpen
         getProductList({ name: value, pageSize }).then((res) => {
             setProductList(res.data);
             setTotal(res.total);
-            getRecommendNewByIds(res.data.map((item) => item.id)).then((res) => {
+            getByIdsFn(res.data.map((item) => item.id)).then((res) => {
                 setDefaultIds(res.data.map((item) => item.product.id));
                 setLoadSuccess(true);
             });
@@ -63,7 +71,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ createModalOpen
                     handleModalOpen(false);
                     return;
                 }
-                addRecommendNew({ productIds }).then(() => {
+                createFn({ productIds }).then(() => {
                     handleModalOpen(false);
                     actionRef.current?.reload();
                 });

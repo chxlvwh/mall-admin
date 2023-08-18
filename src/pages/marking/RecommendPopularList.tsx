@@ -1,18 +1,18 @@
 import { searchProps } from '@/constants/consts';
 import SelectProductModal from '@/pages/marking/components/SelectProductModal';
 import {
-    addRecommendNew,
-    deleteRecommendNew,
-    getRecommendNewByIds,
-    getRecommendNewList,
-    updateRecommendNew,
+    addRecommendPopular,
+    deleteRecommendPopular,
+    getRecommendPopularByIds,
+    getRecommendPopularList,
+    updateRecommendPopular,
 } from '@/services/mall-service/api';
 import { ActionType, ModalForm, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { ProFormDigit } from '@ant-design/pro-form/lib';
 import { Button, Form, message, Modal, Space, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 
-const RecommendNewList: React.FC = () => {
+const RecommendPopularopularList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     const [formRef] = Form.useForm();
@@ -22,7 +22,7 @@ const RecommendNewList: React.FC = () => {
             title: '删除',
             content: '确定删除该推荐商品吗？',
             onOk: () => {
-                deleteRecommendNew(id).then(async () => {
+                deleteRecommendPopular(id).then(async () => {
                     actionRef.current?.reload();
                     await message.success('删除成功');
                 });
@@ -30,21 +30,21 @@ const RecommendNewList: React.FC = () => {
         });
     };
 
-    const switchRecommend = (checked: boolean, record: API.RecommendNew) => {
+    const switchRecommend = (checked: boolean, record: API.RecommendPopular) => {
         // actionRef.current?.reload();
         Modal.confirm({
             title: '确认',
             content: '是否修改推荐状态？',
             onOk: async () => {
                 const params = { isRecommend: checked ? 1 : 0 };
-                updateRecommendNew(record.id, params).then(async () => {
+                updateRecommendPopular(record.id, params).then(async () => {
                     if (actionRef.current) actionRef.current?.reload();
                 });
             },
         });
     };
 
-    const columns: ProColumns<API.RecommendNew>[] = [
+    const columns: ProColumns<API.RecommendPopular>[] = [
         {
             title: '编号',
             dataIndex: 'id',
@@ -53,14 +53,14 @@ const RecommendNewList: React.FC = () => {
         {
             title: '商品名称',
             dataIndex: 'productName',
-            render: (dom: string, record: API.RecommendNew) => {
+            render: (dom: string, record: API.RecommendPopular) => {
                 return <div>{record.product.name}</div>;
             },
         },
         {
             title: '是否推荐',
             dataIndex: 'isRecommend',
-            render: (dom: any, record: API.RecommendNew) => {
+            render: (dom: any, record: API.RecommendPopular) => {
                 return (
                     <Switch onChange={(checked) => switchRecommend(checked, record)} checked={!!record.isRecommend} />
                 );
@@ -79,7 +79,7 @@ const RecommendNewList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (dom: any, record: API.RecommendNew) => {
+            render: (dom: any, record: API.RecommendPopular) => {
                 return (
                     <Space>
                         <ModalForm
@@ -95,7 +95,7 @@ const RecommendNewList: React.FC = () => {
                                 formRef.setFieldValue('sort', record.sort);
                             }}
                             onFinish={async (values) => {
-                                await updateRecommendNew(record.id, { ...record, ...values });
+                                await updateRecommendPopular(record.id, { ...record, ...values });
                                 if (actionRef.current) actionRef.current?.reload();
                                 return true;
                             }}
@@ -112,7 +112,7 @@ const RecommendNewList: React.FC = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.RecommendNew, API.PageParams & API.RecommendNew>
+            <ProTable<API.RecommendPopular, API.PageParams & API.RecommendPopular>
                 headerTitle={'数据列表'}
                 actionRef={actionRef}
                 rowKey="id"
@@ -128,18 +128,18 @@ const RecommendNewList: React.FC = () => {
                         选择商品
                     </Button>,
                 ]}
-                request={getRecommendNewList}
+                request={getRecommendPopularList}
                 columns={columns}
             />
             <SelectProductModal
                 createModalOpen={createModalOpen}
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}
-                createFn={addRecommendNew}
-                getByIdsFn={getRecommendNewByIds}
+                createFn={addRecommendPopular}
+                getByIdsFn={getRecommendPopularByIds}
             />
         </PageContainer>
     );
 };
 
-export default RecommendNewList;
+export default RecommendPopularopularList;

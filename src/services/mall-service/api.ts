@@ -629,3 +629,59 @@ export async function updateRecommendNew(
         ...(options || {}),
     });
 }
+
+/** 查询人气推荐列表 */
+export async function getRecommendPopularList(
+    params: API.PageParams & Partial<API.RecommendPopular>,
+    options?: { [key: string]: any },
+) {
+    const result = await request<API.RestList<API.RecommendPopular>>('/api/v1/recommend-popular', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+/** 新增人气推荐 */
+export async function addRecommendPopular(body: { productIds: number[] }, options?: { [key: string]: any }) {
+    return request<API.RecommendPopular>('/api/v1/recommend-popular', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 删除人气推荐 */
+export async function deleteRecommendPopular(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendPopular>>(`/api/v1/recommend-popular/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 批量查询推荐人气 */
+export async function getRecommendPopularByIds(productIds: number[], options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendPopular[]>>(`/api/v1/recommend-popular/getByProductIds`, {
+        method: 'GET',
+        params: { productIds },
+        ...(options || {}),
+    });
+}
+
+/** 更新人气推荐 */
+export async function updateRecommendPopular(
+    id: number,
+    body: Partial<API.RecommendPopular>,
+    options?: { [key: string]: any },
+) {
+    return request<API.RecommendPopular>(`/api/v1/recommend-popular/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}

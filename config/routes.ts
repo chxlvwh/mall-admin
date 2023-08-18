@@ -105,6 +105,11 @@ export default [
                 path: '/marking/new',
                 component: './marking/RecommendNewList',
             },
+            {
+                name: 'popular',
+                path: '/marking/popular',
+                component: './marking/RecommendPopularList',
+            },
         ],
     },
     {
