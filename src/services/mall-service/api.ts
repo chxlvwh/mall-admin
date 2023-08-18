@@ -573,3 +573,59 @@ export async function updateRecommendBrand(
         ...(options || {}),
     });
 }
+
+/** 查询商品推荐列表 */
+export async function getRecommendNewList(
+    params: API.PageParams & Partial<API.RecommendNew>,
+    options?: { [key: string]: any },
+) {
+    const result = await request<API.RestList<API.RecommendNew>>('/api/v1/recommend-new', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+/** 新增商品推荐 */
+export async function addRecommendNew(body: { productIds: number[] }, options?: { [key: string]: any }) {
+    return request<API.RecommendNew>('/api/v1/recommend-new', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 删除商品推荐 */
+export async function deleteRecommendNew(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendNew>>(`/api/v1/recommend-new/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 批量查询推荐商品 */
+export async function getRecommendNewByIds(productIds: number[], options?: { [key: string]: any }) {
+    return request<API.Resp<API.RecommendNew[]>>(`/api/v1/recommend-new/getByProductIds`, {
+        method: 'GET',
+        params: { productIds },
+        ...(options || {}),
+    });
+}
+
+/** 更新商品推荐 */
+export async function updateRecommendNew(
+    id: number,
+    body: Partial<API.RecommendNew>,
+    options?: { [key: string]: any },
+) {
+    return request<API.RecommendNew>(`/api/v1/recommend-new/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}

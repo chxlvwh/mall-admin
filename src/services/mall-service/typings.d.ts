@@ -51,6 +51,13 @@ declare namespace API {
         brand: Brand;
     } & CommonDate;
 
+    type RecommendNew = {
+        id: number;
+        isRecommend: number;
+        sort: number;
+        product: Product;
+    } & CommonDate;
+
     type Coupon = {
         id: number;
         name: string;

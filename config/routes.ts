@@ -100,6 +100,11 @@ export default [
                 path: '/marking/brand',
                 component: './marking/RecommendBrandList',
             },
+            {
+                name: 'new',
+                path: '/marking/new',
+                component: './marking/RecommendNewList',
+            },
         ],
     },
     {

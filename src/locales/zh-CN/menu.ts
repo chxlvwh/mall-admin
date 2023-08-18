@@ -36,6 +36,7 @@ export default {
     'menu.marking': '营销',
     'menu.marking.coupon': '优惠券列表',
     'menu.marking.brand': '品牌推荐',
+    'menu.marking.new': '新品推荐',
     'menu.auth': '权限',
     'menu.auth.user-list': '用户列表',
     'menu.list.basic-list': '标准列表',

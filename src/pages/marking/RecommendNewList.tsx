@@ -1,12 +1,12 @@
 import { searchProps } from '@/constants/consts';
-import SelectBrandModal from '@/pages/marking/components/SelectBrandModal';
-import { deleteRecommendBrand, getRecommendBrandList, updateRecommendBrand } from '@/services/mall-service/api';
+import SelectProductModal from '@/pages/marking/components/SelectProductModal';
+import { deleteRecommendNew, getRecommendNewList, updateRecommendNew } from '@/services/mall-service/api';
 import { ActionType, ModalForm, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { ProFormDigit } from '@ant-design/pro-form/lib';
 import { Button, Form, message, Modal, Space, Switch } from 'antd';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
-const RecommendBrandList = () => {
+const RecommendNewList: React.FC = () => {
     const [createModalOpen, handleModalOpen] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     const [formRef] = Form.useForm();
@@ -14,9 +14,9 @@ const RecommendBrandList = () => {
     const handleRemove = (id: number) => {
         Modal.confirm({
             title: '删除',
-            content: '确定删除该推荐品牌吗？',
+            content: '确定删除该推荐商品吗？',
             onOk: () => {
-                deleteRecommendBrand(id).then(async () => {
+                deleteRecommendNew(id).then(async () => {
                     actionRef.current?.reload();
                     await message.success('删除成功');
                 });
@@ -24,37 +24,37 @@ const RecommendBrandList = () => {
         });
     };
 
-    const switchRecommend = (checked: boolean, record: API.RecommendBrand) => {
+    const switchRecommend = (checked: boolean, record: API.RecommendNew) => {
         // actionRef.current?.reload();
         Modal.confirm({
             title: '确认',
             content: '是否修改推荐状态？',
             onOk: async () => {
                 const params = { isRecommend: checked ? 1 : 0 };
-                updateRecommendBrand(record.id, params).then(async () => {
+                updateRecommendNew(record.id, params).then(async () => {
                     if (actionRef.current) actionRef.current?.reload();
                 });
             },
         });
     };
 
-    const columns: ProColumns<API.RecommendBrand>[] = [
+    const columns: ProColumns<API.RecommendNew>[] = [
         {
             title: '编号',
             dataIndex: 'id',
             search: false,
         },
         {
-            title: '品牌名称',
-            dataIndex: 'brandName',
-            render: (dom: string, record: API.RecommendBrand) => {
-                return <div>{record.brand.name}</div>;
+            title: '商品名称',
+            dataIndex: 'productName',
+            render: (dom: string, record: API.RecommendNew) => {
+                return <div>{record.product.name}</div>;
             },
         },
         {
             title: '是否推荐',
             dataIndex: 'isRecommend',
-            render: (dom: any, record: API.RecommendBrand) => {
+            render: (dom: any, record: API.RecommendNew) => {
                 return (
                     <Switch onChange={(checked) => switchRecommend(checked, record)} checked={!!record.isRecommend} />
                 );
@@ -73,7 +73,7 @@ const RecommendBrandList = () => {
             title: '操作',
             dataIndex: 'action',
             search: false,
-            render: (dom: any, record: API.RecommendBrand) => {
+            render: (dom: any, record: API.RecommendNew) => {
                 return (
                     <Space>
                         <ModalForm
@@ -89,7 +89,7 @@ const RecommendBrandList = () => {
                                 formRef.setFieldValue('sort', record.sort);
                             }}
                             onFinish={async (values) => {
-                                await updateRecommendBrand(record.id, { ...record, ...values });
+                                await updateRecommendNew(record.id, { ...record, ...values });
                                 if (actionRef.current) actionRef.current?.reload();
                                 return true;
                             }}
@@ -106,7 +106,7 @@ const RecommendBrandList = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.RecommendBrand, API.PageParams & API.RecommendBrand>
+            <ProTable<API.RecommendNew, API.PageParams & API.RecommendNew>
                 headerTitle={'数据列表'}
                 actionRef={actionRef}
                 rowKey="id"
@@ -119,13 +119,13 @@ const RecommendBrandList = () => {
                             handleModalOpen(true);
                         }}
                     >
-                        选择品牌
+                        选择商品
                     </Button>,
                 ]}
-                request={getRecommendBrandList}
+                request={getRecommendNewList}
                 columns={columns}
             />
-            <SelectBrandModal
+            <SelectProductModal
                 createModalOpen={createModalOpen}
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}
@@ -134,4 +134,4 @@ const RecommendBrandList = () => {
     );
 };
 
-export default RecommendBrandList;
+export default RecommendNewList;
