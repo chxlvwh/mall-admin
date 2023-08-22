@@ -685,3 +685,50 @@ export async function updateRecommendPopular(
         ...(options || {}),
     });
 }
+
+/** 查询秒杀活动列表 */
+export async function getSeckillList(params: API.PageParams & Partial<API.Seckill>, options?: { [key: string]: any }) {
+    const result = await request<API.RestList<API.RecommendPopular>>('/api/v1/seckill', {
+        method: 'GET',
+        params,
+        ...(options || {}),
+    });
+    return {
+        data: result.data.elements,
+        total: result.data.paging.total,
+        success: true,
+    };
+}
+
+export async function getSeckillById(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Seckill>>(`/api/v1/seckill/${id}`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+/** 新增秒杀活动列表 */
+export async function addSeckill(body: Partial<API.Seckill>, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Seckill>>('/api/v1/seckill', {
+        method: 'POST',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 更新秒杀活动推荐 */
+export async function updateSeckill(id: number, body: Partial<API.Seckill>, options?: { [key: string]: any }) {
+    return request<API.Seckill>(`/api/v1/seckill/${id}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 删除秒杀活动推荐 */
+export async function deleteSeckill(id: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.Seckill>>(`/api/v1/seckill/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}

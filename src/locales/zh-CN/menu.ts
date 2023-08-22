@@ -34,6 +34,7 @@ export default {
     'menu.order.refund.reason': '退款原因配置',
     'menu.order.order': '订单列表',
     'menu.marking': '营销',
+    'menu.marking.seckill': '秒杀活动列表',
     'menu.marking.coupon': '优惠券列表',
     'menu.marking.brand': '品牌推荐',
     'menu.marking.new': '新品推荐',

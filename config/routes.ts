@@ -91,6 +91,11 @@ export default [
         path: '/marking',
         routes: [
             {
+                name: 'seckill',
+                path: '/marking/seckill',
+                component: './marking/SeckillList',
+            },
+            {
                 name: 'coupon',
                 path: '/marking/coupon',
                 component: './marking/CouponList',

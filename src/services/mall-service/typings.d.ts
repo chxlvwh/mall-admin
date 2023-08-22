@@ -44,6 +44,26 @@ declare namespace API {
         coupon: Coupon;
     };
 
+    type SeckillPeriod = {
+        id: number;
+        name: string;
+        startTime: Date;
+        endTime: Date;
+        enable: boolean;
+        products: Product[];
+        seckill: Seckill;
+    };
+
+    type Seckill = {
+        id: number;
+        title: string;
+        status: number;
+        startDate: Date;
+        endDate: Date;
+        isOnline: number;
+        seckillPeriods: SeckillPeriod[];
+    } & CommonDate;
+
     type RecommendBrand = {
         id: number;
         isRecommend: number;
