@@ -725,9 +725,31 @@ export async function updateSeckill(id: number, body: Partial<API.Seckill>, opti
     });
 }
 
+/** 更新秒杀活动推荐 */
+export async function updateSeckillPeriod(
+    id: number,
+    periodId: number,
+    body: Partial<API.SeckillPeriod>,
+    options?: { [key: string]: any },
+) {
+    return request<API.Seckill>(`/api/v1/seckill/${id}/period/${periodId}`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
 /** 删除秒杀活动推荐 */
 export async function deleteSeckill(id: number, options?: { [key: string]: any }) {
     return request<API.Resp<API.Seckill>>(`/api/v1/seckill/${id}`, {
+        method: 'DELETE',
+        ...(options || {}),
+    });
+}
+
+/** 删除时间段 */
+export async function deleteSeckillPeriod(id: number, periodId: number, options?: { [key: string]: any }) {
+    return request<API.Resp<API.SeckillPeriod>>(`/api/v1/seckill/${id}/period/${periodId}`, {
         method: 'DELETE',
         ...(options || {}),
     });

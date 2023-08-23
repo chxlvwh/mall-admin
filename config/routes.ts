@@ -91,9 +91,17 @@ export default [
         path: '/marking',
         routes: [
             {
+                path: '/marking',
+                redirect: '/marking/seckill',
+            },
+            {
                 name: 'seckill',
                 path: '/marking/seckill',
                 component: './marking/SeckillList',
+            },
+            {
+                path: '/marking/seckill/:id/periods',
+                component: './marking/SeckillPeriodList',
             },
             {
                 name: 'coupon',

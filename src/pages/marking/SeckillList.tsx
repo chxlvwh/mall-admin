@@ -4,6 +4,7 @@ import { deleteSeckill, getSeckillById, getSeckillList, updateSeckill } from '@/
 import { FormattedMessage } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Button, Modal, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
 import React, { useRef, useState } from 'react';
@@ -126,6 +127,9 @@ const SeckillList: React.FC = () => {
                             }}
                         >
                             删除
+                        </Button>
+                        <Button type={'link'} onClick={() => history.push(`seckill/${record.id}/periods`)}>
+                            秒杀时间段列表
                         </Button>
                     </Space>
                 );
