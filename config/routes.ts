@@ -104,6 +104,10 @@ export default [
                 component: './marking/SeckillPeriodList',
             },
             {
+                path: '/marking/seckill/:id/periods/:periodId/products',
+                component: './marking/PeriodProductList',
+            },
+            {
                 name: 'coupon',
                 path: '/marking/coupon',
                 component: './marking/CouponList',

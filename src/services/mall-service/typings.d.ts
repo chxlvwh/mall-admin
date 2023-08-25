@@ -44,13 +44,22 @@ declare namespace API {
         coupon: Coupon;
     };
 
+    type PeriodProduct = {
+        id: number;
+        count: number;
+        price: number;
+        limited: number;
+        sort: number;
+        product: Product;
+    };
+
     type SeckillPeriod = {
         id: number;
         name: string;
         startTime: Date;
         endTime: Date;
         enable: boolean;
-        products: Product[];
+        periodProduct: PeriodProduct[];
         seckill: Seckill;
     };
 

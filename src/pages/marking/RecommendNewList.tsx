@@ -3,7 +3,6 @@ import SelectProductModal from '@/pages/marking/components/SelectProductModal';
 import {
     addRecommendNew,
     deleteRecommendNew,
-    getRecommendNewByIds,
     getRecommendNewList,
     updateRecommendNew,
 } from '@/services/mall-service/api';
@@ -136,7 +135,6 @@ const RecommendNewList: React.FC = () => {
                 handleModalOpen={handleModalOpen}
                 actionRef={actionRef}
                 createFn={addRecommendNew}
-                getByIdsFn={getRecommendNewByIds}
             />
         </PageContainer>
     );

@@ -8,19 +8,16 @@ interface SelectProductModalProps {
     handleModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     actionRef: React.MutableRefObject<ActionType | undefined>;
     createFn: ({ productIds }: { productIds: number[] }) => Promise<any>;
-    getByIdsFn: (productIds: number[]) => Promise<{ data: API.RecommendNew[] }>;
 }
 const SelectProductModal: React.FC<SelectProductModalProps> = ({
     createModalOpen,
     handleModalOpen,
     actionRef,
     createFn,
-    getByIdsFn,
 }) => {
     const [productList, setProductList] = useState<API.Product[]>([]);
     const [selectedRows, setSelectedRows] = useState<API.Product[]>([]);
     const [total, setTotal] = useState(0);
-    const [defaultIds, setDefaultIds] = useState<number[]>([]);
     const [loadSuccess, setLoadSuccess] = useState(false);
     const pageSize = 5;
 
@@ -28,16 +25,12 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({
         getProductList({ name: value, pageSize }).then((res) => {
             setProductList(res.data);
             setTotal(res.total);
-            getByIdsFn(res.data.map((item) => item.id)).then((res) => {
-                setDefaultIds(res.data.map((item) => item.product.id));
-                setLoadSuccess(true);
-            });
+            setLoadSuccess(true);
         });
     };
 
     useEffect(() => {
         if (!createModalOpen) return;
-        setDefaultIds([]);
         onSearch('');
     }, [createModalOpen]);
 
@@ -66,7 +59,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({
             open={createModalOpen}
             onOpenChange={handleModalOpen}
             onFinish={async () => {
-                const productIds = selectedRows.map((item) => item.id).filter((item) => !defaultIds.includes(item));
+                const productIds = selectedRows.map((item) => item.id);
                 if (productIds.length === 0) {
                     handleModalOpen(false);
                     return;

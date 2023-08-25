@@ -754,3 +754,46 @@ export async function deleteSeckillPeriod(id: number, periodId: number, options?
         ...(options || {}),
     });
 }
+
+/** 给时间段关联商品 */
+export async function addPeriodProducts(
+    id: number,
+    periodId: number,
+    body: { productIds: number[] },
+    options?: { [key: string]: any },
+) {
+    return request<API.Resp<API.SeckillPeriod>>(`/api/v1/seckill/${id}/period/${periodId}/periodProducts`, {
+        method: 'PUT',
+        data: body,
+        ...(options || {}),
+    });
+}
+
+/** 获取时间段关联商品 */
+export async function getPeriodProducts(params: { id: number; periodId: number }, options?: { [key: string]: any }) {
+    return request<API.Resp<API.PeriodProduct[]>>(
+        `/api/v1/seckill/${params.id}/period/${params.periodId}/periodProducts`,
+        {
+            method: 'GET',
+            ...(options || {}),
+        },
+    );
+}
+
+/** 删除时间段关联商品 */
+export async function deletePeriodProducts(
+    params: {
+        id: number | string;
+        periodId: number | string;
+        periodProductId: number | string;
+    },
+    options?: { [key: string]: any },
+) {
+    return request<API.Resp<API.SeckillPeriod>>(
+        `/api/v1/seckill/${params.id}/period/${params.periodId}/periodProduct/${params.periodProductId}`,
+        {
+            method: 'DELETE',
+            ...(options || {}),
+        },
+    );
+}

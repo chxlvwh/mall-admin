@@ -1,68 +1,66 @@
-import { deleteSeckillPeriod, getSeckillById, updateSeckillPeriod } from '@/services/mall-service/api';
-import { ModalForm, ProColumns, ProFormRadio, ProTable } from '@ant-design/pro-components';
+import SelectProductModal from '@/pages/marking/components/SelectProductModal';
+import {
+    addPeriodProducts,
+    deletePeriodProducts,
+    getPeriodProducts,
+    updateSeckillPeriod,
+} from '@/services/mall-service/api';
+import { ActionType, ModalForm, ProColumns, ProFormRadio, ProTable } from '@ant-design/pro-components';
 import { ProFormText } from '@ant-design/pro-form/lib';
-import { history } from '@umijs/max';
-import { Button, Form, message, Modal, Space, Switch } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Form, message, Modal, Space } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router';
 
-const SeckillPeriodList: React.FC = () => {
-    const params = useParams<{ id: string }>();
-    const [dataSource, setDataSource] = useState<API.SeckillPeriod[]>();
+const PeriodProductList: React.FC = () => {
+    const params = useParams<{ id: string; periodId: string }>();
     const editFormRef = Form.useForm()[0];
+    const [createModalOpen, handleModalOpen] = useState<boolean>(false);
+    const actionRef = useRef<ActionType>();
 
-    const getList = () => {
-        if (Number(params.id) || Number(params.id) === 0) {
-            getSeckillById(Number(params.id)).then((res) => {
-                if (res.data) {
-                    setDataSource(res.data.seckillPeriods || []);
-                }
-            });
-        }
-    };
-
-    useEffect(() => {
-        getList();
-    }, []);
-
-    const switchEnable = (value: boolean, record: API.SeckillPeriod) => {
-        Modal.confirm({
-            title: `确定要${value ? '【开启】' : '【关闭】'}启用吗？`,
-            onOk: async () => {
-                await updateSeckillPeriod(Number(params.id), record.id, { ...record, enable: value });
-                getList();
-                message.success(`${value ? '开启' : '关闭'}成功`);
-            },
-        });
-    };
-
-    const columns: ProColumns<API.SeckillPeriod>[] = [
+    const columns: ProColumns<API.PeriodProduct>[] = [
         {
             title: '编号',
             dataIndex: 'id',
         },
         {
-            title: '秒杀时间段名称',
+            title: '商品名称',
             dataIndex: 'name',
-        },
-        {
-            title: '每日开始时间',
-            dataIndex: 'startTime',
-        },
-        {
-            title: '每日结束时间',
-            dataIndex: 'endTime',
-        },
-        {
-            title: '商品数量',
-            dataIndex: 'index',
-        },
-        {
-            title: '启用',
-            dataIndex: 'enable',
-            render: (dom: any, record: API.SeckillPeriod) => {
-                return <Switch onChange={(checked) => switchEnable(checked, record)} checked={record.enable} />;
+            render: (_: any, record: API.PeriodProduct) => {
+                return <div>{record.product && record.product.name}</div>;
             },
+        },
+        {
+            title: '货号',
+            dataIndex: 'startTime',
+            render: (_: any, record: API.PeriodProduct) => {
+                return <div>{(record.product && record.product.itemNo) || '-'}</div>;
+            },
+        },
+        {
+            title: '商品价格',
+            dataIndex: 'salePrice',
+            render: (_: any, record: API.PeriodProduct) => {
+                return <div>{record.product && record.product.salePrice / 100}</div>;
+            },
+        },
+        {
+            title: '剩余数量',
+            dataIndex: 'remaining',
+        },
+        {
+            title: '秒杀价格',
+            dataIndex: 'price',
+            render: (_: any, record: API.PeriodProduct) => {
+                return <div>{record.price / 100}</div>;
+            },
+        },
+        {
+            title: '限购数量',
+            dataIndex: 'limited',
+        },
+        {
+            title: '排序',
+            dataIndex: 'sort',
         },
         {
             title: '操作',
@@ -83,7 +81,6 @@ const SeckillPeriodList: React.FC = () => {
                             modalProps={{ destroyOnClose: true }}
                             onFinish={async (values) => {
                                 await updateSeckillPeriod(Number(params.id), record.id, { ...record, ...values });
-                                getList();
                                 return true;
                             }}
                         >
@@ -134,44 +131,59 @@ const SeckillPeriodList: React.FC = () => {
                             type={'link'}
                             onClick={async () => {
                                 Modal.confirm({
-                                    title: '确定要删除当前时间段吗？',
+                                    title: '确定要删除当前商品吗？',
                                     onOk: async () => {
-                                        await deleteSeckillPeriod(Number(params.id), record.id);
+                                        await deletePeriodProducts({
+                                            id: params.id as string,
+                                            periodId: params.periodId as string,
+                                            periodProductId: record.id,
+                                        });
+                                        actionRef.current?.reload();
                                         message.success('删除成功');
-                                        getList();
                                     },
                                 });
                             }}
                         >
                             删除
                         </Button>
-                        <Button
-                            type={'link'}
-                            onClick={() => {
-                                history.push(`/marking/seckill/${params.id}/periods/${record.id}/products`);
-                            }}
-                        >
-                            商品管理
-                        </Button>
                     </Space>
                 );
             },
         },
     ];
-
     return (
         <>
             <ProTable
-                headerTitle={'秒杀时间段列表'}
+                headerTitle={'秒杀商品列表'}
                 bordered={true}
                 pagination={false}
+                actionRef={actionRef}
                 rowKey={'id'}
                 columns={columns}
                 search={false}
-                dataSource={dataSource}
+                request={getPeriodProducts}
+                params={{ id: Number(params.id), periodId: Number(params.periodId) }}
+                toolBarRender={() => [
+                    <Button
+                        type="default"
+                        key="primary"
+                        onClick={() => {
+                            handleModalOpen(true);
+                        }}
+                    >
+                        添加商品
+                    </Button>,
+                ]}
+            />
+
+            <SelectProductModal
+                createModalOpen={createModalOpen}
+                handleModalOpen={handleModalOpen}
+                actionRef={actionRef}
+                createFn={(body) => addPeriodProducts(Number(params.id), Number(params.periodId), body)}
             />
         </>
     );
 };
 
-export default SeckillPeriodList;
+export default PeriodProductList;
