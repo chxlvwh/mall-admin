@@ -1,12 +1,13 @@
 import SelectProductModal from '@/pages/marking/components/SelectProductModal';
 import {
     addPeriodProducts,
-    deletePeriodProducts,
+    deletePeriodProduct,
     getPeriodProducts,
-    updateSeckillPeriod,
+    updatePeriodProduct,
 } from '@/services/mall-service/api';
-import { ActionType, ModalForm, ProColumns, ProFormRadio, ProTable } from '@ant-design/pro-components';
-import { ProFormText } from '@ant-design/pro-form/lib';
+import { ActionType, ModalForm, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-form';
+import { ProFormDigit, ProFormMoney } from '@ant-design/pro-form/lib';
 import { Button, Form, message, Modal, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router';
@@ -65,14 +66,14 @@ const PeriodProductList: React.FC = () => {
         {
             title: '操作',
             dataIndex: 'action',
-            render: (dom: any, record: API.SeckillPeriod) => {
+            render: (dom: any, record: API.PeriodProduct) => {
                 return (
                     <Space>
                         <ModalForm
                             form={editFormRef}
-                            width={500}
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
+                            width={700}
+                            labelCol={{ span: 7 }}
+                            wrapperCol={{ span: 13 }}
                             className={'vertical-margin-20'}
                             layout={'horizontal'}
                             title={'编辑'}
@@ -80,52 +81,56 @@ const PeriodProductList: React.FC = () => {
                             // 重新打开窗口时，重置表单(验证/数据)
                             modalProps={{ destroyOnClose: true }}
                             onFinish={async (values) => {
-                                await updateSeckillPeriod(Number(params.id), record.id, { ...record, ...values });
+                                console.log('[values:] ', values);
+                                await updatePeriodProduct(
+                                    {
+                                        id: params.id as string,
+                                        periodId: params.periodId as string,
+                                        periodProductId: record.id,
+                                    },
+                                    { ...record, ...values, price: values.price * 100 },
+                                );
+                                actionRef.current?.reload();
                                 return true;
                             }}
                         >
-                            <ProFormText
-                                label={'秒杀时间段名称'}
-                                initialValue={record.name}
-                                name={'name'}
-                                width={'md'}
+                            <ProForm.Item label={'商品名称'}>
+                                <div>{record.product?.name}</div>
+                            </ProForm.Item>
+                            <ProForm.Item label={'货号'}>
+                                <div>{record.product?.itemNo}</div>
+                            </ProForm.Item>
+                            <ProForm.Item label={'商品价格'}>
+                                <div>{'¥ ' + record.product?.salePrice / 100}</div>
+                            </ProForm.Item>
+                            <ProFormMoney
+                                initialValue={record.price / 100}
                                 rules={[{ required: true }]}
-                            />
-                            <ProFormText
-                                label={'每日开始时间'}
-                                initialValue={record.startTime}
-                                name={'startTime'}
-                                width={'md'}
-                                rules={[{ required: true }]}
-                            />
-                            <ProFormText
-                                label={'每日结束时间'}
-                                initialValue={record.endTime}
-                                name={'endTime'}
-                                width={'md'}
-                                rules={[{ required: true }]}
-                            />
-                            <ProFormRadio.Group
-                                initialValue={record.enable || false}
-                                radioType={'button'}
-                                label="是否启用"
+                                label="秒杀价格"
                                 width="md"
-                                name="enable"
-                                options={[
-                                    {
-                                        label: '上线',
-                                        value: true,
-                                    },
-                                    {
-                                        label: '下线',
-                                        value: false,
-                                    },
-                                ]}
-                                params={undefined}
-                                debounceTime={undefined}
-                                request={undefined}
-                                valueEnum={undefined}
-                            ></ProFormRadio.Group>
+                                name="price"
+                                min={1}
+                            />
+                            <ProForm.Item label={'剩余数量'}>
+                                <div>{record.remaining}</div>
+                            </ProForm.Item>
+                            <ProFormDigit
+                                initialValue={record.count}
+                                rules={[{ required: true }]}
+                                label="秒杀数量"
+                                width="md"
+                                name="count"
+                                min={0.01}
+                            />
+                            <ProFormDigit
+                                initialValue={record.limited}
+                                rules={[{ required: true }]}
+                                label="限购数量"
+                                width="md"
+                                name="limited"
+                                min={1}
+                            />
+                            <ProFormDigit label="排序" width="md" name="sort" min={0} initialValue={record.sort || 0} />
                         </ModalForm>
                         <Button
                             type={'link'}
@@ -133,7 +138,7 @@ const PeriodProductList: React.FC = () => {
                                 Modal.confirm({
                                     title: '确定要删除当前商品吗？',
                                     onOk: async () => {
-                                        await deletePeriodProducts({
+                                        await deletePeriodProduct({
                                             id: params.id as string,
                                             periodId: params.periodId as string,
                                             periodProductId: record.id,

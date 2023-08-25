@@ -50,6 +50,7 @@ declare namespace API {
         price: number;
         limited: number;
         sort: number;
+        remaining: number;
         product: Product;
     };
 
